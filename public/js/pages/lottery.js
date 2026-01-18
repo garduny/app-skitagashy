@@ -1,33 +1,45 @@
 async function buyTickets(rid) {
     if (!App.checkAuth()) return;
+
     const qtyInput = document.getElementById('ticket-qty');
     const qty = qtyInput ? qtyInput.value : 1;
+
     if (qty < 1) return notyf.error('Invalid Quantity');
+
     notyf.success('Please approve ticket purchase...');
+
     try {
+        // 1. Create Unique Message
         const nonce = Date.now();
         const message = `CONFIRM LOTTERY ENTRY:\n\nRound ID: ${rid}\nTickets: ${qty}\nCost: ${qty * 10} GASHY\nTimestamp: ${nonce}\n\nClick Approve to join pool.`;
+
         const encoded = new TextEncoder().encode(message);
+
+        // 2. Sign Message
         const signed = await window.solana.signMessage(encoded, 'utf8');
-        let txSig = '';
-        if (signed.signature) {
-            txSig = Array.from(new Uint8Array(signed.signature)).map(b => b.toString(16).padStart(2, '0')).join('');
-        } else {
-            txSig = 'MANUAL_LOTTERY_' + nonce;
-        }
+
+        // 3. Robust Hex Conversion (Handles all Phantom versions)
+        // Checks if 'signed' is an object with 'signature' or just the raw bytes
+        const signatureBytes = signed.signature || signed;
+        const txSig = Array.from(new Uint8Array(signatureBytes)).map(b => b.toString(16).padStart(2, '0')).join('');
+
+        // 4. Send to API
         const res = await App.post('api/lottery/enter.php', {
             round_id: rid,
             tickets: qty,
             burn_tx: txSig
         });
+
         if (res.status) {
             notyf.success(`${qty} Tickets Secured!`);
             setTimeout(() => location.reload(), 1000);
         } else {
             notyf.error(res.message);
         }
+
     } catch (e) {
-        console.error(e);
-        notyf.error('Transaction Cancelled');
+        console.error("Lottery Error:", e);
+        // Show the REAL error message to you
+        notyf.error('Failed: ' + (e.message || 'Transaction Cancelled'));
     }
 }
