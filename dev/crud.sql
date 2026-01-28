@@ -1,0 +1,27 @@
+
+-- -- Create table
+-- CREATE TABLE `tablename` (
+--   `id` INT(11) NOT NULL AUTO_INCREMENT,
+--   `ku_name` VARCHAR(100) NOT NULL,
+--   `ar_name` VARCHAR(100) NOT NULL,
+--   `en_name` VARCHAR(100) NOT NULL,
+--   `auth_id` INT(11) DEFAULT NULL,
+--   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+--   PRIMARY KEY (`id`),
+--   KEY `auth_id` (`auth_id`),
+--   CONSTRAINT `tablename_ibfk_1` FOREIGN KEY (`auth_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- -- View
+-- CREATE VIEW `tablenameview` AS
+-- SELECT o.id,
+--        o.ku_name,
+--        o.ar_name,
+--        o.en_name,
+--        o.auth_id,
+--        u.fullname AS auth_fullname,
+--        o.created_at,
+--        o.updated_at
+-- FROM tablename o
+-- LEFT JOIN users u ON o.auth_id = u.id;
