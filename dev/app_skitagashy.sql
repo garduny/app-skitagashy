@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 24, 2026 at 07:42 PM
+-- Generation Time: Jan 28, 2026 at 04:01 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -114,7 +114,8 @@ INSERT INTO `account_sessions` (`id`, `account_id`, `token`, `ip_address`, `acco
 (7, 1, 'f89cbe0e19e0dc54ff93afdd36a7c70e0ca7bceefa29b71d4964ca22ae01b7d6', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-01-25 04:54:08', '2026-01-18 01:54:08'),
 (8, 1, 'b47396259cb52710e64b729fb1096e5d05fc6f8786d7d15051ad394ccfc60d7d', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-01-25 04:54:35', '2026-01-18 01:54:35'),
 (9, 1, '68db32bad8f47b3bbe12dc19963982042aa1aca4c7077db879a8735a982adcc5', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-01-25 05:33:37', '2026-01-18 02:33:37'),
-(10, 1, 'faa04e34bcd1d06466cfe8fa4f104785d00e68275c7053c70638f43f604ab34b', '::1', 'Unknown', '2026-01-30 18:55:06', '2026-01-23 15:55:06');
+(10, 1, 'faa04e34bcd1d06466cfe8fa4f104785d00e68275c7053c70638f43f604ab34b', '::1', 'Unknown', '2026-01-30 18:55:06', '2026-01-23 15:55:06'),
+(11, 1, 'b545337b3a8611be1bf10639de73d1229349d107f645a45fa6edcd30b73f5d02', '::1', 'Unknown', '2026-02-04 05:38:34', '2026-01-28 02:38:34');
 
 -- --------------------------------------------------------
 
@@ -154,7 +155,8 @@ CREATE TABLE `auctions` (
 --
 
 INSERT INTO `auctions` (`id`, `product_id`, `start_time`, `end_time`, `start_price`, `reserve_price`, `current_bid`, `highest_bidder_id`, `status`) VALUES
-(1, 7, '2026-01-17 15:23:00', '2026-01-19 15:23:00', 5000.000000000, NULL, 5500.000000000, 1, 'active');
+(1, 7, '2026-01-17 15:23:00', '2026-01-19 15:23:00', 5000.000000000, NULL, 5500.000000000, 1, 'active'),
+(2, 2, '2026-01-28 05:39:00', '2026-01-29 05:39:00', 10.000000000, NULL, 10.000000000, NULL, 'active');
 
 -- --------------------------------------------------------
 
@@ -216,11 +218,12 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`id`, `parent_id`, `name`, `slug`, `icon`, `is_active`) VALUES
-(1, NULL, 'Gift Cards', 'gift-cards', 'fa-solid fa-gift', 1),
-(2, NULL, 'Gaming Assets', 'gaming', 'fa-solid fa-gamepad', 1),
+(1, NULL, 'Gift Cards', 'gift-cards', 'fa-brands fa-windows', 1),
+(2, NULL, 'Gaming Assets', 'gaming-assets', 'fa-solid fa-gamepad', 1),
 (3, NULL, 'Software Keys', 'software', 'fa-brands fa-windows', 1),
-(4, NULL, 'Premium NFTs', 'nfts', 'fa-solid fa-gem', 1),
-(5, NULL, 'Mystery Boxes', 'mystery', 'fa-solid fa-box-open', 1);
+(4, NULL, 'Premium NFTs', 'premium-nfts', 'fa-solid fa-gem', 1),
+(5, NULL, 'Mystery Boxes', 'mystery-boxes', 'fa-solid fa-box-open', 1),
+(6, NULL, 'a', 'a', 'a', 1);
 
 -- --------------------------------------------------------
 
@@ -341,7 +344,8 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `account_id`, `total_gashy`, `tx_signature`, `status`, `created_at`) VALUES
-(4, 1, 0.000000000, 'f7275f11ccb2cbdf7fb154cdbf37153499a4b6c41630662c288c00d434cd425d903c0ef12142c8576f0d6b6b', 'pending', '2026-01-17 12:19:13');
+(4, 1, 0.000000000, 'f7275f11ccb2cbdf7fb154cdbf37153499a4b6c41630662c288c00d434cd425d903c0ef12142c8576f0d6b6b', 'pending', '2026-01-17 12:19:13'),
+(5, 1, 0.000000000, '280d43bb9c8a75828780f0705982efd49a502b23ac26787b894bdd0cf30c6ef9c03ab3cff9bbece2339f6b7d', 'pending', '2026-01-28 02:38:48');
 
 -- --------------------------------------------------------
 
@@ -363,7 +367,8 @@ CREATE TABLE `order_items` (
 --
 
 INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `quantity`, `price_at_purchase`, `meta_data`) VALUES
-(1, 4, 1, 1, 1.000000000, NULL);
+(1, 4, 1, 1, 1.000000000, NULL),
+(2, 5, 8, 1, 10.000000000, NULL);
 
 -- --------------------------------------------------------
 
@@ -433,7 +438,7 @@ INSERT INTO `products` (`id`, `seller_id`, `category_id`, `title`, `slug`, `desc
 (5, 1, 4, 'CyberPunk Samurai #042', 'cyber-samurai-042', 'Rare NFT from the CyberPunk collection. Verified ownership on Solana.', 5000.000000000, 250.00, 1, 'nft', '[\"https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=1974&auto=format&fit=crop\"]', NULL, 'active', 1203, '2026-01-16 08:40:08'),
 (6, 1, 5, 'Legendary Mystery Box', 'legendary-box', 'Contains a chance to win 50,000 GASHY or a Rare NFT. High risk, high reward.', 500.000000000, 20.00, 994, 'mystery_box', '[\"https://cdn-icons-png.flaticon.com/512/1162/1162951.png\"]', NULL, 'active', 3001, '2026-01-16 08:40:08'),
 (7, 1, 4, 'Bored Ape #9999 (Test)', 'bored-ape-test', 'Original BAYC NFT. Verified on Ethereum.', 10000.000000000, NULL, 1, 'nft', '[\"https://img.seadn.io/files/87722776263889657062473859663749.png?auto=format&fit=max&w=384\"]', NULL, 'active', 0, '2026-01-17 12:23:19'),
-(8, 1, 5, 'Starter Mystery Box', 'starter-box', 'Cheap box for testing luck.', 10.000000000, NULL, 498, 'mystery_box', '[\"https://cdn-icons-png.flaticon.com/512/4213/4213650.png\"]', NULL, 'active', 7, '2026-01-17 12:23:19');
+(8, 1, 5, 'Starter Mystery Box', 'starter-box', 'Cheap box for testing luck.', 10.000000000, NULL, 497, 'mystery_box', '[\"https://cdn-icons-png.flaticon.com/512/4213/4213650.png\"]', NULL, 'active', 10, '2026-01-17 12:23:19');
 
 -- --------------------------------------------------------
 
@@ -577,7 +582,8 @@ INSERT INTO `transactions` (`id`, `account_id`, `type`, `amount`, `tx_signature`
 (5, 1, 'purchase', 10.000000000, '108b1ed1167f1e1b0a842f137853c5b0f232f89573520932f688001bc0912b54d1460cf96f9de189454267b7', NULL, 'confirmed', '2026-01-18 02:08:14'),
 (6, 1, 'reward', 5.000000000, NULL, 8, 'confirmed', '2026-01-18 02:08:14'),
 (7, 1, 'purchase', 500.000000000, 'cb9d6381f5d598118138ca7f31a7c122f0800d3410d325b76c608f413fc4e9bb13100b5c55a1f26a2e38d251', NULL, 'confirmed', '2026-01-18 02:29:05'),
-(8, 1, 'reward', 1000.000000000, NULL, 6, 'confirmed', '2026-01-18 02:29:05');
+(8, 1, 'reward', 1000.000000000, NULL, 6, 'confirmed', '2026-01-18 02:29:05'),
+(9, 1, 'purchase', 0.000000000, '280d43bb9c8a75828780f0705982efd49a502b23ac26787b894bdd0cf30c6ef9c03ab3cff9bbece2339f6b7d', NULL, 'pending', '2026-01-28 02:38:48');
 
 -- --------------------------------------------------------
 
@@ -602,8 +608,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `role_id`, `username`, `email`, `password`, `avatar`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, 1, 'admin', 'admin@gashy.com', '$2y$10$lpkvg3.1MbV46.BUD0iUw.kJJ.bFDB3fcKTRqUJPTOfeJOxufWEqu', 'https://skita.io/img/logo.png', 1, '2026-01-23 15:28:44', '2026-01-24 18:30:35'),
-(2, 1, 'test', 'test@gmail.com', '$2y$10$KoNsaVFGcy4Oc22u3JZ7K.qLztmCp7vnfcywoDTIDHCRroDezaCfm', NULL, 1, '2026-01-23 16:21:13', '2026-01-23 16:21:13');
+(1, 1, 'admin', 'admin@gashy.com', '$2y$10$npxUdczn1lsjuUg1r4Rk/ek7LUMcpQ.A5sG38MtBnymCnSbK84ryu', 'https://skita.io/img/logo.png', 1, '2026-01-23 15:28:44', '2026-01-28 02:32:40'),
+(2, 1, 'test', 'test@gmail.com', '$2y$10$53tAtHb3aJ8gIrHLKwR.uuzizSb0uok8ZjIS5oiVXGL7LL4f/.V8u', NULL, 1, '2026-01-23 16:21:13', '2026-01-28 02:32:37');
 
 -- --------------------------------------------------------
 
@@ -640,7 +646,7 @@ CREATE TABLE `user_sessions` (
 --
 
 INSERT INTO `user_sessions` (`id`, `user_id`, `token`, `ip_address`, `user_agent`, `expires_at`, `created_at`) VALUES
-(1, 1, '5dc464b3bc5f29cd657fccf4c73f042909002c844e048478eaafea5da7c064ef', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-22 20:55:25', '2026-01-23 17:55:25');
+(1, 1, '44e2d2cb806e61ca56671b77a0e4dcbf2ac6cfbbaf060c40b3393a37b9e53d3e', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-02-27 05:32:40', '2026-01-28 02:32:40');
 
 -- --------------------------------------------------------
 
@@ -930,7 +936,7 @@ ALTER TABLE `account_referrals`
 -- AUTO_INCREMENT for table `account_sessions`
 --
 ALTER TABLE `account_sessions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `activity_log`
@@ -942,7 +948,7 @@ ALTER TABLE `activity_log`
 -- AUTO_INCREMENT for table `auctions`
 --
 ALTER TABLE `auctions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `banners`
@@ -960,7 +966,7 @@ ALTER TABLE `burn_log`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `gift_cards`
@@ -990,13 +996,13 @@ ALTER TABLE `mystery_box_loot`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `permissions`
@@ -1032,7 +1038,7 @@ ALTER TABLE `settings`
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `users`
