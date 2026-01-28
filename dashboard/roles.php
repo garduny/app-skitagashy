@@ -17,7 +17,7 @@ if (post('add_role')) {
     }
 }
 if (post('edit_role')) {
-    $id = (int)post('id');
+    $id = request('id', 'post');
     $name = request('name', 'post');
     $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $name)));
     $check = findQuery(" SELECT id FROM roles WHERE slug='$slug' AND id!=$id ");

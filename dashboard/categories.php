@@ -22,7 +22,7 @@ if (post('add_cat')) {
     }
 }
 if (post('edit_cat')) {
-    $id = (int)post('id');
+    $id = request('id', 'post');
     $name = secure($_POST['name']);
     $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $name)));
     $check = findQuery(" SELECT id FROM categories WHERE slug='$slug' AND id!=$id ");
