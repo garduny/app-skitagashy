@@ -1,6 +1,6 @@
 <?php
 require_once 'init.php';
-$id = (int)get('id');
+$id = request('id', 'get');
 $o = findQuery(" SELECT o.*,a.accountname,a.email,a.wallet_address FROM orders o JOIN accounts a ON o.account_id=a.id WHERE o.id=$id ");
 // if (empty($o)) redirect('orders.php');
 // var_dump($o);

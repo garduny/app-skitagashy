@@ -1,7 +1,7 @@
 <?php
 require_once 'init.php';
 if (get('delete')) {
-    $id = (int)get('delete');
+    $id = request('delete', 'get');
     if ($id !== 1 && $id != (int)user()['id']) {
         execute(" DELETE FROM users WHERE id=$id ");
     }

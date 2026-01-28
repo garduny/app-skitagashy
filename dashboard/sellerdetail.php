@@ -1,6 +1,6 @@
 <?php
 require_once 'init.php';
-$id = (int)get('id');
+$id = request('id', 'get');
 $seller = findQuery(" SELECT s.*,a.accountname,a.email,a.wallet_address FROM sellers s JOIN accounts a ON s.account_id=a.id WHERE s.account_id=$id ");
 if (!$seller) redirect('sellers.php');
 if (get('approve')) {

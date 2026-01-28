@@ -1,12 +1,12 @@
 <?php
 require_once 'init.php';
 if (get('ban')) {
-    $id = (int)get('ban');
+    $id = request('ban', 'get');
     execute("UPDATE accounts SET is_banned=1 WHERE id=$id");
     redirect('accounts.php?msg=banned');
 }
 if (get('unban')) {
-    $id = (int)get('unban');
+    $id = request('unban', 'get');
     execute("UPDATE accounts SET is_banned=0 WHERE id=$id");
     redirect('accounts.php?msg=active');
 }

@@ -1,6 +1,6 @@
 <?php
 require_once 'init.php';
-$id = (int)get('id');
+$id = request('id', 'get');
 $a = findQuery(" SELECT a.*,p.title,p.images,acc.accountname,acc.wallet_address FROM auctions a JOIN products p ON a.product_id=p.id LEFT JOIN accounts acc ON a.highest_bidder_id=acc.id WHERE a.id=$id ");
 if (!$a) redirect('auctions.php');
 if (post('update_auction')) {

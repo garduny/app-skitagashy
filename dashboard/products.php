@@ -3,12 +3,12 @@ require_once 'init.php';
 $cats = getQuery(" SELECT * FROM categories ORDER BY name ASC");
 $sellers = getQuery(" SELECT account_id,store_name FROM sellers WHERE is_approved=1 ORDER BY store_name ASC");
 if (get('delete')) {
-    $id = (int)get('delete');
+    $id = request('delete', 'get');
     execute("UPDATE products SET status='banned' WHERE id=$id");
     redirect('products.php?msg=banned');
 }
 if (get('restore')) {
-    $id = (int)get('restore');
+    $id = request('restore', 'get');
     execute("UPDATE products SET status='active' WHERE id=$id");
     redirect('products.php?msg=restored');
 }

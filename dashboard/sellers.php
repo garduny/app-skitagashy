@@ -1,17 +1,17 @@
 <?php
 require_once 'init.php';
 if (get('approve')) {
-    $id = (int)get('approve');
+    $id = request('approve', 'get');
     execute("UPDATE sellers SET is_approved=1 WHERE account_id=$id");
     redirect('sellers.php?msg=approved');
 }
 if (get('reject')) {
-    $id = (int)get('reject');
+    $id = request('reject', 'get');
     execute("UPDATE sellers SET is_approved=0 WHERE account_id=$id");
     redirect('sellers.php?msg=rejected');
 }
 if (get('delete')) {
-    $id = (int)get('delete');
+    $id = request('delete', 'get');
     execute("DELETE FROM sellers WHERE account_id=$id");
     redirect('sellers.php?msg=deleted');
 }

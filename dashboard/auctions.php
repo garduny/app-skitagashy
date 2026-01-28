@@ -1,7 +1,7 @@
 <?php
 require_once 'init.php';
 if (get('delete')) {
-    $id = (int)get('delete');
+    $id = request('delete', 'get');
     execute(" DELETE FROM auctions WHERE id=$id ");
     redirect('auctions.php?msg=deleted');
 }

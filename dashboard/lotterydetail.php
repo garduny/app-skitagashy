@@ -1,6 +1,6 @@
 <?php
 require_once 'init.php';
-$id = (int)get('id');
+$id = request('id', 'get');
 $r = findQuery(" SELECT * FROM lottery_rounds WHERE id=$id");
 if (!$r) redirect('lotteries.php');
 if (post('draw_winner')) {

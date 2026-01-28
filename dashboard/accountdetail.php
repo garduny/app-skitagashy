@@ -1,6 +1,6 @@
 <?php
 require_once 'init.php';
-$id = (int)get('id');
+$id = request('id', 'get');
 $acc = findQuery(" SELECT * FROM accounts WHERE id=$id ");
 if (!$acc) redirect('accounts.php');
 $orders = getQuery(" SELECT * FROM orders WHERE account_id=$id ORDER BY id DESC LIMIT 20 ");

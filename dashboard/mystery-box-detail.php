@@ -1,10 +1,10 @@
 <?php
 require_once 'init.php';
-$id = (int)get('id'); // Product ID of the box
+$id = request('id', 'get'); // Product ID of the box
 $box = findQuery(" SELECT * FROM products WHERE id=$id AND type='mystery_box'");
 if (!$box) redirect('products.php');
 if (get('delete_loot')) {
-    $lid = (int)get('delete_loot');
+    $lid = request('delete_loot', 'get');
     execute(" DELETE FROM mystery_box_loot WHERE id=$lid ");
     redirect("mystery-box-detail.php?id=$id");
 }
