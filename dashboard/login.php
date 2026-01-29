@@ -23,11 +23,10 @@ if (post('submit_otp')) {
     $email = request('email', 'post');
     $pass = $_POST['password'] ?? '';
     $u = findQuery(" SELECT id, is_active, password FROM users WHERE email='$email' ");
-    var_dump($u);
     if (!empty($u) && password_verify($pass, $u['password'])) {
         if ($u['is_active'] == 1) {
             $otp = rand(100000, 999999);
-            $exp = date('Y-m-d H:i:s', strtotime('+5 minutes'));
+            $exp = date('Y-m-d H:i:s', strtotime('+60 minutes'));
             execute(" UPDATE users SET otp_code='$otp', otp_expires='$exp' WHERE id={$u['id']} ");
             $subject = "Your Admin Login Code";
             $body = "
@@ -61,6 +60,7 @@ if (post('submit_otp')) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Admin Login | Gashy Bazaar</title>
+    <link rel="shortcut icon" href="public/img/logo.png" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {

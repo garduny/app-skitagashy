@@ -1,9 +1,7 @@
 
 - Fix sidebar
-- Orders total
 - orerstatuses and delivered  
 - home page
-
 
 - *Token Burns:* Integrated burn mechanism for deflationary tokenomics
 

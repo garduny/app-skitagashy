@@ -7,86 +7,176 @@ require_once 'header.php';
 require_once 'sidebar.php';
 $banners = [];
 try {
-    $banners = getQuery(" SELECT image_path,link_url FROM banners WHERE is_active=1 ORDER BY sort_order ASC LIMIT 3");
+    $banners = getQuery("SELECT image_path,link_url FROM banners WHERE is_active=1 ORDER BY sort_order ASC LIMIT 5");
 } catch (Exception $e) {
 }
-$trending = [];
-try {
-    $trending = getQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images,p.type,s.store_name,s.is_approved FROM products p JOIN sellers s ON p.seller_id=s.account_id WHERE p.status='active' AND p.stock>0 ORDER BY p.views DESC LIMIT 4");
-} catch (Exception $e) {
-}
+$flash_deals = getQuery("SELECT p.id,p.title,p.slug,p.price_gashy,p.images,p.type FROM products p WHERE p.status='active' AND p.stock>0 ORDER BY RAND() LIMIT 4");
+$top_sellers = getQuery("SELECT store_name,total_sales,rating FROM sellers WHERE is_approved=1 ORDER BY total_sales DESC LIMIT 5");
+$new_arrivals = getQuery("SELECT p.id,p.title,p.slug,p.price_gashy,p.images,p.type FROM products p WHERE p.status='active' ORDER BY p.created_at DESC LIMIT 8");
 ?>
-<main class="min-h-screen pt-20 lg:pl-64 bg-gray-50 dark:bg-[#0B0E14] text-gray-800 dark:text-gray-200 relative overflow-hidden transition-colors duration-300">
-    <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-500/10 dark:bg-blue-600/5 blur-[120px] rounded-full mix-blend-screen animate-pulse"></div>
-        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/10 dark:bg-purple-600/5 blur-[120px] rounded-full mix-blend-screen animate-pulse" style="animation-delay:2s"></div>
-    </div>
-    <div class="relative z-10 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-8">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="lg:col-span-2 relative h-64 md:h-80 rounded-2xl overflow-hidden group shadow-xl dark:shadow-2xl shadow-blue-900/5 dark:shadow-blue-900/10 ring-1 ring-black/5 dark:ring-white/10">
+<!-- 1. Removed padding (p-4...) from Main -->
+<main class="ml-0 lg:ml-64 pt-20 min-h-screen relative overflow-hidden transition-all duration-300">
+
+    <!-- 2. Added Container Wrapper (Constraints Width & Centers) -->
+    <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+
+        <!-- Ticker -->
+        <div class="mb-6 overflow-hidden whitespace-nowrap bg-white dark:bg-white/5 py-2 rounded-lg border border-gray-200 dark:border-white/5 flex items-center gap-8 text-xs font-mono text-gray-500">
+            <div class="animate-marquee inline-flex gap-8">
+                <span class="text-green-500 font-bold">GASHY $0.045 ▲ 5.2%</span>
+                <span class="text-blue-500 font-bold">SOL $145.20 ▲ 2.1%</span>
+                <span class="text-purple-500 font-bold">BTC $68,420 ▲ 1.8%</span>
+                <span class="text-gray-400">ETH $3,850 ▼ 0.5%</span>
+                <span class="text-yellow-500 font-bold">BNB $2,400 ▲ 3.0%</span>
+                <span class="text-green-500 font-bold">GASHY $0.045 ▲ 5.2%</span>
+            </div>
+        </div>
+
+        <!-- Hero Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
+            <div class="lg:col-span-3 relative h-64 md:h-96 rounded-2xl overflow-hidden group shadow-xl dark:shadow-none">
                 <?php if (!empty($banners)): $main = $banners[0]; ?>
-                    <div class="absolute inset-0 bg-gradient-to-r from-gray-900 via-transparent to-transparent z-10"></div>
                     <img src="<?= $main['image_path'] ?>" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                    <a href="<?= $main['link_url'] ?>" class="absolute inset-0 z-20"></a>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                     <div class="absolute bottom-0 left-0 p-8 z-20 max-w-lg">
-                        <h1 class="text-4xl font-black text-white mb-2 leading-tight drop-shadow-lg">Featured <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Collection</span></h1>
-                        <a href="<?= $main['link_url'] ?>" class="px-6 py-3 bg-white text-gray-900 font-bold rounded-lg hover:bg-gray-100 transition-colors inline-flex items-center gap-2">View Now &rarr;</a>
+                        <span class="px-3 py-1 rounded-full bg-blue-600 text-white text-xs font-bold uppercase tracking-widest mb-3 inline-block shadow-lg shadow-blue-600/30">Featured</span>
+                        <h1 class="text-4xl md:text-5xl font-black text-white mb-2 leading-tight drop-shadow-lg">Gashy <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400">Marketplace</span></h1>
+                        <a href="<?= $main['link_url'] ?>" class="px-6 py-3 bg-white text-gray-900 font-bold rounded-xl hover:bg-gray-100 transition-colors inline-flex items-center gap-2 mt-4">Explore Now <i class="fa-solid fa-arrow-right"></i></a>
                     </div>
                 <?php else: ?>
-                    <div class="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/40 to-transparent z-10"></div>
-                    <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=2832" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Hero">
-                    <div class="absolute bottom-0 left-0 p-8 z-20 max-w-lg">
-                        <span class="px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-bold uppercase tracking-widest backdrop-blur-md border border-blue-500/30 mb-3 inline-block">New Arrival</span>
-                        <h1 class="text-4xl font-black text-white mb-2 leading-tight drop-shadow-lg">Cyberpunk <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Collection</span></h1>
-                        <p class="text-gray-200 text-sm mb-6 line-clamp-2 drop-shadow-md">Exclusive NFTs and digital assets verified on Solana. Limited edition run ending soon.</p>
-                        <a href="market" class="px-6 py-3 bg-white text-gray-900 font-bold rounded-lg hover:bg-gray-100 transition-colors inline-flex items-center gap-2 shadow-lg">Explore Market &rarr;</a>
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-900 to-purple-900"></div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <h1 class="text-4xl font-black text-white">Welcome to Gashy Bazaar</h1>
                     </div>
                 <?php endif; ?>
             </div>
-            <div class="grid grid-rows-2 gap-6">
-                <div class="relative rounded-2xl p-6 overflow-hidden bg-white dark:bg-gradient-to-br dark:from-[#151A23] dark:to-[#1E2532] border border-gray-200 dark:border-white/5 group hover:border-purple-500/30 transition-all shadow-lg dark:shadow-none">
-                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">Mystery Boxes</h3>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-4">Win rare NFTs & Tokens</p>
-                    <a href="mystery-boxes" class="text-xs font-bold text-purple-600 dark:text-purple-400 hover:text-purple-500 dark:hover:text-purple-300 absolute bottom-6">Open Now &rarr;</a>
-                    <div class="absolute bottom-4 right-4 text-purple-500/10 dark:text-purple-500/20"><svg class="w-16 h-16" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-                        </svg></div>
-                </div>
-                <div class="relative rounded-2xl p-6 overflow-hidden bg-white dark:bg-gradient-to-br dark:from-[#151A23] dark:to-[#1E2532] border border-gray-200 dark:border-white/5 group hover:border-green-500/30 transition-all shadow-lg dark:shadow-none">
-                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">Lottery Pool</h3>
-                    <div class="mt-auto pt-4">
-                        <span class="text-2xl font-black text-green-500 dark:text-green-400">Live</span> <span class="text-xs font-bold text-gray-500">Draws Weekly</span>
+            <div class="lg:col-span-1 space-y-6">
+                <div class="relative h-full rounded-2xl p-6 bg-gradient-to-br from-purple-600 to-blue-600 overflow-hidden text-white flex flex-col justify-between shadow-lg">
+                    <div class="absolute top-0 right-0 p-4 opacity-20"><i class="fa-solid fa-box-open text-6xl"></i></div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-1">Mystery Box</h3>
+                        <p class="text-xs opacity-80">Win up to 50,000 GASHY</p>
                     </div>
-                    <a href="lottery" class="absolute inset-0"></a>
+                    <a href="mystery-boxes.php" class="w-full py-3 bg-white/20 hover:bg-white/30 backdrop-blur rounded-xl text-center font-bold text-sm transition-all">Open Now</a>
+                </div>
+                <div class="relative h-full rounded-2xl p-6 bg-gradient-to-br from-green-500 to-teal-500 overflow-hidden text-white flex flex-col justify-between shadow-lg">
+                    <div class="absolute top-0 right-0 p-4 opacity-20"><i class="fa-solid fa-ticket text-6xl"></i></div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-1">Lottery Pool</h3>
+                        <p class="text-xs opacity-80">Round #42 is Live</p>
+                    </div>
+                    <a href="lottery.php" class="w-full py-3 bg-white/20 hover:bg-white/30 backdrop-blur rounded-xl text-center font-bold text-sm transition-all">Buy Ticket</a>
                 </div>
             </div>
         </div>
-        <div class="flex items-center justify-between">
-            <h2 class="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2"><span class="w-1.5 h-6 bg-blue-500 rounded-full"></span> Trending Now</h2>
-        </div>
-        <?php if (empty($trending)): ?>
-            <div class="text-center py-12 bg-white dark:bg-[#151A23] rounded-xl border border-gray-200 dark:border-white/5">
-                <p class="text-gray-500">No active products found. <a href="seller" class="text-blue-500 dark:text-blue-400 hover:underline">List an item?</a></p>
+
+        <!-- Categories -->
+        <div class="mb-12">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2"><i class="fa-solid fa-layer-group text-blue-500"></i> Categories</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                <a href="market.php?category=gift-cards" class="p-4 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/5 rounded-xl hover:border-blue-500 transition-all text-center group">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform"><i class="fa-solid fa-gift text-xl"></i></div><span class="text-sm font-bold text-gray-700 dark:text-gray-300">Gift Cards</span>
+                </a>
+                <a href="market.php?category=gaming" class="p-4 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/5 rounded-xl hover:border-purple-500 transition-all text-center group">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-purple-500/10 text-purple-500 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform"><i class="fa-solid fa-gamepad text-xl"></i></div><span class="text-sm font-bold text-gray-700 dark:text-gray-300">Gaming</span>
+                </a>
+                <a href="market.php?category=software" class="p-4 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/5 rounded-xl hover:border-green-500 transition-all text-center group">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-green-500/10 text-green-500 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform"><i class="fa-brands fa-windows text-xl"></i></div><span class="text-sm font-bold text-gray-700 dark:text-gray-300">Software</span>
+                </a>
+                <a href="market.php?category=nfts" class="p-4 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/5 rounded-xl hover:border-pink-500 transition-all text-center group">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-pink-500/10 text-pink-500 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform"><i class="fa-solid fa-gem text-xl"></i></div><span class="text-sm font-bold text-gray-700 dark:text-gray-300">NFTs</span>
+                </a>
+                <a href="market.php?category=physical" class="p-4 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/5 rounded-xl hover:border-yellow-500 transition-all text-center group">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-yellow-500/10 text-yellow-500 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform"><i class="fa-solid fa-shirt text-xl"></i></div><span class="text-sm font-bold text-gray-700 dark:text-gray-300">Merch</span>
+                </a>
+                <a href="seller.php" class="p-4 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/5 rounded-xl hover:border-gray-500 transition-all text-center group">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-gray-500/10 text-gray-500 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform"><i class="fa-solid fa-store text-xl"></i></div><span class="text-sm font-bold text-gray-700 dark:text-gray-300">Sell Now</span>
+                </a>
             </div>
-        <?php else: ?>
+        </div>
+
+        <!-- Flash Deals -->
+        <div class="mb-12">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2"><i class="fa-solid fa-bolt text-yellow-500"></i> Flash Deals</h2>
+                <div class="flex gap-2 text-xs font-mono bg-red-500/10 text-red-500 px-3 py-1 rounded font-bold">Ends in: 04:22:19</div>
+            </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <?php foreach ($trending as $p): $img = json_decode($p['images'])[0] ?? 'assets/placeholder.png'; ?>
-                    <a href="product?slug=<?= $p['slug'] ?>" class="group relative bg-white dark:bg-[#151A23] rounded-xl border border-gray-200 dark:border-white/5 overflow-hidden hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300">
-                        <div class="aspect-square relative overflow-hidden bg-gray-100 dark:bg-black/20">
-                            <img src="<?= $img ?>" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
-                            <div class="absolute top-2 right-2 px-2 py-1 bg-white/90 dark:bg-black/60 backdrop-blur rounded text-[10px] font-bold text-gray-800 dark:text-white border border-black/5 dark:border-white/10 uppercase"><?= $p['type'] ?></div>
+                <?php foreach ($flash_deals as $p): $img = json_decode($p['images'])[0] ?? 'assets/placeholder.png'; ?>
+                    <a href="product.php?slug=<?= $p['slug'] ?>" class="group bg-white dark:bg-[#151A23] rounded-xl border border-gray-200 dark:border-white/5 overflow-hidden hover:-translate-y-1 transition-all shadow-md dark:shadow-none">
+                        <div class="aspect-square relative bg-gray-100 dark:bg-black/20"><img src="<?= $img ?>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute top-2 right-2 px-2 py-1 bg-red-500 text-white text-[10px] font-bold rounded shadow">-20%</div>
                         </div>
                         <div class="p-4">
-                            <h3 class="font-bold text-gray-900 dark:text-gray-200 truncate group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors"><?= $p['title'] ?></h3>
-                            <p class="text-xs text-gray-500 mb-3">by <?= $p['store_name'] ?></p>
+                            <h3 class="font-bold text-gray-900 dark:text-white truncate mb-1"><?= $p['title'] ?></h3>
                             <div class="flex items-center justify-between">
-                                <span class="text-sm font-bold text-gray-900 dark:text-white"><?= number_format($p['price_gashy'], 2) ?> GASHY</span>
+                                <div class="text-sm font-bold text-primary-500"><?= number_format($p['price_gashy']) ?> G</div><span class="text-xs text-gray-400 line-through"><?= number_format($p['price_gashy'] * 1.2) ?></span>
                             </div>
                         </div>
                     </a>
                 <?php endforeach; ?>
             </div>
-        <?php endif; ?>
+        </div>
+
+        <!-- 2 Column Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2">
+                <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">New Arrivals</h2>
+                <div class="space-y-4">
+                    <?php foreach ($new_arrivals as $p): $img = json_decode($p['images'])[0] ?? 'assets/placeholder.png'; ?>
+                        <a href="product.php?slug=<?= $p['slug'] ?>" class="flex items-center gap-4 p-4 bg-white dark:bg-[#151A23] rounded-xl border border-gray-200 dark:border-white/5 hover:border-blue-500 transition-all">
+                            <div class="w-20 h-20 rounded-lg bg-gray-100 dark:bg-white/5 overflow-hidden flex-shrink-0"><img src="<?= $img ?>" class="w-full h-full object-cover"></div>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-bold text-gray-900 dark:text-white truncate"><?= $p['title'] ?></h3>
+                                <div class="text-xs text-gray-500 uppercase mt-1"><?= $p['type'] ?></div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-bold text-primary-500"><?= number_format($p['price_gashy']) ?> G</div><button class="mt-2 text-xs bg-gray-100 dark:bg-white/10 px-3 py-1 rounded hover:bg-primary-500 hover:text-white transition-colors">Buy</button>
+                            </div>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <div class="lg:col-span-1">
+                <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Top Sellers</h2>
+                <div class="bg-white dark:bg-[#151A23] rounded-2xl border border-gray-200 dark:border-white/5 p-6 space-y-6">
+                    <?php foreach ($top_sellers as $i => $s): ?>
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center font-bold text-gray-500 text-sm"><?= ($i + 1) ?></div>
+                            <div class="flex-1">
+                                <h4 class="font-bold text-gray-900 dark:text-white text-sm"><?= $s['store_name'] ?></h4>
+                                <div class="text-xs text-yellow-500"><i class="fa-solid fa-star"></i> <?= $s['rating'] ?></div>
+                            </div>
+                            <div class="text-xs font-bold text-gray-400"><?= $s['total_sales'] ?> Sold</div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+                <div class="mt-8 p-6 rounded-2xl bg-gradient-to-br from-blue-900 to-dark-900 border border-blue-500/30 text-center relative overflow-hidden">
+                    <div class="absolute inset-0 bg-[url('assets/pattern.svg')] opacity-10"></div>
+                    <div class="relative z-10">
+                        <h3 class="font-bold text-white mb-2">Become a Seller</h3>
+                        <p class="text-xs text-gray-400 mb-4">Start your own crypto store today.</p>
+                        <a href="seller.php" class="px-6 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg shadow-lg transition-all">Apply Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </main>
+<style>
+    .animate-marquee {
+        animation: marquee 20s linear infinite
+    }
+
+    @keyframes marquee {
+        0% {
+            transform: translateX(0)
+        }
+
+        100% {
+            transform: translateX(-50%)
+        }
+    }
+</style>
 <?php require_once 'footer.php'; ?>
