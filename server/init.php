@@ -42,3 +42,20 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
 header("Strict-Transport-Security: max-age=31536000; includeSubDomains");
 ini_set('display_errors', '1');
 error_reporting(1);
+$m_mode = findQuery(" SELECT value FROM settings WHERE key_name='maintenance_mode' ");
+$is_maintenance = ($m_mode && $m_mode['value'] == '1');
+$current_uri = $_SERVER['REQUEST_URI'];
+$is_dashboard = strpos($current_uri, '/dashboard/') !== false;
+$is_maintenance_page = strpos($current_uri, 'maintenance.php') !== false;
+$is_admin_api = strpos($current_uri, '/api/admin/') !== false;
+if ($is_maintenance) {
+    if (!$is_dashboard && !$is_admin_api && !$is_maintenance_page) {
+        header("Location: /maintenance.php");
+        exit;
+    }
+} else {
+    if ($is_maintenance_page) {
+        header("Location: /");
+        exit;
+    }
+}
