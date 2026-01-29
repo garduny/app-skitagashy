@@ -26,7 +26,8 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="bg-white dark:bg-[#151A23] p-6 rounded-2xl border border-gray-200 dark:border-white/5 shadow-sm">
                     <div class="text-gray-500 text-xs font-bold uppercase mb-2">Total Earnings</div>
-                    <div class="text-3xl font-black text-green-500"><span id="stat-earnings">0</span> <span class="text-sm text-gray-400">G</span></div>
+                    <div class="text-3xl font-black text-green-500 mb-2"><span id="stat-earnings">0</span> <span class="text-sm text-gray-400">G</span></div>
+                    <button onclick="requestWithdraw()" class="w-full py-2 bg-green-600/10 hover:bg-green-600 text-green-500 hover:text-white rounded-lg text-xs font-bold transition-all">Request Payout</button>
                 </div>
                 <div class="bg-white dark:bg-[#151A23] p-6 rounded-2xl border border-gray-200 dark:border-white/5 shadow-sm">
                     <div class="text-gray-500 text-xs font-bold uppercase mb-2">Total Sales</div>
