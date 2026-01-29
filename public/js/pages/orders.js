@@ -71,17 +71,28 @@ App.fetchOrders = async () => {
     }
 };
 App.viewOrderDetails = async (oid) => {
-    notyf.success('Fetching secure data...');
+    notyf.success('Authenticating & Decrypting...');
     try {
         const res = await App.post('api/orders/detail.php', { id: oid });
-        if (res.status && res.gift_cards.length > 0) {
-            let codes = res.gift_cards.map(gc => `Product: ${gc.title}\nCode: ${gc.code_enc}\nPIN: ${gc.pin_enc || 'N/A'}`).join('\n\n');
-            alert("🔒 SECRET DATA REVEALED:\n\n" + codes);
+        if (res.status) {
+            if (res.gift_cards.length > 0) {
+                let message = `🔐 <b>SECURE CONTENT REVEALED</b><br><br>`;
+                res.gift_cards.forEach(item => {
+                    message += `📦 <b>${item.product}</b><br>`;
+                    message += `Code: <code class="bg-gray-200 dark:bg-black px-1 rounded select-all">${item.code}</code><br>`;
+                    if (item.pin) message += `Pin: <code>${item.pin}</code><br>`;
+                    message += `<hr class="my-2 border-white/10">`;
+                });
+                alert("YOUR CODES:\n\n" + res.gift_cards.map(i => `${i.product}\nCode: ${i.code}`).join('\n\n'));
+            } else {
+                notyf.error("No digital codes found for this order.");
+            }
         } else {
-            alert("No digital codes attached to this order.");
+            notyf.error(res.message);
         }
     } catch (e) {
-        notyf.error("Failed to fetch details");
+        console.error(e);
+        notyf.error("Decryption Failed");
     }
 };
 document.addEventListener('DOMContentLoaded', () => {

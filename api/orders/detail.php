@@ -5,22 +5,53 @@ if (file_exists('../../server/init.php')) {
     exit;
 }
 $token = request('token') ?? str_replace('Bearer ', '', $_SERVER['HTTP_AUTHORIZATION'] ?? '');
-$account_session = findQuery(" SELECT account_id FROM account_sessions WHERE token='$token' AND expires_at>NOW() ");
-if (!$account_session) {
+$session = findQuery(" SELECT account_id FROM account_sessions WHERE token='$token' AND expires_at>NOW() ");
+if (!$session) {
     encode(['status' => false, 'message' => 'Unauthorized']);
 }
-$uid = $account_session['account_id'];
-$oid = (int)request('id', 'get');
+$uid = $session['account_id'];
+$oid = (int)request('id');
 if (!$oid) {
     encode(['status' => false, 'message' => 'Order ID required']);
 }
-$order = findQuery(" SELECT * FROM orders WHERE id=$oid AND account_id=$uid ");
+$order = findQuery(" SELECT id, status, total_gashy FROM orders WHERE id=$oid AND account_id=$uid ");
 if (!$order) {
     encode(['status' => false, 'message' => 'Order not found']);
 }
-$items = getQuery(" SELECT oi.*,p.title,p.slug,p.images,p.type FROM order_items oi JOIN products p ON oi.product_id=p.id WHERE oi.order_id=$oid ");
-$gift_cards = [];
-if ($order['status'] === 'completed' || $order['status'] === 'pending') {
-    $gift_cards = getQuery(" SELECT gc.code_enc,gc.pin_enc,p.title FROM gift_cards gc JOIN products p ON gc.product_id=p.id WHERE gc.sold_to_order_id=$oid ");
+
+if ($order['status'] !== 'completed') {
+    encode(['status' => false, 'message' => 'Order not paid yet. Content is locked.']);
 }
-encode(['status' => true, 'data' => $order, 'items' => $items, 'gift_cards' => $gift_cards]);
+$cards = getQuery(" 
+    SELECT p.title, gc.code_enc, gc.pin_enc 
+    FROM gift_cards gc
+    JOIN products p ON gc.product_id = p.id
+    WHERE gc.sold_to_order_id = $oid 
+");
+define('ENC_KEY', 'GashySecretKey2026');
+define('ENC_ALGO', 'AES-256-CBC');
+function decryptCode($str)
+{
+    if (!$str) return null;
+    try {
+        list($enc, $iv) = explode('::', base64_decode($str), 2);
+        return openssl_decrypt($enc, ENC_ALGO, ENC_KEY, 0, $iv);
+    } catch (Exception $e) {
+        return 'Error Decrypting';
+    }
+}
+$delivered_items = [];
+foreach ($cards as $c) {
+    $delivered_items[] = [
+        'product' => $c['title'],
+        'code'    => decryptCode($c['code_enc']),
+        'pin'     => decryptCode($c['pin_enc'])
+    ];
+}
+execute(" INSERT INTO activity_log (account_id, action, details, ip_address) VALUES ($uid, 'view_secret', 'Viewed Order #$oid', '{$_SERVER['REMOTE_ADDR']}') ");
+
+encode([
+    'status' => true,
+    'order_id' => $oid,
+    'gift_cards' => $delivered_items
+]);
