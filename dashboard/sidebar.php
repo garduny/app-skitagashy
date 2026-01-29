@@ -13,6 +13,7 @@ function active($n)
         <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 mt-6 px-3">Management</div>
         <a href="accounts" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors <?= active('accounts') ?>"><i class="fa-solid fa-users w-5 text-center"></i> Accounts</a>
         <a href="sellers" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors <?= active('sellers') ?>"><i class="fa-solid fa-store w-5 text-center"></i> Sellers</a>
+        <a href="payouts.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors <?= active('payouts') ?>"><i class="fa-solid fa-money-bill-transfer w-5 text-center"></i> Payouts</a>
         <a href="categories" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors <?= active('categories') ?>"><i class="fa-solid fa-tags w-5 text-center"></i> Categories</a>
         <a href="products" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors <?= active('products') ?>"><i class="fa-solid fa-box w-5 text-center"></i> Products</a>
         <a href="orders" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors <?= active('orders') ?>"><i class="fa-solid fa-receipt w-5 text-center"></i> Orders</a>

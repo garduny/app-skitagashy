@@ -112,3 +112,19 @@ async function deleteProduct(id) {
         notyf.error('Delete failed');
     }
 }
+async function requestWithdraw() {
+    const amount = prompt("Enter amount to withdraw:");
+    if (!amount || amount <= 0) return;
+    notyf.success('Processing request...');
+    try {
+        const res = await App.post('api/seller/withdraw.php', { amount: amount });
+        if (res.status) {
+            notyf.success(res.message);
+            loadHub();
+        } else {
+            notyf.error(res.message);
+        }
+    } catch (e) {
+        notyf.error('Request failed');
+    }
+}
