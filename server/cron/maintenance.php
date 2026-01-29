@@ -2,6 +2,15 @@
 if (php_sapi_name() !== 'cli') {
     if (!defined('gashy_exec')) define('gashy_exec', true);
 }
+if (!isset($_SERVER['REQUEST_URI'])) {
+    $_SERVER['REQUEST_URI'] = '/cron/maintenance';
+}
+if (!isset($_SERVER['HTTP_USER_AGENT'])) {
+    $_SERVER['HTTP_USER_AGENT'] = 'SystemCron';
+}
+if (!isset($_SERVER['REMOTE_ADDR'])) {
+    $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+}
 require_once __DIR__ . '/../init.php';
 echo "[" . date('Y-m-d H:i:s') . "] System Maintenance Started...\n";
 $expired = getQuery(" SELECT id FROM gift_cards WHERE is_sold=0 AND expiry_date IS NOT NULL AND expiry_date < CURDATE() ");
@@ -14,6 +23,8 @@ if (!empty($expired)) {
         execute(" DELETE FROM gift_cards WHERE id=$cid ");
         echo " -> Removed Card #$cid (Expired)\n";
     }
+} else {
+    echo "No expired gift cards found.\n";
 }
 $deleted_sessions = execute(" DELETE FROM account_sessions WHERE expires_at < NOW() ");
 $deleted_admin = execute(" DELETE FROM user_sessions WHERE expires_at < NOW() ");
