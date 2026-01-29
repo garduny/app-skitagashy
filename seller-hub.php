@@ -43,24 +43,41 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                         </svg></div>
                 </div>
             </div>
-            <div class="bg-white dark:bg-[#151A23] rounded-2xl border border-gray-200 dark:border-white/5 shadow-sm overflow-hidden">
-                <div class="p-6 border-b border-gray-200 dark:border-white/5">
-                    <h3 class="font-bold text-gray-900 dark:text-white">Your Inventory</h3>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 bg-white dark:bg-[#151A23] rounded-2xl border border-gray-200 dark:border-white/5 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-gray-200 dark:border-white/5">
+                        <h3 class="font-bold text-gray-900 dark:text-white">Your Inventory</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead>
+                                <tr class="text-gray-500 border-b border-gray-200 dark:border-white/5">
+                                    <th class="px-6 py-4">Product</th>
+                                    <th class="px-6 py-4">Price</th>
+                                    <th class="px-6 py-4">Stock</th>
+                                    <th class="px-6 py-4">Status</th>
+                                    <th class="px-6 py-4 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="product-list" class="divide-y divide-gray-100 dark:divide-white/5"></tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm">
-                        <thead>
-                            <tr class="text-gray-500 border-b border-gray-200 dark:border-white/5">
-                                <th class="px-6 py-4">Product</th>
-                                <th class="px-6 py-4">Price</th>
-                                <th class="px-6 py-4">Stock</th>
-                                <th class="px-6 py-4">Category</th>
-                                <th class="px-6 py-4">Status</th>
-                                <th class="px-6 py-4 text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="product-list" class="divide-y divide-gray-100 dark:divide-white/5"></tbody>
-                    </table>
+                <div class="lg:col-span-1 bg-white dark:bg-[#151A23] rounded-2xl border border-gray-200 dark:border-white/5 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-gray-200 dark:border-white/5">
+                        <h3 class="font-bold text-gray-900 dark:text-white">Recent Sales</h3>
+                    </div>
+                    <div class="overflow-y-auto max-h-[400px] custom-scrollbar">
+                        <table class="w-full text-left text-sm">
+                            <thead>
+                                <tr class="text-gray-500 border-b border-gray-200 dark:border-white/5">
+                                    <th class="px-4 py-3">Item</th>
+                                    <th class="px-4 py-3 text-right">Earned</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sales-list" class="divide-y divide-gray-100 dark:divide-white/5"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

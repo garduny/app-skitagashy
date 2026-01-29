@@ -21,4 +21,5 @@ $stats = [
     'earnings' => findQuery(" SELECT SUM(price_gashy) as t FROM products p JOIN order_items oi ON p.id=oi.product_id JOIN orders o ON oi.order_id=o.id WHERE p.seller_id=$uid AND o.status='completed' ")['t'] ?? 0
 ];
 $products = getQuery(" SELECT p.id,p.title,p.price_gashy,p.stock,p.type,p.status,p.images,c.name as cat_name FROM products p LEFT JOIN categories c ON p.category_id=c.id WHERE p.seller_id=$uid ORDER BY p.id DESC ");
-encode(['status' => true, 'seller' => $seller, 'stats' => $stats, 'products' => $products]);
+$sales = getQuery(" SELECT oi.price_at_purchase,oi.quantity,o.created_at,p.title,a.accountname FROM order_items oi JOIN orders o ON oi.order_id=o.id JOIN products p ON oi.product_id=p.id LEFT JOIN accounts a ON o.account_id=a.id WHERE p.seller_id=$uid AND o.status='completed' ORDER BY o.id DESC LIMIT 20 ");
+encode(['status' => true, 'seller' => $seller, 'stats' => $stats, 'products' => $products, 'sales' => $sales]);
