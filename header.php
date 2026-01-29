@@ -50,7 +50,7 @@
         }
 
         .neon-text {
-            text-shadow: 0 0 10px rgba(59, 130, 246, 0.5)
+            text-shadow: 0 0 10px #00ffaa
         }
 
         ::-webkit-scrollbar {
@@ -67,7 +67,7 @@
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #3B82F6
+            background: #00d48f
         }
 
         html.dark body {
@@ -115,9 +115,7 @@
                 </button>
                 <a href="app.php" class="flex items-center gap-2 group">
                     <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-primary-600 to-accent-500 flex items-center justify-center shadow-lg shadow-primary-500/20 group-hover:shadow-primary-500/40 transition-all duration-300">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
+                        <img src="./public/img/logo.png" alt="logo">
                     </div>
                     <span class="text-xl font-black tracking-tight group-hover:neon-text transition-all text-white dark:text-white text-gray-900">GASHY<span class="text-primary-500">BAZAAR</span></span>
                 </a>
