@@ -6,12 +6,12 @@ function formatSize($bytes)
     for ($i = 0; $bytes > 1024; $i++) $bytes /= 1024;
     return number_format($bytes, 2) . ' ' . $units[$i];
 }
-$db_name = findQuery("SELECT DATABASE() as db")['db'];
-$db_size = findQuery("SELECT SUM(data_length + index_length) as size FROM information_schema.TABLES WHERE table_schema='$db_name'")['size'];
+$db_name = findQuery(" SELECT DATABASE() as db")['db'];
+$db_size = findQuery(" SELECT SUM(data_length + index_length) as size FROM information_schema.TABLES WHERE table_schema='$db_name'")['size'];
 $server_info = [
     'php_version' => phpversion(),
     'server_software' => $_SERVER['SERVER_SOFTWARE'],
-    'db_version' => findQuery("SELECT VERSION() as v")['v'],
+    'db_version' => findQuery(" SELECT VERSION() as v")['v'],
     'disk_free' => disk_free_space("."),
     'disk_total' => disk_total_space("."),
     'memory_limit' => ini_get('memory_limit'),
@@ -63,7 +63,7 @@ require_once 'sidebar.php';
                 </thead>
                 <tbody class="divide-y divide-gray-100 dark:divide-white/5">
                     <?php
-                    $tables = getQuery("SELECT table_name, table_rows, data_length, engine FROM information_schema.TABLES WHERE table_schema='$db_name'");
+                    $tables = getQuery(" SELECT table_name, table_rows, data_length, engine FROM information_schema.TABLES WHERE table_schema='$db_name'");
                     foreach ($tables as $t):
                     ?>
                         <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">

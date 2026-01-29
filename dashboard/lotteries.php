@@ -1,13 +1,23 @@
 <?php
 require_once 'init.php';
 if (post('new_round')) {
-    $last = findQuery(" SELECT MAX(round_number) as r FROM lottery_rounds");
+    $last = findQuery("SELECT MAX(round_number) as r FROM lottery_rounds");
     $next = ($last['r'] ?? 0) + 1;
     $draw = request('draw_time', 'post');
     execute(" INSERT INTO lottery_rounds (round_number,prize_pool,draw_time,status) VALUES ($next,0,'$draw','open') ");
     redirect('lotteries.php?msg=created');
 }
-$rounds = getQuery(" SELECT * FROM lottery_rounds ORDER BY id DESC ");
+$status = request('status', 'get');
+$page = max(1, (int)(request('page', 'get') ?: 1));
+$limit = 10;
+$offset = ($page - 1) * $limit;
+$where = "WHERE 1=1";
+if ($status) {
+    $where .= " AND status='$status' ";
+}
+$rounds = getQuery(" SELECT * FROM lottery_rounds $where ORDER BY id DESC LIMIT $limit OFFSET $offset ");
+$total = countQuery(" SELECT COUNT(*) FROM lottery_rounds $where ");
+$pages = ceil($total / $limit);
 require_once 'header.php';
 require_once 'sidebar.php';
 ?>
@@ -15,11 +25,18 @@ require_once 'sidebar.php';
     <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
         <div>
             <h1 class="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Lottery Rounds</h1>
-            <p class="text-sm text-gray-500">Manage prize pools and draws.</p>
+            <p class="text-sm text-gray-500">Manage <?= $total ?> rounds.</p>
         </div>
         <button onclick="openModal('addModal')" class="px-6 py-2.5 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-xl shadow-lg shadow-primary-500/20 transition-all flex items-center gap-2"><i class="fa-solid fa-plus"></i> New Round</button>
     </div>
     <div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-200 dark:border-white/5 shadow-sm overflow-hidden mb-6">
+        <div class="p-4 border-b border-gray-200 dark:border-white/5 flex gap-4">
+            <div class="flex bg-gray-50 dark:bg-dark-900 p-1 rounded-xl border border-gray-200 dark:border-white/10">
+                <a href="lotteries.php" class="px-4 py-2 rounded-lg text-sm font-bold <?= !$status ? 'bg-white dark:bg-white/10 shadow-sm text-gray-900 dark:text-white' : 'text-gray-500' ?>">All</a>
+                <a href="?status=open" class="px-4 py-2 rounded-lg text-sm font-bold <?= $status == 'open' ? 'bg-white dark:bg-white/10 shadow-sm text-green-500' : 'text-gray-500' ?>">Open</a>
+                <a href="?status=closed" class="px-4 py-2 rounded-lg text-sm font-bold <?= $status == 'closed' ? 'bg-white dark:bg-white/10 shadow-sm text-gray-900 dark:text-white' : 'text-gray-500' ?>">Closed</a>
+            </div>
+        </div>
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
@@ -44,6 +61,8 @@ require_once 'sidebar.php';
                 </tbody>
             </table>
         </div>
+        <div class="p-4 border-t border-gray-200 dark:border-white/5 flex justify-center gap-2"><?php if ($pages > 1): for ($i = 1; $i <= $pages; $i++): ?><a href="?page=<?= $i ?>&status=<?= $status ?>" class="px-3 py-1 rounded-lg text-sm font-bold <?= $i == $page ? 'bg-primary-500 text-white' : 'bg-gray-100 dark:bg-white/5 text-gray-500 hover:bg-gray-200 dark:hover:bg-white/10' ?>"><?= $i ?></a><?php endfor;
+                                                                                                                                                                                                                                                                                                                                                                                                        endif; ?></div>
     </div>
 </main>
 <div id="addModal" class="fixed inset-0 z-[60] hidden">
