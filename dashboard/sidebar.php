@@ -21,10 +21,12 @@ function active($n)
         <a href="lotteries" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors <?= active('lotteries') ?>"><i class="fa-solid fa-ticket w-5 text-center"></i> Lotteries</a>
         <a href="mystery-boxes" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors <?= active('mystery-boxes') ?>"><i class="fa-solid fa-cube w-5 text-center"></i> Mystery Boxes</a>
         <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 mt-6 px-3">System</div>
-        <a href="users" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors <?= active('users') ?>"><i class="fa-solid fa-user-shield w-5 text-center"></i> Admins</a>
-        <a href="roles" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors <?= active('roles') ?>"><i class="fa-solid fa-user-tag w-5 text-center"></i> Roles</a>
-        <a href="permissions" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors <?= active('permissions') ?>"><i class="fa-solid fa-key w-5 text-center"></i> Permissions</a>
-        <a href="setting" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors <?= active('setting') ?>"><i class="fa-solid fa-gear w-5 text-center"></i> Settings</a>
+        <a href="users.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors <?= active('users') ?>"><i class="fa-solid fa-user-shield w-5 text-center"></i> Admins</a>
+        <a href="roles.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors <?= active('roles') ?>"><i class="fa-solid fa-user-tag w-5 text-center"></i> Roles</a>
+        <a href="permissions.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors <?= active('permissions') ?>"><i class="fa-solid fa-key w-5 text-center"></i> Permissions</a>
+        <a href="logs.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors <?= active('logs') ?>"><i class="fa-solid fa-list-ul w-5 text-center"></i> Activity Logs</a>
+        <a href="system.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors <?= active('system') ?>"><i class="fa-solid fa-server w-5 text-center"></i> System Info</a>
+        <a href="setting.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors <?= active('setting') ?>"><i class="fa-solid fa-gear w-5 text-center"></i> Settings</a>
         <div class="mt-8 pt-4 border-t border-gray-200 dark:border-white/5">
             <a href="?logout=1" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors"><i class="fa-solid fa-right-from-bracket w-5 text-center"></i> Logout</a>
         </div>
