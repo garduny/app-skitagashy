@@ -2263,12 +2263,12 @@ function renderPickers()
 
 
 
-function updateQuestProgress($userId, $actionType, $amount)
+function updateQuestProgress($accountId, $actionType, $amount)
 {
     $quest = findQuery(" SELECT id, target_count FROM quests WHERE action_type='$actionType' AND is_active=1 LIMIT 1 ");
     if ($quest) {
         $qid = $quest['id'];
-        execute(" INSERT INTO user_quests (user_id, quest_id, progress) VALUES ($userId, $qid, $amount) 
+        execute(" INSERT INTO account_quests (account_id, quest_id, progress) VALUES ($accountId, $qid, $amount) 
                   ON DUPLICATE KEY UPDATE progress = progress + $amount ");
     }
 }
