@@ -12,18 +12,12 @@ if (!$account_session) {
 $uid = $account_session['account_id'];
 $name = request('store_name');
 $slug = request('store_slug');
-
 if (!$name || !$slug) {
     encode(['status' => false, 'message' => 'Invalid Data']);
 }
-
-// Check Slug Uniqueness
 $check = findQuery(" SELECT account_id FROM sellers WHERE store_slug='$slug' ");
 if ($check) {
     encode(['status' => false, 'message' => 'Store URL already taken']);
 }
-
 execute(" INSERT INTO sellers (account_id, store_name, store_slug, is_approved) VALUES ($uid, '$name', '$slug', 0) ");
-// Note: is_approved = 0 means pending. 1 means active.
-
 encode(['status' => true, 'message' => 'Success']);

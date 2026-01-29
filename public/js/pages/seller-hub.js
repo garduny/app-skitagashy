@@ -16,8 +16,7 @@ async function loadHub() {
             myProducts = res.products;
             renderTable();
         } else {
-            alert(res.message);
-            location.href = 'seller.php';
+            window.location.href = 'seller.php';
         }
     } catch (e) {
         console.error(e);

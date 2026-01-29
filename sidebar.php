@@ -1,7 +1,6 @@
 <?php
 $current_page = basename($_SERVER['PHP_SELF'], '.php');
 if ($current_page === 'index') $current_page = 'app';
-
 function navClass($target)
 {
     global $current_page;
@@ -12,7 +11,6 @@ function navClass($target)
         return $base . "text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5";
     }
 }
-
 function iconClass($target)
 {
     global $current_page;
@@ -24,10 +22,7 @@ function iconClass($target)
     }
 }
 ?>
-
 <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white dark:bg-dark-900 border-r border-gray-200 dark:border-white/5 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 pt-0 lg:pt-16">
-
-    <!-- Mobile Header (Close Button) -->
     <div class="h-16 flex items-center justify-between px-4 border-b border-gray-200 dark:border-white/5 lg:hidden">
         <span class="text-lg font-black tracking-tight text-gray-900 dark:text-white">GASHY<span class="text-green-600">BAZAAR</span></span>
         <button onclick="document.getElementById('sidebar').classList.add('-translate-x-full');document.getElementById('sidebar-overlay').classList.add('hidden')" class="p-2 text-gray-500 hover:text-red-500">
@@ -36,9 +31,7 @@ function iconClass($target)
             </svg>
         </button>
     </div>
-
     <div class="h-[calc(100%-4rem)] lg:h-full flex flex-col overflow-y-auto custom-scrollbar">
-        <!-- Price Widget -->
         <div class="p-4 mb-2">
             <div class="p-4 rounded-xl bg-gray-100 dark:bg-gradient-to-br dark:from-dark-800 dark:to-dark-700 border border-gray-200 dark:border-white/5 shadow-inner">
                 <p class="text-xs text-gray-500 font-medium mb-1">Current Token Price</p>
@@ -53,10 +46,8 @@ function iconClass($target)
                 </div>
             </div>
         </div>
-
         <nav class="flex-1 px-3 space-y-1">
             <p class="px-3 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mt-4 mb-2">Discover</p>
-
             <a href="app.php" class="<?= navClass('app') ?>">
                 <span class="<?= iconClass('app') ?>">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -65,7 +56,6 @@ function iconClass($target)
                 </span>
                 Home
             </a>
-
             <a href="market.php" class="<?= navClass('market') ?>">
                 <span class="<?= iconClass('market') ?>">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -74,7 +64,6 @@ function iconClass($target)
                 </span>
                 Marketplace
             </a>
-
             <a href="auctions.php" class="<?= navClass('auctions') ?>">
                 <span class="<?= iconClass('auctions') ?>">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -86,7 +75,6 @@ function iconClass($target)
                     <span class="ml-auto px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-100 dark:bg-red-500/20 text-red-500 dark:text-red-400 animate-pulse">LIVE</span>
                 <?php endif; ?>
             </a>
-
             <a href="mystery-boxes.php" class="<?= navClass('mystery-boxes') ?>">
                 <span class="<?= iconClass('mystery-boxes') ?>">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -95,7 +83,6 @@ function iconClass($target)
                 </span>
                 Mystery Boxes
             </a>
-
             <a href="lottery.php" class="<?= navClass('lottery') ?>">
                 <span class="<?= iconClass('lottery') ?>">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -104,9 +91,7 @@ function iconClass($target)
                 </span>
                 Lottery
             </a>
-
             <p class="px-3 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mt-6 mb-2">Account Zone</p>
-
             <a href="profile.php" class="auth-link hidden <?= navClass('profile') ?>">
                 <span class="<?= iconClass('profile') ?>">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -115,7 +100,6 @@ function iconClass($target)
                 </span>
                 My Profile
             </a>
-
             <a href="orders.php" class="auth-link hidden <?= navClass('orders') ?>">
                 <span class="<?= iconClass('orders') ?>">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -124,7 +108,6 @@ function iconClass($target)
                 </span>
                 My Orders
             </a>
-
             <a href="seller.php" class="auth-link hidden <?= navClass('seller') ?>">
                 <span class="<?= iconClass('seller') ?>">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -134,8 +117,6 @@ function iconClass($target)
                 Seller Hub
             </a>
         </nav>
-
-        <!-- Quest -->
         <div class="mt-auto p-4">
             <div class="p-3 rounded-lg bg-gradient-to-r from-primary-600/10 to-accent-600/10 dark:from-primary-900/50 dark:to-accent-900/50 border border-primary-100 dark:border-white/5 text-center">
                 <p class="text-[10px] text-gray-500 dark:text-gray-400 mb-1">Weekly Quest</p>

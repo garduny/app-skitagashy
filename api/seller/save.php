@@ -5,11 +5,11 @@ if (file_exists('../../server/init.php')) {
     exit;
 }
 $token = request('token') ?? str_replace('Bearer ', '', $_SERVER['HTTP_AUTHORIZATION'] ?? '');
-$session = findQuery(" SELECT user_id FROM account_sessions WHERE token='$token' AND expires_at>NOW() ");
+$session = findQuery(" SELECT account_id FROM account_sessions WHERE token='$token' AND expires_at>NOW() ");
 if (!$session) {
     encode(['status' => false, 'message' => 'Unauthorized']);
 }
-$uid = $session['user_id'];
+$uid = $session['account_id'];
 $seller = findQuery(" SELECT * FROM sellers WHERE account_id=$uid AND is_approved=1 ");
 if (!$seller) {
     encode(['status' => false, 'message' => 'Seller permission denied']);
