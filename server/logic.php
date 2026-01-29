@@ -2272,3 +2272,10 @@ function updateQuestProgress($accountId, $actionType, $amount)
                   ON DUPLICATE KEY UPDATE progress = progress + $amount ");
     }
 }
+
+function logActivity($type, $userId, $action, $details = '')
+{
+    $ip = $_SERVER['REMOTE_ADDR'];
+    $details = secure($details);
+    execute(" INSERT INTO activity_log (user_type, user_id, action, details, ip_address, created_at) VALUES ('$type', $userId, '$action', '$details', '$ip', NOW()) ");
+}
