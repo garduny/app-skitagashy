@@ -48,9 +48,7 @@ foreach ($cards as $c) {
         'pin'     => decryptCode($c['pin_enc'])
     ];
 }
-execute(" INSERT INTO activity_log (user_id,user_type, action, details, ip_address) 
-VALUES ($uid,'account', 'view_secret', 'Viewed Order #$oid', '{$_SERVER['REMOTE_ADDR']}') ");
-
+logActivity('account', $uid, 'view_secret', 'Viewed Order #' . $oid);
 encode([
     'status' => true,
     'order_id' => $oid,

@@ -10,7 +10,7 @@ if (post('update_status')) {
     execute(" UPDATE orders SET status='$st' WHERE id=$id ");
     if ($note) {
         $safe_note = secure($note);
-        execute(" INSERT INTO activity_log (user_type,user_id,action,details,ip_address,created_at) VALUES ('admin'," . user()['id'] . ",'order_update','Changed Order #$id to $st: $safe_note','{$_SERVER['REMOTE_ADDR']}',NOW()) ");
+        logActivity('admin', user()['id'], 'order_update', "Changed Order #$id to $st: $safe_note");
     }
     if ($st === 'delivered' && $o['email']) {
         $subject = "Order #$id Delivered";
