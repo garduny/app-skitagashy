@@ -8,10 +8,11 @@ if (post('submit_otp')) {
         $token = bin2hex(random_bytes(32));
         $ip = $_SERVER['REMOTE_ADDR'];
         $ua = substr($_SERVER['HTTP_USER_AGENT'] ?? 'Unknown', 0, 255);
-        $exp = date('Y-m-d H:i:s', strtotime('+24 hours'));
-        execute(" INSERT INTO user_sessions (user_id, token, ip_address, user_agent, expires_at) VALUES ({$u['id']}, '$token', '$ip', '$ua', '$exp') ");
+        $exp = date('Y-m-d H:i:s', strtotime('+30 days'));
+        execute(" INSERT INTO user_sessions (user_id,token,ip_address,user_agent,expires_at) VALUES ({$u['id']},'$token','$ip','$ua','$exp') ");
         $_SESSION['user_id'] = $u['id'];
         $_SESSION['token'] = $token;
+        setcookie('auth_token', $token, time() + (86400 * 30), "/", "", true, true);
         execute(" UPDATE users SET otp_code=NULL, otp_expires=NULL, updated_at=NOW() WHERE id={$u['id']} ");
         header("Location: app.php");
         exit;
@@ -22,31 +23,21 @@ if (post('submit_otp')) {
 } elseif (post('submit_login')) {
     $email = request('email', 'post');
     $pass = $_POST['password'] ?? '';
-    $u = findQuery(" SELECT id, is_active, password FROM users WHERE email='$email' ");
+    $u = findQuery(" SELECT id,is_active,password FROM users WHERE email='$email' ");
     if (!empty($u) && password_verify($pass, $u['password'])) {
         if ($u['is_active'] == 1) {
             $otp = rand(100000, 999999);
             $exp = date('Y-m-d H:i:s', strtotime('+60 minutes'));
             execute(" UPDATE users SET otp_code='$otp', otp_expires='$exp' WHERE id={$u['id']} ");
             $subject = "Your Admin Login Code";
-            $body = "
-                <div style='font-family: Arial, sans-serif; padding: 20px; color: #333;'>
-                    <h2 style='color: #00d48f;'>Gashy Bazaar Admin Access</h2>
-                    <p>Use the following One-Time Password (OTP) to complete your login.</p>
-                    <div style='background: #f4f4f4; padding: 15px; font-size: 24px; letter-spacing: 5px; font-weight: bold; text-align: center; border-radius: 5px; margin: 20px 0;'>
-                        $otp
-                    </div>
-                    <p>This code expires in 5 minutes.</p>
-                    <p style='font-size: 12px; color: #999;'>If you did not request this code, please secure your account immediately.</p>
-                </div>
-            ";
+            $body = "<div style='padding:20px;color:#333'><h2 style='color:#00d48f'>Admin Access</h2><p>OTP Code:</p><h1 style='font-size:30px'>$otp</h1></div>";
             if (function_exists('mailer')) {
                 mailer($subject, $body, "Gashy Security", $email);
             }
             $demo_otp = $otp;
             $step = 2;
         } else {
-            $error = "Account is inactive.";
+            $error = "Account inactive.";
         }
     } else {
         $error = "Invalid credentials.";
@@ -60,7 +51,7 @@ if (post('submit_otp')) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Admin Login | Gashy Bazaar</title>
-    <link rel="shortcut icon" href="public/img/logo.png" type="image/x-icon">
+    <link rel="shortcut icon" href="../public/img/logo.png" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -99,38 +90,18 @@ if (post('submit_otp')) {
             <h1 class="text-3xl font-black tracking-tighter mb-2">GASHY<span class="text-primary-500">ADMIN</span></h1>
             <p class="text-sm text-gray-500 dark:text-gray-400">Secure Access Portal</p>
         </div>
-        <?php if (isset($error)): ?>
-            <div class="p-4 bg-red-100 dark:bg-red-500/20 border border-red-200 dark:border-red-500/30 text-red-600 dark:text-red-400 text-sm rounded-lg font-medium text-center">
-                <?= $error ?>
-            </div>
-        <?php endif; ?>
+        <?php if (isset($error)): ?><div class="p-4 bg-red-100 dark:bg-red-500/20 border border-red-200 dark:border-red-500/30 text-red-600 dark:text-red-400 text-sm rounded-lg font-medium text-center"><?= $error ?></div><?php endif; ?>
+        <?php if (isset($demo_otp)): ?><div class="p-4 bg-blue-100 dark:bg-blue-500/20 border border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-400 text-sm rounded-lg font-medium text-center">DEMO CODE: <?= $demo_otp ?></div><?php endif; ?>
         <?php if (isset($step) && $step == 2): ?>
-            <form method="POST" action="" class="space-y-5">
-                <input type="hidden" name="email" value="<?= $email ?>">
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Enter 6-Digit Code</label>
-                    <input type="text" name="otp_code" required class="w-full px-4 py-3 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl focus:border-primary-500 outline-none text-gray-900 dark:text-white text-center font-mono tracking-[0.5em] text-xl" autofocus>
-                </div>
-                <button type="submit" name="submit_otp" value="1" class="w-full py-3.5 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-primary-500/25 transform hover:-translate-y-0.5">
-                    Verify & Login
-                </button>
+            <form method="POST" action="" class="space-y-5"><input type="hidden" name="email" value="<?= $email ?>">
+                <div><label class="block text-xs font-bold text-gray-500 uppercase mb-2">Enter 6-Digit Code</label><input type="text" name="otp_code" required class="w-full px-4 py-3 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl focus:border-primary-500 outline-none text-gray-900 dark:text-white text-center font-mono tracking-[0.5em] text-xl" autofocus></div><button type="submit" name="submit_otp" value="1" class="w-full py-3.5 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-primary-500/25 transform hover:-translate-y-0.5">Verify & Login</button>
             </form>
         <?php else: ?>
             <form method="POST" action="" class="space-y-5">
+                <div><label class="block text-xs font-bold text-gray-500 uppercase mb-2">Email Address</label><input type="email" name="email" required class="w-full px-4 py-3 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl focus:border-primary-500 outline-none text-gray-900 dark:text-white transition-all"></div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Email Address</label>
-                    <input type="email" name="email" required class="w-full px-4 py-3 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl focus:border-primary-500 outline-none text-gray-900 dark:text-white transition-all">
-                </div>
-                <div>
-                    <div class="flex justify-between items-center mb-2">
-                        <label class="block text-xs font-bold text-gray-500 uppercase">Password</label>
-                        <a href="forgetpassword.php" class="text-xs text-primary-500 hover:underline">Forgot?</a>
-                    </div>
-                    <input type="password" name="password" required class="w-full px-4 py-3 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl focus:border-primary-500 outline-none text-gray-900 dark:text-white transition-all">
-                </div>
-                <button type="submit" name="submit_login" value="1" class="w-full py-3.5 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-xl shadow-lg shadow-primary-500/25 transition-all transform hover:-translate-y-0.5">
-                    Continue
-                </button>
+                    <div class="flex justify-between items-center mb-2"><label class="block text-xs font-bold text-gray-500 uppercase">Password</label><a href="forgetpassword.php" class="text-xs text-primary-500 hover:underline">Forgot?</a></div><input type="password" name="password" required class="w-full px-4 py-3 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl focus:border-primary-500 outline-none text-gray-900 dark:text-white transition-all">
+                </div><button type="submit" name="submit_login" value="1" class="w-full py-3.5 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-xl shadow-lg shadow-primary-500/25 transition-all transform hover:-translate-y-0.5">Continue</button>
             </form>
         <?php endif; ?>
         <div class="text-center">
