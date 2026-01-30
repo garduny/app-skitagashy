@@ -91,7 +91,6 @@ if (post('submit_otp')) {
             <p class="text-sm text-gray-500 dark:text-gray-400">Secure Access Portal</p>
         </div>
         <?php if (isset($error)): ?><div class="p-4 bg-red-100 dark:bg-red-500/20 border border-red-200 dark:border-red-500/30 text-red-600 dark:text-red-400 text-sm rounded-lg font-medium text-center"><?= $error ?></div><?php endif; ?>
-        <?php if (isset($demo_otp)): ?><div class="p-4 bg-blue-100 dark:bg-blue-500/20 border border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-400 text-sm rounded-lg font-medium text-center">DEMO CODE: <?= $demo_otp ?></div><?php endif; ?>
         <?php if (isset($step) && $step == 2): ?>
             <form method="POST" action="" class="space-y-5"><input type="hidden" name="email" value="<?= $email ?>">
                 <div><label class="block text-xs font-bold text-gray-500 uppercase mb-2">Enter 6-Digit Code</label><input type="text" name="otp_code" required class="w-full px-4 py-3 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl focus:border-primary-500 outline-none text-gray-900 dark:text-white text-center font-mono tracking-[0.5em] text-xl" autofocus></div><button type="submit" name="submit_otp" value="1" class="w-full py-3.5 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-primary-500/25 transform hover:-translate-y-0.5">Verify & Login</button>
