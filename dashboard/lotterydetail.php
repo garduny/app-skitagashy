@@ -1,22 +1,22 @@
 <?php
 require_once 'init.php';
-$id = request('id', 'get');
-$r = findQuery(" SELECT * FROM lottery_rounds WHERE id=$id");
+$id = (int)request('id', 'get');
+$r = findQuery(" SELECT * FROM lottery_rounds WHERE id=$id ");
 if (!$r) redirect('lotteries.php');
 if (post('draw_winner')) {
-    $entries = getQuery(" SELECT account_id,ticket_count FROM lottery_entries WHERE round_id=$id");
+    $entries = getQuery(" SELECT account_id,ticket_count FROM lottery_entries WHERE round_id=$id ");
     $pool = [];
     foreach ($entries as $e) {
         for ($i = 0; $i < $e['ticket_count']; $i++) $pool[] = $e['account_id'];
     }
     if (empty($pool)) {
-        execute("UPDATE lottery_rounds SET status='closed' WHERE id=$id");
+        execute(" UPDATE lottery_rounds SET status='closed' WHERE id=$id ");
     } else {
         $winner_id = $pool[array_rand($pool)];
-        $win_json = json_encode(['account_id' => $winner_id, 'amount' => $r['prize_pool']]);
-        execute("UPDATE lottery_rounds SET status='closed',winning_numbers='$win_json' WHERE id=$id");
-        // Create transaction for winner
-        execute("INSERT INTO transactions (account_id,type,amount,reference_id,status) VALUES ($winner_id,'reward',{$r['prize_pool']},$id,'confirmed')");
+        $win_data = [['rank' => 1, 'user' => $winner_id, 'amount' => $r['prize_pool']]];
+        $win_json = json_encode($win_data);
+        execute(" UPDATE lottery_rounds SET status='closed',winning_numbers='$win_json' WHERE id=$id ");
+        execute(" INSERT INTO transactions (account_id,type,amount,reference_id,status) VALUES ($winner_id,'reward',{$r['prize_pool']},$id,'confirmed') ");
     }
     redirect("lotterydetail.php?id=$id&msg=drawn");
 }
@@ -26,7 +26,7 @@ require_once 'header.php';
 require_once 'sidebar.php';
 ?>
 <main class="ml-0 lg:ml-64 pt-20 p-6 min-h-screen transition-all duration-300">
-    <div class="flex items-center gap-4 mb-6"><a href="lotteries.php" class="p-2 rounded-lg bg-white dark:bg-white/5 text-gray-500 hover:text-white"><i class="fa-solid fa-arrow-left"></i></a>
+    <div class="flex items-center gap-4 mb-6"><a href="lotteries.php" class="p-2 rounded-lg bg-white dark:bg-white/5 text-gray-500 hover:text-white transition-colors"><i class="fa-solid fa-arrow-left"></i></a>
         <h1 class="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Round #<?= $r['round_number'] ?></h1>
     </div>
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -46,14 +46,33 @@ require_once 'sidebar.php';
                 </div>
             </div>
             <?php if ($r['status'] == 'open'): ?>
-                <form method="POST"><button type="submit" name="draw_winner" value="1" onclick="return confirm('Close round and pick winner?')" class="w-full py-4 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-2xl shadow-lg shadow-primary-500/20 text-lg">🎲 Draw Winner</button></form>
-            <?php else: $win = json_decode($r['winning_numbers'], true);
-                $w_acc = $win ? findQuery(" SELECT accountname FROM accounts WHERE id={$win['account_id']}") : []; ?>
-                <div class="bg-primary-500/10 border border-primary-500/20 p-6 rounded-2xl text-center">
-                    <div class="text-xs text-primary-500 uppercase font-bold mb-1">Winner</div>
-                    <div class="text-2xl font-black text-white"><?= $w_acc['accountname'] ?? 'No Winner' ?></div>
-                </div>
-            <?php endif; ?>
+                <form method="POST"><button type="submit" name="draw_winner" value="1" onclick="return confirm('Close round?')" class="w-full py-4 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-2xl shadow-lg shadow-primary-500/20 text-lg">🎲 Draw Winner</button></form>
+                <?php else:
+                $winners = json_decode($r['winning_numbers'], true) ?? [];
+                if (isset($winners['account_id'])) {
+                    $winners = [['rank' => 1, 'user' => $winners['account_id'], 'amount' => $winners['amount']]];
+                }
+                if (!empty($winners)): ?>
+                    <div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-200 dark:border-white/5 p-6 shadow-sm">
+                        <h3 class="font-bold text-gray-900 dark:text-white mb-4">Winners Podium</h3>
+                        <div class="space-y-3">
+                            <?php foreach ($winners as $w):
+                                $uid = (int)($w['user'] ?? 0);
+                                $u = $uid ? findQuery(" SELECT accountname FROM accounts WHERE id=$uid") : [];
+                                $rankColor = $w['rank'] == 1 ? 'text-yellow-500' : ($w['rank'] == 2 ? 'text-gray-400' : 'text-orange-500');
+                            ?>
+                                <div class="flex items-center justify-between p-3 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5">
+                                    <div class="flex items-center gap-3">
+                                        <div class="font-black text-lg <?= $rankColor ?>">#<?= $w['rank'] ?></div>
+                                        <div class="text-sm font-bold text-gray-900 dark:text-white"><?= $u['accountname'] ?? 'Unknown' ?></div>
+                                    </div>
+                                    <div class="font-mono font-bold text-green-500">+<?= number_format($w['amount']) ?></div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                <?php else: ?><div class="p-4 bg-red-500/10 text-red-500 text-center rounded-xl font-bold">No Winners</div><?php endif;
+                                                                                                                    endif; ?>
         </div>
         <div class="lg:col-span-2 bg-white dark:bg-dark-800 rounded-2xl border border-gray-200 dark:border-white/5 p-6 shadow-sm overflow-hidden">
             <h3 class="font-bold text-gray-900 dark:text-white mb-4">Entries</h3>
