@@ -1,13 +1,14 @@
 <?php
 require_once 'init.php';
-$id = request('id', 'get');
+$id = (int)request('id', 'get');
 $a = findQuery(" SELECT a.*,p.title,p.images,acc.accountname,acc.wallet_address FROM auctions a JOIN products p ON a.product_id=p.id LEFT JOIN accounts acc ON a.highest_bidder_id=acc.id WHERE a.id=$id ");
 if (!$a) redirect('auctions.php');
 if (post('update_auction')) {
     $start = request('start_time', 'post');
     $end = request('end_time', 'post');
     $st = request('status', 'post');
-    execute(" UPDATE auctions SET start_time='$start', end_time='$end', status='$st' WHERE id=$id ");
+    $res = (float)request('reserve_price', 'post');
+    execute(" UPDATE auctions SET start_time='$start', end_time='$end', status='$st', reserve_price=$res WHERE id=$id ");
     redirect("auctiondetail.php?id=$id&msg=updated");
 }
 $bids = getQuery(" SELECT t.*,acc.accountname FROM transactions t JOIN accounts acc ON t.account_id=acc.id WHERE t.type='auction_bid' AND t.reference_id=$id ORDER BY t.amount DESC ");
@@ -15,7 +16,7 @@ require_once 'header.php';
 require_once 'sidebar.php';
 ?>
 <main class="ml-0 lg:ml-64 pt-20 p-6 min-h-screen transition-all duration-300">
-    <div class="flex items-center gap-4 mb-6"><a href="auctions.php" class="p-2 rounded-lg bg-white dark:bg-white/5 text-gray-500 hover:text-white"><i class="fa-solid fa-arrow-left"></i></a>
+    <div class="flex items-center gap-4 mb-6"><a href="auctions.php" class="p-2 rounded-lg bg-white dark:bg-white/5 text-gray-500 hover:text-white transition-colors"><i class="fa-solid fa-arrow-left"></i></a>
         <h1 class="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Auction #<?= $id ?></h1>
     </div>
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -39,6 +40,7 @@ require_once 'sidebar.php';
                     <div class="space-y-4">
                         <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Start Time</label><input type="datetime-local" name="start_time" value="<?= date('Y-m-d\TH:i', strtotime($a['start_time'])) ?>" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none"></div>
                         <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">End Time</label><input type="datetime-local" name="end_time" value="<?= date('Y-m-d\TH:i', strtotime($a['end_time'])) ?>" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none"></div>
+                        <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Reserve Price</label><input type="number" step="0.01" name="reserve_price" value="<?= $a['reserve_price'] ?>" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none"></div>
                         <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Status</label><select name="status" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none">
                                 <option value="active" <?= $a['status'] == 'active' ? 'selected' : '' ?>>Active</option>
                                 <option value="ended" <?= $a['status'] == 'ended' ? 'selected' : '' ?>>Ended</option>

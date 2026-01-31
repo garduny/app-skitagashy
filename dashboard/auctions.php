@@ -12,12 +12,13 @@ if (post('save_auction')) {
     $start = request('start_time', 'post');
     $end = request('end_time', 'post');
     $price = (float)request('start_price', 'post');
+    $reserve = (float)request('reserve_price', 'post');
     $status = request('status', 'post') ?? 'active';
     if ($id) {
-        execute(" UPDATE auctions SET start_time='$start',end_time='$end',status='$status' WHERE id=$id ");
+        execute(" UPDATE auctions SET start_time='$start',end_time='$end',status='$status',reserve_price=$reserve WHERE id=$id ");
         redirect('auctions.php?msg=updated');
     } else {
-        execute(" INSERT INTO auctions (product_id,start_time,end_time,start_price,current_bid,status) VALUES ($pid,'$start','$end',$price,$price,'active') ");
+        execute(" INSERT INTO auctions (product_id,start_time,end_time,start_price,current_bid,status,reserve_price) VALUES ($pid,'$start','$end',$price,$price,'active',$reserve) ");
         redirect('auctions.php?msg=created');
     }
 }
@@ -73,6 +74,7 @@ require_once 'sidebar.php';
                     <tr class="bg-gray-50 dark:bg-white/5 border-b border-gray-200 dark:border-white/5 text-xs uppercase text-gray-500 font-bold">
                         <th class="px-6 py-4">Item</th>
                         <th class="px-6 py-4">Current Bid</th>
+                        <th class="px-6 py-4">Reserve</th>
                         <th class="px-6 py-4">Top Bidder</th>
                         <th class="px-6 py-4">Countdown</th>
                         <th class="px-6 py-4">Status</th>
@@ -92,21 +94,18 @@ require_once 'sidebar.php';
                                 </div>
                             </td>
                             <td class="px-6 py-4 font-mono font-bold text-primary-500"><?= number_format($a['current_bid'], 2) ?></td>
+                            <td class="px-6 py-4 font-mono text-xs text-gray-500"><?= number_format($a['reserve_price'] ?? 0, 2) ?></td>
                             <td class="px-6 py-4 text-sm"><?= $a['bidder_name'] ?? '<span class="text-gray-400 italic">No Bids</span>' ?></td>
                             <td class="px-6 py-4"><span class="text-sm font-mono <?= $diff > 0 && $diff < 3600 ? 'text-red-500 font-bold' : '' ?>"><?= $diff > 0 ? "{$h}h {$m}m" : 'Ended' ?></span></td>
                             <td class="px-6 py-4"><span class="px-2 py-1 rounded text-[10px] uppercase font-bold <?= $a['status'] == 'active' ? 'bg-green-500/10 text-green-500' : ($a['status'] == 'ended' ? 'bg-blue-500/10 text-blue-500' : 'bg-red-500/10 text-red-500') ?>"><?= $a['status'] ?></span></td>
-                            <td class="px-6 py-4 text-right">
-                                <a href="auctiondetail.php?id=<?= $a['id'] ?>" class="p-2 text-gray-400 hover:text-blue-500 transition-colors"><i class="fa-solid fa-eye"></i></a>
-                                <button onclick='editAuction(<?= json_encode($a) ?>)' class="p-2 text-gray-400 hover:text-primary-500 transition-colors"><i class="fa-solid fa-pen-to-square"></i></button>
-                                <a href="?delete=<?= $a['id'] ?>" onclick="return confirm('Delete auction?')" class="p-2 text-gray-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-trash"></i></a>
-                            </td>
+                            <td class="px-6 py-4 text-right"><a href="auctiondetail.php?id=<?= $a['id'] ?>" class="p-2 text-gray-400 hover:text-blue-500 transition-colors"><i class="fa-solid fa-eye"></i></a><button onclick='editAuction(<?= json_encode($a) ?>)' class="p-2 text-gray-400 hover:text-primary-500 transition-colors"><i class="fa-solid fa-pen-to-square"></i></button><a href="?delete=<?= $a['id'] ?>" onclick="return confirm('Delete auction?')" class="p-2 text-gray-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-trash"></i></a></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
         <div class="p-4 border-t border-gray-200 dark:border-white/5 flex flex-wrap justify-center gap-2"><?php if ($pages > 1): for ($i = 1; $i <= $pages; $i++): ?><a href="<?= filterUrl('page', $i) ?>" class="px-3 py-1 rounded-lg text-sm font-bold <?= $i == $page ? 'bg-primary-500 text-white' : 'bg-gray-100 dark:bg-white/5 text-gray-500 hover:bg-gray-200 dark:hover:bg-white/10' ?>"><?= $i ?></a><?php endfor;
-                                                                                                                                                                                                                                                                                                                                                                                                        endif; ?></div>
+                                                                                                                                                                                                                                                                                                                                                                                endif; ?></div>
     </div>
 </main>
 <div id="auctionModal" class="fixed inset-0 z-[60] hidden">
@@ -120,7 +119,10 @@ require_once 'sidebar.php';
                     <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Start Time</label><input type="datetime-local" name="start_time" id="auc_start" required class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none"></div>
                     <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">End Time</label><input type="datetime-local" name="end_time" id="auc_end" required class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none"></div>
                 </div>
-                <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Start Price</label><input type="number" step="0.01" name="start_price" id="auc_price" required class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none"></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Start Price</label><input type="number" step="0.01" name="start_price" id="auc_price" required class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none"></div>
+                    <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Reserve Price</label><input type="number" step="0.01" name="reserve_price" id="auc_reserve" value="0" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none"></div>
+                </div>
                 <div id="status_field" class="hidden"><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Status</label><select name="status" id="auc_status" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none">
                         <option value="active">Active</option>
                         <option value="ended">Ended</option>
@@ -152,6 +154,7 @@ require_once 'sidebar.php';
         document.getElementById('auc_start').value = a.start_time.replace(' ', 'T');
         document.getElementById('auc_end').value = a.end_time.replace(' ', 'T');
         document.getElementById('auc_price').value = a.start_price;
+        document.getElementById('auc_reserve').value = a.reserve_price;
         document.getElementById('auc_status').value = a.status;
         document.getElementById('status_field').classList.remove('hidden');
         document.getElementById('modalTitle').innerText = 'Edit Auction';
