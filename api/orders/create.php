@@ -23,32 +23,38 @@ if ($dup) {
 }
 execute(" START TRANSACTION ");
 try {
-    $account = findQuery(" SELECT tier FROM accounts WHERE id=$uid ");
+    $account = findQuery(" SELECT tier,email,accountname FROM accounts WHERE id=$uid ");
     $tier = $account['tier'] ?? 'bronze';
     $discount_map = ['bronze' => 0, 'silver' => 0.02, 'gold' => 0.05, 'platinum' => 0.10, 'diamond' => 0.15];
     $discount_rate = $discount_map[$tier] ?? 0;
     $subtotal = 0;
+    $status = 'completed';
     foreach ($items as $i) {
         $pid = (int)$i['id'];
         $qty = (int)$i['qty'];
         if ($qty < 1) continue;
-        $p = findQuery(" SELECT price_gashy,stock FROM products WHERE id=$pid ");
+        $p = findQuery(" SELECT price_gashy,stock,type FROM products WHERE id=$pid ");
         if (!$p || $p['stock'] < $qty) {
             throw new Exception("Product #$pid Out of Stock");
         }
         $subtotal += ($p['price_gashy'] * $qty);
+        if ($p['type'] === 'physical') {
+            $status = 'processing';
+        }
     }
     $final_total = $subtotal * (1 - $discount_rate);
-    execute(" INSERT INTO orders (account_id,total_gashy,tx_signature,status,created_at) VALUES ($uid,$final_total,'$txSig','completed',NOW()) ");
+    execute(" INSERT INTO orders (account_id,total_gashy,tx_signature,status,created_at) VALUES ($uid,$final_total,'$txSig','$status',NOW()) ");
     $lastOrd = findQuery(" SELECT LAST_INSERT_ID() as id ");
     $oid = $lastOrd['id'];
+    $email_items_html = "";
     foreach ($items as $i) {
         $pid = (int)$i['id'];
         $qty = (int)$i['qty'];
         if ($qty < 1) continue;
-        $prod = findQuery(" SELECT price_gashy,type FROM products WHERE id=$pid ");
+        $prod = findQuery(" SELECT title,price_gashy,type FROM products WHERE id=$pid ");
         execute(" INSERT INTO order_items (order_id,product_id,quantity,price_at_purchase) VALUES ($oid,$pid,$qty,{$prod['price_gashy']}) ");
         execute(" UPDATE products SET stock=stock-$qty WHERE id=$pid ");
+        $email_items_html .= "<li>{$prod['title']} (x$qty)</li>";
         if ($prod['type'] === 'gift_card') {
             $cards = getQuery(" SELECT id FROM gift_cards WHERE product_id=$pid AND is_sold=0 LIMIT $qty ");
             if (count($cards) < $qty) {
@@ -67,6 +73,23 @@ try {
         if ($comm > 0) {
             execute(" INSERT INTO transactions (account_id,type,amount,reference_id,status,created_at) VALUES ($ref_id,'reward',$comm,$oid,'confirmed',NOW()) ");
         }
+    }
+    if ($account['email'] && function_exists('mailer')) {
+        $subject = "Order #$oid Confirmed";
+        $body = "
+        <div style='font-family: Arial, sans-serif; color: #333; padding: 20px;'>
+            <h2 style='color: #00d48f;'>Order Confirmed!</h2>
+            <p>Hi {$account['accountname']},</p>
+            <p>Your order has been successfully placed.</p>
+            <p><strong>Order ID:</strong> #$oid<br>
+            <strong>Status:</strong> " . strtoupper($status) . "<br>
+            <strong>Total:</strong> " . number_format($final_total, 2) . " GASHY</p>
+            <hr style='border: 0; border-top: 1px solid #eee;'>
+            <h3>Items:</h3>
+            <ul>$email_items_html</ul>
+            <p style='margin-top: 20px;'><a href='https://gashybazaar.com/orders.php' style='background: #00d48f; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>View Order & Reveal Codes</a></p>
+        </div>";
+        mailer($subject, $body, "Gashy Bazaar", $account['email']);
     }
     execute(" COMMIT ");
     encode(['status' => true, 'order_id' => $oid, 'discount_applied' => $discount_rate * 100, 'final_total' => $final_total]);

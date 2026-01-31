@@ -2,7 +2,7 @@
 if (php_sapi_name() !== 'cli') {
     if (!defined('gashy_exec')) define('gashy_exec', true);
 }
-if (!isset($_SERVER['REQUEST_URI'])) $_SERVER['REQUEST_URI'] = '/';
+if (!isset($_SERVER['REQUEST_URI'])) $_SERVER['REQUEST_URI'] = '/cron/lottery';
 if (!isset($_SERVER['HTTP_USER_AGENT'])) $_SERVER['HTTP_USER_AGENT'] = 'CronJob';
 require_once __DIR__ . '/../init.php';
 echo "[" . date('Y-m-d H:i:s') . "] Lottery Logic Started...\n";
@@ -31,10 +31,15 @@ if ($round) {
             $log_data[] = ['rank' => $rank + 1, 'user' => $winner_id, 'amount' => $amount];
             echo " -> Rank #" . ($rank + 1) . ": User $winner_id wins $amount G\n";
             execute(" INSERT INTO transactions (account_id,type,amount,reference_id,status,created_at) VALUES ($winner_id,'reward',$amount,$rid,'confirmed',NOW()) ");
+            $acc = findQuery(" SELECT email,accountname FROM accounts WHERE id=$winner_id ");
+            if ($acc['email'] && function_exists('mailer')) {
+                $body = "<h1>Lottery Win!</h1><p>Hi {$acc['accountname']},</p><p>Congratulations! You won <b>Rank #" . ($rank + 1) . "</b> in Round #{$round['round_number']}.</p><p>Prize: <b>" . number_format($amount) . " GASHY</b></p>";
+                mailer("Lottery Prize: " . number_format($amount) . " G", $body, "Gashy Lottery", $acc['email']);
+            }
             $pool = array_filter($pool, fn($id) => $id !== $winner_id);
         }
         $win_json = json_encode($log_data);
-        execute(" UPDATE lottery_rounds SET status='closed', winning_numbers='$win_json' WHERE id=$rid ");
+        execute(" UPDATE lottery_rounds SET status='closed',winning_numbers='$win_json' WHERE id=$rid ");
     } else {
         echo " -> No Entries. Closing without winners.\n";
         execute(" UPDATE lottery_rounds SET status='closed' WHERE id=$rid ");

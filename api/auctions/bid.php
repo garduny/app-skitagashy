@@ -5,13 +5,13 @@ if (file_exists('../../server/init.php')) {
     exit;
 }
 $token = request('token') ?? str_replace('Bearer ', '', $_SERVER['HTTP_AUTHORIZATION'] ?? '');
-$account_session = findQuery(" SELECT account_id FROM account_sessions WHERE token='$token' AND expires_at>NOW() ");
-if (!$account_session) {
+$session = findQuery(" SELECT account_id FROM account_sessions WHERE token='$token' AND expires_at>NOW() ");
+if (!$session) {
     encode(['status' => false, 'message' => 'Unauthorized']);
 }
-$uid = $account_session['account_id'];
-$aid = request('auction_id');
-$amount = request('amount');
+$uid = $session['account_id'];
+$aid = (int)request('auction_id', 'post');
+$amount = (float)request('amount', 'post');
 if (!$aid || !$amount) {
     encode(['status' => false, 'message' => 'Invalid input']);
 }
@@ -22,21 +22,27 @@ if (!$auc) {
 if ($auc['status'] !== 'active') {
     encode(['status' => false, 'message' => 'Auction is not active']);
 }
-if (strtotime($auc['end_time']) < time()) {
+$end_time = strtotime($auc['end_time']);
+if ($end_time < time()) {
     encode(['status' => false, 'message' => 'Auction has ended']);
 }
-if ($amount <= $auc['current_bid']) {
-    encode(['status' => false, 'message' => 'Bid must be higher than current price']);
+$min_inc = max(10, $auc['current_bid'] * 0.05);
+$min_bid = $auc['current_bid'] + $min_inc;
+if ($amount < $min_bid) {
+    encode(['status' => false, 'message' => 'Bid too low. Minimum bid is ' . number_format($min_bid, 2)]);
 }
-if ($amount <= $auc['start_price']) {
-    encode(['status' => false, 'message' => 'Bid must be higher than start price']);
+$extend_sql = "";
+if (($end_time - time()) < 300) {
+    $new_end = date('Y-m-d H:i:s', $end_time + 300);
+    $extend_sql = ", end_time='$new_end'";
 }
+$txSig = 'BID_' . time() . '_' . $uid;
 execute(" START TRANSACTION ");
 try {
-    execute(" UPDATE auctions SET current_bid=$amount,highest_bidder_id=$uid WHERE id=$aid ");
-    execute(" INSERT INTO transactions (account_id,type,amount,reference_id,status,created_at) VALUES ($uid,'auction_bid',$amount,$aid,'pending',NOW()) ");
+    execute(" UPDATE auctions SET current_bid=$amount, highest_bidder_id=$uid $extend_sql WHERE id=$aid ");
+    execute(" INSERT INTO transactions (account_id,type,amount,tx_signature,reference_id,status,created_at) VALUES ($uid,'auction_bid',$amount,'$txSig',$aid,'pending',NOW()) ");
     execute(" COMMIT ");
-    encode(['status' => true, 'new_bid' => $amount]);
+    encode(['status' => true, 'new_bid' => $amount, 'message' => 'Bid placed successfully' . ($extend_sql ? ' (Time Extended)' : '')]);
 } catch (Exception $e) {
     execute(" ROLLBACK ");
     encode(['status' => false, 'message' => 'Bid failed']);
