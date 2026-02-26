@@ -1,0 +1,144 @@
+{
+  "short_name": "KITTA",
+  "name": "KITTA Website",
+  "description": "This is KITTA Website You Can Enjoy",
+  "icons": [
+    {
+      "src": "./icon-72x72.png",
+      "type": "image/png",
+      "sizes": "72x72",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-96x96.png",
+      "type": "image/png",
+      "sizes": "96x96",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-128x128.png",
+      "type": "image/png",
+      "sizes": "128x128",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-144x144.png",
+      "type": "image/png",
+      "sizes": "144x144",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-152x152.png",
+      "type": "image/png",
+      "sizes": "152x152",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-384x384.png",
+      "type": "image/png",
+      "sizes": "384x384",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ],
+  "splash": [
+    {
+      "640x1136": "./splash-640x1136.png"
+    },
+    {
+      "750x1334": "./splash-750x1334.png"
+    },
+    {
+      "828x1792": "./splash-828x1792.png"
+    },
+    {
+      "1125x2436": "./splash-1125x2436.png"
+    },
+    {
+      "1242x2208": "./splash-1242x2208.png"
+    },
+    {
+      "1242x2688": "./splash-1242x2688.png"
+    },
+    {
+      "1536x2048": "./splash-1536x2048.png"
+    },
+    {
+      "1668x2224": "./splash-1668x2224.png"
+    },
+    {
+      "1668x2388": "./splash-1668x2388.png"
+    },
+    {
+      "2048x2732": "./splash-2048x2732.png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "./mobile-1.png",
+      "sizes": "564x1147",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Mobile 1"
+    },
+    {
+      "src": "./mobile-2.png",
+      "sizes": "564x1147",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Mobile 2"
+    },
+    {
+      "src": "./desktop-1.png",
+      "sizes": "1107x638",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Desktop 1"
+    },
+    {
+      "src": "./desktop-2.png",
+      "sizes": "1107x638",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Desktop 2"
+    }
+  ],
+  "start_url": ".././",
+  "scope": ".././",
+  "id": ".././",
+  "background_color": "#2152a4",
+  "orientation": "portrait",
+  "display": "standalone",
+  "theme_color": "#2152a4",
+  "prefer_related_applications": false,
+  "display_override": ["window-controls-overlay", "standalone"],
+  "lang": "en",
+  "dir": "auto",
+  "categories": ["electronic", "software"],
+  "edge_side_panel": {
+    "preferred_width": 480
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+electronic",
+      "url": "../?url=%s"
+    }
+  ]
+}
