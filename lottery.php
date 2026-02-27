@@ -5,13 +5,9 @@ if (file_exists('server/init.php')) {
 }
 require_once 'header.php';
 require_once 'sidebar.php';
-
-// 1. Get Current Round
 $round = findQuery(" SELECT * FROM lottery_rounds WHERE status='open' ORDER BY id DESC LIMIT 1 ");
 $pool = $round['prize_pool'] ?? 0;
 $rid = $round['id'] ?? 0;
-
-// 2. Get User's Tickets for this round
 $my_tickets = 0;
 $token = request('token') ?? str_replace('Bearer ', '', $_SERVER['HTTP_AUTHORIZATION'] ?? '');
 $session = findQuery(" SELECT account_id FROM account_sessions WHERE token='$token' AND expires_at>NOW() ");
@@ -20,8 +16,6 @@ if ($session && $rid) {
     $ticket_query = findQuery(" SELECT SUM(ticket_count) as total FROM lottery_entries WHERE round_id=$rid AND account_id=$uid ");
     $my_tickets = $ticket_query['total'] ?? 0;
 }
-
-// 3. Get Real Recent Winners (From closed rounds)
 $closed_rounds = getQuery(" SELECT winning_numbers, draw_time FROM lottery_rounds WHERE status='closed' AND winning_numbers IS NOT NULL ORDER BY id DESC LIMIT 3 ");
 $real_winners = [];
 foreach ($closed_rounds as $cr) {
@@ -333,9 +327,9 @@ foreach ($closed_rounds as $cr) {
                     <?php else: ?>
                         <?php foreach ($real_winners as $i => $w):
                             $colors = [
-                                'from-yellow-400 via-yellow-500 to-yellow-600', // 1st
-                                'from-gray-300 via-gray-400 to-gray-500',       // 2nd
-                                'from-orange-400 via-orange-500 to-orange-600'  // 3rd
+                                'from-yellow-400 via-yellow-500 to-yellow-600',
+                                'from-gray-300 via-gray-400 to-gray-500',
+                                'from-orange-400 via-orange-500 to-orange-600'
                             ];
                             $c = $colors[$i % 3];
                         ?>
@@ -359,5 +353,8 @@ foreach ($closed_rounds as $cr) {
         </div>
     </div>
 </main>
+<script>
+    window.GASHY_TICKET_PRICE = 10;
+</script>
 <script src="./public/js/pages/lottery.js"></script>
 <?php require_once 'footer.php'; ?>

@@ -224,7 +224,7 @@ $boxes = getQuery(" SELECT p.id,p.title,p.price_gashy,p.images,p.description FRO
                                     <div class="w-[30%] h-full bg-gradient-to-r from-blue-400 to-blue-500 shadow-lg shadow-blue-400/50"></div>
                                 </div>
                             </div>
-                            <button onclick="openBox(<?= $b['id'] ?>)" class="open-btn w-full py-4 text-white font-black text-lg rounded-2xl shadow-2xl flex items-center justify-center gap-3 relative overflow-hidden group">
+                            <button onclick="openBox(<?= $b['id'] ?>,<?= $b['price_gashy'] ?>)" class="open-btn w-full py-4 text-white font-black text-lg rounded-2xl shadow-2xl flex items-center justify-center gap-3 relative overflow-hidden group">
                                 <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                                 <svg class="w-6 h-6 transform group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />

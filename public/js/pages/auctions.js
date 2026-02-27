@@ -29,7 +29,7 @@ function calculateTimeLeft(seconds) {
 async function placeBid(id) {
     if (!App.checkAuth()) return;
     if (!window.solana?.isPhantom) { window.notyf.error('Phantom wallet required'); return; }
-    if (!window.solana.isConnected) { try { await window.solana.connect(); } catch (err) { window.notyf.error('Wallet connection rejected'); return; } }
+    if (!window.solana.isConnected) { try { await window.solana.connect(); } catch (e) { window.notyf.error('Wallet connection rejected'); return; } }
     const input = document.getElementById(`bid-amount-${id}`);
     const amount = parseFloat(input ? input.value : 0);
     if (!amount || amount <= 0) return window.notyf.error('Invalid amount');
@@ -42,22 +42,26 @@ async function placeBid(id) {
         const mintInfo = await connection.getParsedAccountInfo(mint);
         const decimals = mintInfo.value?.data?.parsed?.info?.decimals || 9;
         const rawAmount = BigInt(Math.round(amount * Math.pow(10, decimals)));
-        const tokenAccounts = await connection.getParsedTokenAccountsByOwner(publicKey, { mint: mint });
-        if (tokenAccounts.value.length === 0) { window.notyf.error('No GASHY tokens found in your wallet!'); return; }
-        const fromATA = tokenAccounts.value[0].pubkey;
-        const balanceVal = BigInt(tokenAccounts.value[0].account.data.parsed.info.tokenAmount.amount);
+        const buyerTokens = await connection.getParsedTokenAccountsByOwner(publicKey, { mint: mint });
+        if (buyerTokens.value.length === 0) { window.notyf.error('No GASHY tokens found in your wallet!'); return; }
+        const fromATA = buyerTokens.value[0].pubkey;
+        const balanceVal = BigInt(buyerTokens.value[0].account.data.parsed.info.tokenAmount.amount);
         if (balanceVal < rawAmount) { window.notyf.error('Insufficient GASHY balance'); return; }
-        const toATA = await splToken.getAssociatedTokenAddress(mint, treasury);
+        let toATA;
         const tx = new solanaWeb3.Transaction();
-        const treasuryInfo = await connection.getAccountInfo(toATA);
-        if (!treasuryInfo) tx.add(splToken.createAssociatedTokenAccountInstruction(publicKey, toATA, treasury, mint));
+        const treasuryTokens = await connection.getParsedTokenAccountsByOwner(treasury, { mint: mint });
+        if (treasuryTokens.value.length > 0) { toATA = treasuryTokens.value[0].pubkey; }
+        else {
+            toATA = await splToken.getAssociatedTokenAddress(mint, treasury);
+            tx.add(splToken.createAssociatedTokenAccountInstruction(publicKey, toATA, treasury, mint));
+        }
         tx.add(splToken.createTransferInstruction(fromATA, toATA, publicKey, rawAmount));
         tx.feePayer = publicKey;
         tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
-        window.notyf.success('Approve transaction in Phantom...');
+        window.notyf.success('Approve in Phantom...');
         const signed = await window.solana.signAndSendTransaction(tx);
         await connection.confirmTransaction(signed.signature, "confirmed");
         const res = await App.post('api/auctions/bid.php', { auction_id: id, amount: amount, tx_signature: signed.signature });
-        if (res.status) { window.notyf.success(`Bid placed!`); loadAuctions('ending_soon'); } else window.notyf.error(res.message);
+        if (res.status) { window.notyf.success('Bid placed!'); loadAuctions('ending_soon'); } else window.notyf.error(res.message);
     } catch (e) { window.notyf.error('Bid Cancelled'); }
 }

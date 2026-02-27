@@ -57,7 +57,7 @@ try {
             $oid = findQuery(" SELECT LAST_INSERT_ID() as id ")['id'];
             execute(" INSERT INTO order_items (order_id,product_id,quantity,price_at_purchase) VALUES ($oid,$pid,1,0) ");
             execute(" UPDATE products SET stock=stock-1 WHERE id=$pid ");
-            if ($prod['type'] === 'gift_card') {
+            if ($prod['type'] === 'gift_card' || $prod['type'] === 'digital') {
                 $card = findQuery(" SELECT id FROM gift_cards WHERE product_id=$pid AND is_sold=0 LIMIT 1 ");
                 if ($card) {
                     execute(" UPDATE gift_cards SET is_sold=1,sold_to_order_id=$oid WHERE id={$card['id']} ");
