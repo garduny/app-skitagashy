@@ -216,5 +216,28 @@ if (!window.App) {
             }
         }
     };
+    window.GashySPL = {
+        async ata(mint, owner) {
+            return await solanaWeb3.PublicKey.findProgramAddressSync(
+                [
+                    owner.toBuffer(),
+                    new solanaWeb3.PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA").toBuffer(),
+                    mint.toBuffer()
+                ],
+                new solanaWeb3.PublicKey("ATokenGPvbdGVxr1hF8dS6Vw6QWmvMRGsiE9zraFMvx6")
+            )[0];
+        },
+        transferIx(from, to, owner, amount) {
+            return new solanaWeb3.TransactionInstruction({
+                programId: new solanaWeb3.PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"),
+                keys: [
+                    { pubkey: from, isSigner: false, isWritable: true },
+                    { pubkey: to, isSigner: false, isWritable: true },
+                    { pubkey: owner, isSigner: true, isWritable: false }
+                ],
+                data: Uint8Array.of(3, ...new Uint8Array(new BigUint64Array([BigInt(amount)]).buffer))
+            });
+        }
+    };
     document.addEventListener('DOMContentLoaded', () => window.App.init());
 }

@@ -9,8 +9,92 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
     <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
-    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
-    <script src="https://unpkg.com/@solana/spl-token@latest/lib/index.iife.js"></script>
+    <script src="https://bundle.run/buffer@6.0.3"></script>
+    <script>
+        window.Buffer = window.Buffer || buffer.Buffer;
+    </script>
+    <script src="https://unpkg.com/@solana/web3.js@1.91.8/lib/index.iife.min.js"></script>
+    <script>
+        const TOKEN_PROGRAM_ID = new solanaWeb3.PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
+        const ASSOCIATED_TOKEN_PROGRAM_ID = new solanaWeb3.PublicKey("ATokenGPvbdGVxr1hF8dS6Vw6QWmvMRGsiE9zraFMvx6");
+        const SYSVAR_RENT_PUBKEY = new solanaWeb3.PublicKey("SysvarRent111111111111111111111111111111111");
+        window.splToken = {
+            async getAssociatedTokenAddress(mint, owner) {
+                return (await solanaWeb3.PublicKey.findProgramAddress(
+                    [owner.toBuffer(), TOKEN_PROGRAM_ID.toBuffer(), mint.toBuffer()],
+                    ASSOCIATED_TOKEN_PROGRAM_ID
+                ))[0];
+            },
+            createTransferInstruction(source, destination, owner, amount) {
+                const data = new Uint8Array(9);
+                const view = new DataView(data.buffer);
+                view.setUint8(0, 3);
+                view.setBigUint64(1, BigInt(amount), true);
+                return new solanaWeb3.TransactionInstruction({
+                    keys: [{
+                            pubkey: source,
+                            isSigner: false,
+                            isWritable: true
+                        },
+                        {
+                            pubkey: destination,
+                            isSigner: false,
+                            isWritable: true
+                        },
+                        {
+                            pubkey: owner,
+                            isSigner: true,
+                            isWritable: false
+                        },
+                    ],
+                    programId: TOKEN_PROGRAM_ID,
+                    data: data
+                });
+            },
+            createAssociatedTokenAccountInstruction(payer, associatedToken, owner, mint) {
+                return new solanaWeb3.TransactionInstruction({
+                    keys: [{
+                            pubkey: payer,
+                            isSigner: true,
+                            isWritable: true
+                        },
+                        {
+                            pubkey: associatedToken,
+                            isSigner: false,
+                            isWritable: true
+                        },
+                        {
+                            pubkey: owner,
+                            isSigner: false,
+                            isWritable: false
+                        },
+                        {
+                            pubkey: mint,
+                            isSigner: false,
+                            isWritable: false
+                        },
+                        {
+                            pubkey: solanaWeb3.SystemProgram.programId,
+                            isSigner: false,
+                            isWritable: false
+                        },
+                        {
+                            pubkey: TOKEN_PROGRAM_ID,
+                            isSigner: false,
+                            isWritable: false
+                        },
+                        {
+                            pubkey: SYSVAR_RENT_PUBKEY,
+                            isSigner: false,
+                            isWritable: false
+                        }
+                    ],
+                    programId: ASSOCIATED_TOKEN_PROGRAM_ID,
+                    data: new Uint8Array(0)
+                });
+            }
+        };
+    </script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -96,7 +180,6 @@
             overflow-x: hidden
         }
 
-        /* ── DARK MODE HEADER ── */
         .glass-header {
             background: rgba(13, 17, 28, 0.9);
             backdrop-filter: blur(20px) saturate(180%);
@@ -132,7 +215,6 @@
             filter: drop-shadow(0 0 10px rgba(0, 255, 170, 0.4)) drop-shadow(0 0 20px rgba(139, 92, 246, 0.2))
         }
 
-        /* ── SEARCH ── */
         .search-input {
             background: rgba(26, 31, 46, 0.6);
             border: 1px solid rgba(0, 255, 170, 0.15);
@@ -151,7 +233,6 @@
             outline: none;
         }
 
-        /* ── BUTTONS ── */
         .btn-glow {
             position: relative;
             overflow: hidden;
@@ -207,7 +288,6 @@
             color: #00ffaa;
         }
 
-        /* ── BALANCE CARD ── */
         .balance-card {
             background: linear-gradient(135deg, rgba(0, 212, 143, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
             border: 1px solid rgba(0, 255, 170, 0.2);
@@ -215,7 +295,6 @@
             padding: 8px 16px;
         }
 
-        /* ── SCROLLBAR ── */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px
@@ -234,9 +313,6 @@
             background: linear-gradient(180deg, #00ffaa, #a855f7)
         }
 
-        /* ══════════════════════════════════════
-   LIGHT MODE OVERRIDES — ALL EXPLICIT
-   ══════════════════════════════════════ */
         html:not(.dark) body {
             background: #f1f5f9;
             color: #0f172a;
@@ -253,7 +329,6 @@
             background: linear-gradient(90deg, transparent, rgba(0, 180, 120, 0.2) 50%, transparent);
         }
 
-        /* Logo text */
         html:not(.dark) .logo-text-main {
             background: linear-gradient(135deg, #0f172a, #00a372) !important;
             -webkit-background-clip: text !important;
@@ -265,7 +340,6 @@
             color: #00a372 !important
         }
 
-        /* Search */
         html:not(.dark) .search-input {
             background: rgba(241, 245, 249, 0.9);
             border: 1px solid rgba(0, 0, 0, 0.12);
@@ -283,7 +357,6 @@
             color: #0f172a;
         }
 
-        /* Icon colors in light */
         html:not(.dark) .header-icon {
             color: #475569
         }
@@ -292,7 +365,6 @@
             color: #00a372
         }
 
-        /* Buttons */
         html:not(.dark) .btn-secondary {
             background: rgba(15, 23, 42, 0.06);
             border: 1px solid rgba(15, 23, 42, 0.12);
@@ -305,7 +377,6 @@
             color: #00a372;
         }
 
-        /* Balance card */
         html:not(.dark) .balance-card {
             background: linear-gradient(135deg, rgba(0, 163, 114, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
             border: 1px solid rgba(0, 163, 114, 0.2);
@@ -322,7 +393,6 @@
             background-clip: text !important;
         }
 
-        /* Mobile menu hamburger */
         html:not(.dark) .mobile-menu-btn span {
             background: #374151
         }
@@ -331,14 +401,12 @@
             background: #00a372
         }
 
-        /* kbd hint */
         html:not(.dark) .search-kbd {
             background: #e2e8f0;
             border-color: rgba(0, 0, 0, 0.12);
             color: #475569;
         }
 
-        /* Mobile search modal */
         html:not(.dark) .mobile-search-modal {
             background: rgba(248, 250, 252, 0.99);
         }
@@ -347,12 +415,10 @@
             color: #0f172a
         }
 
-        /* Sidebar toggle active bars in light */
         html:not(.dark) .mobile-menu-btn.active span {
             background: #00a372
         }
 
-        /* ── RESPONSIVE ── */
         .mobile-menu-btn {
             cursor: pointer;
             display: flex;
@@ -542,14 +608,6 @@
             </div>
         </div>
     </header>
-    <script src="./public/js/core.js"></script>
-    <?php
-    $page = basename($_SERVER['PHP_SELF'], '.php');
-    $path = "./public/js/pages/{$page}.js";
-    if (file_exists($path)) {
-        echo "<script src='{$path}'></script>";
-    }
-    ?>
 </body>
 
 </html>

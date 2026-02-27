@@ -382,6 +382,7 @@ $gashyUsd = (float)($oracle['price'] ?? 0.045);
     </div>
 </main>
 <script>
+    window.GASHY_PRICE = <?= (float)$p['price_gashy']; ?>;
     window.GASHY_PRODUCT_SELLER_ID = <?= (int)$p['seller_id'] ?>;
 </script>
 <script src="./public/js/pages/product.js"></script>

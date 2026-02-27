@@ -6,17 +6,12 @@
 solana
 6dygwo6jHPrExGKrohykhYoC1DkAA6CyPp9qDbhMe1JT
 
-ethereum 
-0x5BDE006695615bD774315FE33bCEdB7c16fC3F90
+
+ACC2 : 
+solana
+Hmdv1Asp6uhvG9SCX64fdCX7wVkYZ792v5uavjEjACXb
 
 
 
-
-What it DOES support:
-Phantom (Most popular Solana wallet)
-Solflare
-Backpack
-Glow
-(Any wallet that supports the Solana Standard)
-
-
+helius : 
+89dc36c3-c605-4931-8d9a-905287802f36
