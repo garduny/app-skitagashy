@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 26, 2026 at 07:51 AM
+-- Generation Time: Feb 28, 2026 at 07:28 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -48,7 +48,8 @@ CREATE TABLE `accounts` (
 
 INSERT INTO `accounts` (`id`, `wallet_address`, `accountname`, `email`, `role`, `tier`, `nonce`, `is_verified`, `created_at`, `updated_at`, `is_banned`, `my_referral_code`) VALUES
 (1, '6dygwo6jHPrExGKrohykhYoC1DkAA6CyPp9qDbhMe1JT', 'gardunydev', 'gardunydeveloper@gmail.com', 'seller', 'bronze', 'bd45660a3cd2a193c8f2578d9ff80752', 0, '2026-01-16 04:03:30', '2026-02-21 13:35:22', 0, 'c6a0bad7'),
-(2, 'Di6...TEST_WALLET_2', 'CryptoKing', 'seller2@test.com', 'account', 'bronze', NULL, 0, '2026-02-02 02:50:08', '2026-02-02 03:14:25', 0, NULL);
+(2, 'Di6...TEST_WALLET_2', 'CryptoKing', 'seller2@test.com', 'account', 'bronze', NULL, 0, '2026-02-02 02:50:08', '2026-02-02 03:14:25', 0, NULL),
+(3, 'Hmdv1Asp6uhvG9SCX64fdCX7wVkYZ792v5uavjEjACXb', NULL, NULL, 'account', 'bronze', 'b46799ba324cc88d29b1432bd1fabfdb', 0, '2026-02-26 22:23:11', '2026-02-26 22:23:11', 0, 'be443d4c');
 
 -- --------------------------------------------------------
 
@@ -70,8 +71,8 @@ CREATE TABLE `account_quests` (
 --
 
 INSERT INTO `account_quests` (`id`, `account_id`, `quest_id`, `progress`, `is_claimed`, `updated_at`) VALUES
-(1, 1, 1, 25, 1, '2026-02-24 08:18:42'),
-(2, 1, 2, 160, 1, '2026-02-26 02:15:19');
+(1, 1, 1, 1201, 1, '2026-02-27 15:38:34'),
+(2, 1, 2, 490, 1, '2026-02-27 15:49:11');
 
 -- --------------------------------------------------------
 
@@ -110,7 +111,17 @@ INSERT INTO `account_sessions` (`id`, `account_id`, `token`, `ip_address`, `acco
 (1, 1, '57b71ebb2ded2c8c1569a26891d3ffb2dce1d3a44d0eaf8b4d6bcc1f4f4ab243', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-03 07:49:06', '2026-02-24 04:49:06'),
 (2, 1, 'f1f36e5fce9f32b36a96bb64d76889e505451e77898cf775975a784aa4d09fb6', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-03 09:47:02', '2026-02-24 06:47:02'),
 (3, 1, '74e1782e1c7d1f7788208689ffc817c6ba72db962313b3a805ce798799b338cc', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-05 09:11:46', '2026-02-26 06:11:46'),
-(4, 1, 'f6778e01aed71c253d477d06e2df61fb2ff13343a6cad8c4ba4b80bb1566ff8d', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-05 09:39:06', '2026-02-26 06:39:06');
+(4, 1, 'f6778e01aed71c253d477d06e2df61fb2ff13343a6cad8c4ba4b80bb1566ff8d', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-05 09:39:06', '2026-02-26 06:39:06'),
+(5, 1, 'caa208399dc5669e17133f162e9b7714acbe7567ce81d9eee83f17552030533b', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-05 11:43:33', '2026-02-26 08:43:33'),
+(6, 1, '656f117a8eae378f847847f0ec7ad26514de8a069120b01416e1d996439f3fc7', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-06 00:30:48', '2026-02-26 21:30:48'),
+(7, 1, '66c2d3938d906796fc7200ca38db331fb4f48059295ae8d3404de74dfe08f530', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-06 00:50:36', '2026-02-26 21:50:36'),
+(8, 1, '90bda16a1974f58dc96827331e1e7c76127f71518830f8d7a7080269108bf898', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-06 00:51:02', '2026-02-26 21:51:02'),
+(9, 1, 'acd98b79329fd6dbc4e6d90b8ed86c400859ce494c75ccba7754d6a0395b4f84', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-06 01:05:40', '2026-02-26 22:05:40'),
+(10, 1, 'dbe6e81674e8f57b9b3ac612a192e97148d5d50f22fd51019218fc490daa6be7', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-06 01:19:37', '2026-02-26 22:19:37'),
+(11, 3, 'c15cf4b5df02c9743430c98530408b38a7096878504c5476e486d43e1ee73962', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', '2026-03-06 01:23:11', '2026-02-26 22:23:11'),
+(12, 1, 'ae7bb995b0535f10cdaf7ba12a7679085f53524982d798bbca10e1854d23f9cc', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-06 18:18:54', '2026-02-27 15:18:54'),
+(13, 3, '4aa66fa3df846c7b313dd13368bd9b1c3262729e49c9ba1084bb88af0ea0fcb7', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', '2026-03-06 18:19:48', '2026-02-27 15:19:48'),
+(14, 3, 'edd77ce4e4cdd87c9f0b877025df91c340edc2306ca7d01dd082c5559a40fd04', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', '2026-03-06 18:41:12', '2026-02-27 15:41:12');
 
 -- --------------------------------------------------------
 
@@ -152,7 +163,18 @@ INSERT INTO `activity_log` (`id`, `user_type`, `user_id`, `action`, `details`, `
 (17, 'account', 1, 'view_secret', 'Viewed Order #7', '::1', '2026-02-24 07:38:26'),
 (18, 'account', 1, 'view_secret', 'Viewed Order #4', '::1', '2026-02-24 07:38:28'),
 (19, 'account', 1, 'view_secret', 'Viewed Order #7', '::1', '2026-02-26 02:57:26'),
-(20, 'account', 1, 'view_secret', 'Viewed Order #4', '::1', '2026-02-26 03:10:49');
+(20, 'account', 1, 'view_secret', 'Viewed Order #4', '::1', '2026-02-26 03:10:49'),
+(21, 'account', 1, 'view_secret', 'Viewed Order #7', '::1', '2026-02-26 08:49:57'),
+(22, 'account', 1, 'view_secret', 'Viewed Order #4', '::1', '2026-02-26 08:50:00'),
+(23, 'account', 1, 'view_secret', 'Viewed Order #2', '::1', '2026-02-26 08:50:01'),
+(24, 'account', 1, 'view_secret', 'Viewed Order #1', '::1', '2026-02-26 08:50:03'),
+(25, 'account', 1, 'view_secret', 'Viewed Order #10', '::1', '2026-02-26 23:00:27'),
+(26, 'account', 1, 'view_secret', 'Viewed Order #23', '::1', '2026-02-27 04:56:13'),
+(27, 'account', 1, 'view_secret', 'Viewed Order #23', '::1', '2026-02-27 04:57:35'),
+(28, 'account', 1, 'view_secret', 'Viewed Order #24', '::1', '2026-02-27 05:02:39'),
+(29, 'admin', 1, 'order_update', 'Changed Order #25 to shipped: dgjsdhgsd', '::1', '2026-02-27 15:23:56'),
+(30, 'account', 1, 'view_secret', 'Viewed Order #27', '::1', '2026-02-27 15:26:20'),
+(31, 'account', 1, 'view_secret', 'Viewed Order #27', '::1', '2026-02-27 15:26:34');
 
 -- --------------------------------------------------------
 
@@ -177,7 +199,8 @@ CREATE TABLE `auctions` (
 --
 
 INSERT INTO `auctions` (`id`, `product_id`, `start_time`, `end_time`, `start_price`, `reserve_price`, `current_bid`, `highest_bidder_id`, `status`) VALUES
-(1, 1, '2026-02-24 09:49:00', '2026-02-24 09:56:00', 1.000000000, 2.000000000, 2.000000000, 1, 'ended');
+(1, 1, '2026-02-27 09:49:00', '2026-02-27 07:35:00', 1.000000000, 2.000000000, 4.000000000, 1, 'ended'),
+(2, 1, '2026-02-27 18:32:00', '2026-02-27 18:39:00', 10.000000000, 20.000000000, 12.000000000, 1, 'ended');
 
 -- --------------------------------------------------------
 
@@ -226,7 +249,9 @@ INSERT INTO `burn_log` (`id`, `account_id`, `amount`, `purpose`, `tx_signature`,
 (1, 1, 10.000000000, 'lottery_entry', '59d944f8df377060ec229f1a4595f6dd51a026bb1691608590a0d831cde7d4ae8dc8e1df9d4714c1df275726', 0.00, '2026-02-24 09:02:04'),
 (2, 1, 10.000000000, 'lottery_entry', '2df9fad6a7aae9da75a25d810f6575cd52dafbc09bb069a18ce45c2964e9d075ec283a020aa0010b3d15ce1f', 0.00, '2026-02-24 09:02:37'),
 (3, 1, 40.000000000, 'lottery_entry', '4b0001d39f107071935400c3adcc10f0cb951b0b09c478323127f11ce4b60869422d7c25a9b8d822960db078', 0.00, '2026-02-24 09:03:07'),
-(4, 1, 100.000000000, 'lottery_entry', '68212de81d02f22b4e1cbd439f0a82d3e5033ce1827c13ad0eadc677dd2c06b3aabb65ed6bf3a18e4ffa39e2', 0.00, '2026-02-24 09:03:20');
+(4, 1, 100.000000000, 'lottery_entry', '68212de81d02f22b4e1cbd439f0a82d3e5033ce1827c13ad0eadc677dd2c06b3aabb65ed6bf3a18e4ffa39e2', 0.00, '2026-02-24 09:03:20'),
+(5, 1, 20.000000000, 'lottery_entry', '3tthQy57myz2TDamMaeTTc891woB7XuDJxHdwA8neAdpamNpCWSkec8ZUnp1FVJM6znWE6wR5CRUv6qqb1b8CKr3', 0.00, '2026-02-27 04:32:39'),
+(6, 1, 50.000000000, 'lottery_entry', '4M8tY8ZVk6JdZz99q4LAyGxMT4FazoBbe2HMMRKiY73wMFvCqiLNwVojEqX1wthVWHMhtCHdpZ5J2cyyTgZmDUyi', 0.00, '2026-02-27 15:35:26');
 
 -- --------------------------------------------------------
 
@@ -283,7 +308,15 @@ INSERT INTO `gift_cards` (`id`, `product_id`, `code_enc`, `pin_enc`, `expiry_dat
 (5, 12, 'SUxSU1ZwdWFaclR2ZHBvMm1scWpwdz09Ojphc/qyigellXQggdacX2hN', NULL, NULL, 1, 7),
 (6, 15, 'NDVmN09JamVSdVZiRTV2YkNnYnY4Zz09OjqZeooNn3nUpxermfYKDuSr', NULL, NULL, 0, NULL),
 (7, 15, 'eCt5U1hBNXJvUExmWWFsYW82Mk5CUT09OjrX6ZNH+MbXbpRyLwVZDFW4', NULL, NULL, 0, NULL),
-(8, 15, 'NzJnQ2lsMEIxR1VCVmt6QW1tUStoUT09OjqrR5+QObTplBl1xd0AH+lt', NULL, NULL, 0, NULL);
+(8, 15, 'NzJnQ2lsMEIxR1VCVmt6QW1tUStoUT09OjqrR5+QObTplBl1xd0AH+lt', NULL, NULL, 0, NULL),
+(9, 1, 'Z3JWbVBEcm1aczQ0cFAzcEozTzExQT09OjrDi0SrdRG9NK22CSPAkh+j', NULL, NULL, 1, 10),
+(10, 1, 'b3FrUjRoTG52bzJ6YzE5VzdqUGFzUT09OjpHArSokUx2dHNPKnpkOqmj', NULL, NULL, 1, 22),
+(11, 12, 'dEF1L1pNb3JtUHErRTNjc0t5V0U3dz09OjoOAqzUgiZpLjo1cUxlquck', NULL, NULL, 1, 24),
+(12, 18, 'M0gxS0VENDdKS1NjQk10eXhjSC9pdz09Ojr2YK1j4okeyY6hfPv/0GCn', NULL, NULL, 1, 27),
+(13, 18, 'Z1Z3S3k2aXR6alVsQjR5cmJEVW1nVnpHOGF6Zk1PMlpOdG96aTd2WkpyST06OtC5N17L8wufyvAyAy8D7P8=', NULL, NULL, 0, NULL),
+(14, 18, 'Z0M0cmc1WE54OUQ5UGw0SXdIWmN1QT09OjrcqQ4BESNiBMoNIkpe8wyh', NULL, NULL, 0, NULL),
+(15, 1, 'c2NKT3o1aWsvUitFYVBxV2V1UVpEdz09OjpiBNZbHvW4cnEFLWaWP3Vm', NULL, NULL, 0, NULL),
+(16, 1, 'anl1YWlLaEdXb29yQUJLalorMDdEUT09Ojqm4b+rRXJDFX8/S/9Lg+Z/', NULL, NULL, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -307,7 +340,9 @@ INSERT INTO `lottery_entries` (`id`, `round_id`, `account_id`, `burn_tx`, `ticke
 (1, 1, 1, '59d944f8df377060ec229f1a4595f6dd51a026bb1691608590a0d831cde7d4ae8dc8e1df9d4714c1df275726', 1),
 (2, 1, 1, '2df9fad6a7aae9da75a25d810f6575cd52dafbc09bb069a18ce45c2964e9d075ec283a020aa0010b3d15ce1f', 1),
 (3, 1, 1, '4b0001d39f107071935400c3adcc10f0cb951b0b09c478323127f11ce4b60869422d7c25a9b8d822960db078', 4),
-(4, 1, 1, '68212de81d02f22b4e1cbd439f0a82d3e5033ce1827c13ad0eadc677dd2c06b3aabb65ed6bf3a18e4ffa39e2', 10);
+(4, 1, 1, '68212de81d02f22b4e1cbd439f0a82d3e5033ce1827c13ad0eadc677dd2c06b3aabb65ed6bf3a18e4ffa39e2', 10),
+(5, 2, 1, '3tthQy57myz2TDamMaeTTc891woB7XuDJxHdwA8neAdpamNpCWSkec8ZUnp1FVJM6znWE6wR5CRUv6qqb1b8CKr3', 2),
+(6, 3, 1, '4M8tY8ZVk6JdZz99q4LAyGxMT4FazoBbe2HMMRKiY73wMFvCqiLNwVojEqX1wthVWHMhtCHdpZ5J2cyyTgZmDUyi', 5);
 
 -- --------------------------------------------------------
 
@@ -329,7 +364,10 @@ CREATE TABLE `lottery_rounds` (
 --
 
 INSERT INTO `lottery_rounds` (`id`, `round_number`, `prize_pool`, `draw_time`, `status`, `winning_numbers`) VALUES
-(1, 1, 160.000000000, '2026-02-24 09:03:42', 'closed', '[{\"rank\":1,\"user\":1,\"amount\":\"160.000000000\"}]');
+(1, 1, 160.000000000, '2026-02-24 09:03:42', 'closed', '[{\"rank\":1,\"user\":1,\"amount\":\"160.000000000\"}]'),
+(2, 2, 20.000000000, '2026-02-27 04:34:24', 'closed', '[{\"rank\":1,\"user\":1,\"amount\":\"20.000000000\"}]'),
+(3, 3, 50.000000000, '2026-02-27 15:37:31', 'closed', '[{\"rank\":1,\"user\":1,\"amount\":25}]'),
+(4, 4, 0.000000000, '2026-03-06 15:37:31', 'open', NULL);
 
 -- --------------------------------------------------------
 
@@ -352,10 +390,12 @@ CREATE TABLE `mystery_box_loot` (
 --
 
 INSERT INTO `mystery_box_loot` (`id`, `box_product_id`, `reward_product_id`, `reward_amount`, `reward_gashy_amount`, `probability`, `rarity`) VALUES
-(1, 6, NULL, 10.000000000, 0.000000000, 90.00, 'common'),
-(2, 6, NULL, 100.000000000, 0.000000000, 40.00, 'legendary'),
+(1, 6, NULL, 100.000000000, 0.000000000, 40.00, 'legendary'),
+(2, 8, NULL, 10.000000000, 0.000000000, 80.00, 'common'),
 (3, 8, NULL, 10.000000000, 0.000000000, 80.00, 'common'),
-(4, 8, NULL, 10.000000000, 0.000000000, 80.00, 'common');
+(4, 6, 12, 0.000000000, 0.000000000, 99.00, 'common'),
+(5, 20, NULL, 60.000000000, 0.000000000, 80.00, 'common'),
+(6, 20, NULL, 150.000000000, 0.000000000, 30.00, 'legendary');
 
 -- --------------------------------------------------------
 
@@ -472,7 +512,26 @@ INSERT INTO `orders` (`id`, `account_id`, `total_gashy`, `tx_signature`, `status
 (2, 1, 2.000000000, 'AUC_WIN_1_1771916171.5768', 'completed', '2026-02-24 06:56:11'),
 (4, 1, 25.000000000, '6659c81730b41d861a9db3e8e25d9596962493c7c56604f88edfe0fc9a0ae2a4d66519f3aab21c4d5e0f086d', 'completed', '2026-02-24 07:02:39'),
 (7, 1, 25.000000000, '34d0f397b78299a91d4d3f8bcc9dd6e6bf9e1c870d7e2415db235ca987773a53fae9be590b0191b6d170d359', 'completed', '2026-02-24 07:28:30'),
-(8, 2, 10.000000000, '34d0f397b78299a9hh4d3f8bcc9dd6e6bf9e1c870d7dffa65db235ca987773a53fae9be590b0191b6d170d35', 'delivered', '2026-02-24 07:28:30');
+(8, 2, 10.000000000, '34d0f397b78299a9hh4d3f8bcc9dd6e6bf9e1c870d7dffa65db235ca987773a53fae9be590b0191b6d170d35', 'delivered', '2026-02-24 07:28:30'),
+(10, 1, 1.000000000, '9c8bFxnceMF9dryQsc1CfcFr8haaix1ZmTtWa5F1QPGs5GE4YmWapLzVjNUWwer7i9dSWezReVRhWLXvn2oxu9G', 'completed', '2026-02-26 23:00:21'),
+(11, 1, 100.000000000, '2N13dzVHMWdiFA6u6AaTL5yB5xwP3xQbLjPsivWzSMUHd997CBUtXwF5DZ61vsaegy84CKiMaLdCE13XtaLQeA4w', 'processing', '2026-02-26 23:05:22'),
+(12, 1, 100.000000000, '52L9EwRrnBTmmWRGZ35YTc38q46FNzSnCy9qurTR9Z11wj4Ve9SfD8MV1cGkn1fnxUAhBBdrTdA8NVhu7kC7JQKJ', 'processing', '2026-02-26 23:11:12'),
+(13, 1, 100.000000000, '2CNnXCYXjWg2hYuPk3kGWC61ZMPD3tQMqxxnoLePeBN1yqpC3ufxS9qhiZa7eEbZbW4LBykLw1NUwdA4nEA8bU1P', 'processing', '2026-02-26 23:16:01'),
+(14, 1, 100.000000000, '4fU6ZnAzPiVEmVgSe2EatPF8G5uimkxSaJahBJxSPRKc3xeWegyEetavoagbiLkZ6LMvSaTzStXMFaAQAwE9RwvJ', 'processing', '2026-02-26 23:17:58'),
+(15, 1, 100.000000000, '3GopVLhXsxjjwHQhgZs1tcfcE1VET6cN85JEC9RoJ3oCYN7YyGtW1sKk4SZGp8TdiV9uNjJDKj8YDxChquXNJptk', 'processing', '2026-02-27 03:42:25'),
+(16, 1, 100.000000000, 't7VjfFwPYEUMX63rL6WivxLWKczko51CRkuTK2UjLx5sDYFSRxAByUEQSQw3Gp7HQKfD8iwVByYae5juEFg5kJB', 'processing', '2026-02-27 04:01:36'),
+(17, 1, 100.000000000, '3tnMfsvNwKsuPTjq9VEHsnTPbzw23KztyG9rf1MWQX8Diwj2ap9VrQA6seEAQvB8iqQVrL8b5gzEyfQFtLNKYDux', 'processing', '2026-02-27 04:07:36'),
+(18, 1, 100.000000000, '1rg56AytzfrQ41x8oSJFEDwepr78iCr7m68D8bBXhD96XE8dv25kxC7YqKdoCmdmLfjJ6nWfmAkXokLcYz5PgcN', 'processing', '2026-02-27 04:12:18'),
+(19, 1, 100.000000000, 'PeVeuQBrRA2ASGFNKUET7B4JVKpsMXrp9Y38psEj7RVoGD1pArPyKVZnp5MSUGEZFxE8ywTeyWPZNfA2qjLRaWc', 'processing', '2026-02-27 04:14:33'),
+(20, 1, 100.000000000, '2y5Rwd1yg7EZ4xv8NZnBnyqin9nnoZanpEzWqZFUvZcPwLQPtsAMVWfNifPrMKqSur7oDJdaZRLydCNWMCdrpbt6', 'processing', '2026-02-27 04:15:58'),
+(21, 1, 100.000000000, '5oKpEmGHnaxwMn992VACj5T2tRPcZMYAXh8mFrGGQr9tcTo7QfyQFBdqzBCQ6wUEsWs3o6H1SRCk8mjG415gGePG', 'processing', '2026-02-27 04:18:44'),
+(22, 1, 4.000000000, 'AUC_WIN_1_1772167420.6881', 'completed', '2026-02-27 04:43:40'),
+(23, 1, 0.000000000, '3so6VcHdJ6cqanBbvFRUVqpvn2gfVJjhrHr3ELiP797jNL24qYyZf2qHXrpvwJt1U8MMSPtShroostWwvrAn74RA', 'completed', '2026-02-27 04:55:59'),
+(24, 1, 0.000000000, '2epEhdrtrsmzh8S9PcTc4kaTx29ttdBrXNXeW5KgwxLGwaNGduojGjVcdTCBSTwE9xM8v2jTV251VUSFwTddEwUF', 'completed', '2026-02-27 05:01:37'),
+(25, 1, 10.000000000, 'yXkMJfipsahuGSGGAN9mfVQiQTHLh2qh7eEA4rU9nwMeV69Mq9JU5giBPR6d4RRGuFYmyCMdj6y8qpyAi5Az7VX', 'shipped', '2026-02-27 15:22:43'),
+(26, 1, 10.000000000, '4wNroSZEtMW7YNHCN3AWefT8A3yigA8tR8bmLHtX3redEiaboeeU5Pj4ShcvNVAFAXs4UPYE8vFGm1BnHshxiaTZ', 'processing', '2026-02-27 15:25:47'),
+(27, 1, 15.000000000, 'QzYPE4J5ygBoxy8UqDwFNJKMC6axhRMqaXMLcRfSGA7CtjuFpWZU99y6dVGnmbJyX9yrtoYLFSt9tZvNZmejVKe', 'completed', '2026-02-27 15:26:11'),
+(28, 1, 40.000000000, '4JVM2754gbQHiHiVCt57pzSJEhxk6NnfrJ7p5sFcu5Jxsynf9Rk9WFR7eokG43winusqEgqUmZvUNrqJtAdLK5Yz', 'completed', '2026-02-27 15:38:34');
 
 -- --------------------------------------------------------
 
@@ -498,7 +557,26 @@ INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `quantity`, `price_at
 (2, 2, 1, 1, 2.000000000, NULL),
 (3, 4, 12, 1, 25.000000000, NULL),
 (4, 7, 12, 1, 25.000000000, NULL),
-(5, 8, 2, 1, 40.000000000, NULL);
+(5, 8, 2, 1, 40.000000000, NULL),
+(6, 10, 1, 1, 1.000000000, NULL),
+(7, 11, 16, 1, 100.000000000, NULL),
+(8, 12, 16, 1, 100.000000000, NULL),
+(9, 13, 16, 1, 100.000000000, NULL),
+(10, 14, 16, 1, 100.000000000, NULL),
+(11, 15, 16, 1, 100.000000000, NULL),
+(12, 16, 16, 1, 100.000000000, NULL),
+(13, 17, 16, 1, 100.000000000, NULL),
+(14, 18, 16, 1, 100.000000000, NULL),
+(15, 19, 16, 1, 100.000000000, NULL),
+(16, 20, 16, 1, 100.000000000, NULL),
+(17, 21, 16, 1, 100.000000000, NULL),
+(18, 22, 1, 1, 4.000000000, NULL),
+(19, 23, 12, 1, 0.000000000, NULL),
+(20, 24, 12, 1, 0.000000000, NULL),
+(21, 25, 17, 1, 10.000000000, NULL),
+(22, 26, 17, 1, 10.000000000, NULL),
+(23, 27, 18, 1, 15.000000000, NULL),
+(24, 28, 19, 1, 40.000000000, NULL);
 
 -- --------------------------------------------------------
 
@@ -561,20 +639,25 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `seller_id`, `category_id`, `title`, `slug`, `description`, `price_gashy`, `price_usd_peg`, `stock`, `type`, `images`, `attributes`, `status`, `views`, `created_at`) VALUES
-(1, 2, 1, 'Amazon $50 Gift Card (US)', 'amazon-50-gift-card-us-', 'Valid for US accounts only. Code delivered instantly via email and order dashboard upon blockchain confirmation.', 1.000000000, 0.01, 1, 'gift_card', '[\"/server/uploads/products/6998ffe2ee3ab4.45018495.jpg\"]', NULL, 'active', 474, '2026-01-16 08:40:08'),
-(2, 1, 1, 'Steam Wallet $20 Global', 'steam-wallet-20-global', 'Add funds to your Steam Wallet. Works globally. Instant delivery.', 40.000000000, 20.00, 50, 'gift_card', '[\"/server/uploads/products/6998ffddd54654.89335006.jpg\"]', NULL, 'active', 901, '2026-01-16 08:40:08'),
+(1, 2, 1, 'Amazon $50 Gift Card (US)', 'amazon-50-gift-card-us-', 'Valid for US accounts only. Code delivered instantly via email and order dashboard upon blockchain confirmation.', 1.000000000, 0.01, 2, 'gift_card', '[\"/server/uploads/products/6998ffe2ee3ab4.45018495.jpg\"]', NULL, 'active', 479, '2026-01-16 08:40:08'),
+(2, 1, 1, 'Steam Wallet $20 Global', 'steam-wallet-20-global', 'Add funds to your Steam Wallet. Works globally. Instant delivery.', 40.000000000, 20.00, 50, 'gift_card', '[\"/server/uploads/products/6998ffddd54654.89335006.jpg\"]', NULL, 'active', 902, '2026-01-16 08:40:08'),
 (3, 1, 1, 'PUBG Mobile 660 UC', 'pubg-mobile-660-uc', 'pubg pubg pubg pubg pubg pubg pubg pubg pubg pubg pubg pubg', 30.000000000, 10.00, 200, 'digital', '[\"/server/uploads/products/6998ffd7dfa877.05088825.jfif\"]', NULL, 'active', 128, '2026-01-16 08:40:08'),
 (4, 1, 3, 'Windows 11 Pro License', 'windows-11-pro-license', 'Lifetime retail key for Windows 11 Pro. Supports multi-language installation.', 6.000000000, 25.00, 17, 'digital', '[\"/server/uploads/products/6998fa5e48ed03.37830430.webp\"]', NULL, 'active', 71, '2026-01-16 08:40:08'),
 (5, 1, 4, 'CyberPunk Samurai #042', 'cyberpunk-samurai-042', 'Rare NFT from the CyberPunk collection. Verified ownership on Solana.', 15.000000000, 250.00, 0, 'nft', '[\"/server/uploads/products/6998f9e1b69b83.11482242.jfif\"]', NULL, 'active', 1211, '2026-01-16 08:40:08'),
-(6, 1, 5, 'Legendary Mystery Box', 'legendary-mystery-box', 'Contains a chance to win 50,000 GASHY or a Rare NFT. High risk, high reward.', 50.000000000, 20.00, 994, 'mystery_box', '[\"/server/uploads/products/6998fa3a558396.36014683.webp\"]', NULL, 'active', 3021, '2026-01-16 08:40:08'),
+(6, 1, 5, 'Legendary Mystery Box', 'legendary-mystery-box', 'Contains a chance to win 50,000 GASHY or a Rare NFT. High risk, high reward.', 50.000000000, 20.00, 0, 'mystery_box', '[\"/server/uploads/products/6998fa3a558396.36014683.webp\"]', NULL, 'banned', 3021, '2026-01-16 08:40:08'),
 (7, 1, 4, 'Bored Ape #9999 (Test)', 'bored-ape-9999-test-', 'Original BAYC NFT. Verified on Ethereum.', 10.000000000, NULL, 1, 'nft', '[\"/server/uploads/products/6998fa590ac966.04235643.jpg\"]', NULL, 'active', 6, '2026-01-17 12:23:19'),
-(8, 1, 5, 'Starter Mystery Box', 'starter-mystery-box', 'jhfgdjfhdgfjdhf', 10.000000000, NULL, 494, 'mystery_box', '[\"/server/uploads/products/6998fa4b9e5517.58520314.webp\"]', NULL, 'active', 12, '2026-01-17 12:23:19'),
+(8, 1, 5, 'Starter Mystery Box', 'starter-mystery-box', 'jhfgdjfhdgfjdhf', 10.000000000, NULL, 493, 'mystery_box', '[\"/server/uploads/products/6998fa4b9e5517.58520314.webp\"]', NULL, 'active', 12, '2026-01-17 12:23:19'),
 (9, 1, 1, 'GTA-6', 'gta-6', 'undefined', 10.000000000, NULL, 4, 'digital', '[\"/server/uploads/products/6998fa1e769023.06569469.jpg\"]', NULL, 'active', 19, '2026-01-29 01:53:02'),
 (10, 1, 4, 'nft test', 'nft-test', 'test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product', 1.000000000, NULL, 1, 'nft', '[\"/server/uploads/products/6998fa76d88368.86052092.jfif\"]', NULL, 'active', 7, '2026-01-29 01:53:43'),
-(11, 1, 1, 'Gifts', 'gifts', '....', 1.000000000, NULL, 2, 'gift_card', '[\"/server/uploads/products/6998fbbba44ac0.24472211.webp\"]', NULL, 'active', 8, '2026-02-02 01:11:44'),
+(11, 1, 1, 'Gifts', 'gifts', '....', 1.000000000, NULL, 2, 'gift_card', '[\"/server/uploads/products/6998fbbba44ac0.24472211.webp\"]', NULL, 'active', 9, '2026-02-02 01:11:44'),
 (12, 2, 2, 'Valorant 1000 Points', 'valorant-1000-points', 'Instant delivery code.', 25.000000000, NULL, 0, 'digital', '[\"/server/uploads/products/6998f945730096.26491339.jpg\"]', NULL, 'active', 34, '2026-02-02 02:50:08'),
 (13, 1, 5, 'first mystery', 'first-mystery', 'first mystery  detail', 10.000000000, NULL, 1, 'digital', '[\"/server/uploads/products/6998fbb4c5f740.95288782.jfif\"]', NULL, 'active', 2, '2026-02-07 10:27:45'),
-(15, 1, 1, 'loxera software 1YEAR', 'sdsd-482', 'loxera software license key 1 year', 1.000000000, NULL, 8, 'digital', '[\"/server/uploads/products/699fd5ea7639d0.75533383.png\"]', NULL, 'active', 0, '2026-02-26 05:10:37');
+(15, 1, 1, 'loxera software 1YEAR', 'sdsd-482', 'loxera software license key 1 year', 1.000000000, NULL, 8, 'digital', '[\"/server/uploads/products/699fd5ea7639d0.75533383.png\"]', NULL, 'active', 47, '2026-02-26 05:10:37'),
+(16, 2, 6, 'test gashy', 'test-gashy', 'ddsdsdsdsd', 100.000000000, NULL, 4, 'physical', '[\"/server/uploads/products/69a0d1969cbd83.73127799.png\"]', NULL, 'active', 40, '2026-02-26 23:04:54'),
+(17, 2, 6, 'test test', 'test-test', 'dghjsdgsdjs', 10.000000000, NULL, 8, 'physical', '[\"/server/uploads/products/69a1b695d2de12.26621603.jpg\"]', NULL, 'active', 2, '2026-02-27 15:21:57'),
+(18, 2, 3, 'test test 2', 'test-test-2', 'cmxcdxjhdgdsj', 15.000000000, NULL, 2, 'digital', '[\"/server/uploads/products/69a1b745a98b80.34502289.jpg\"]', NULL, 'active', 1, '2026-02-27 15:24:53'),
+(19, 3, 6, 'seller-2 product-1', 'seller-2-product-1-894', 'fhdjkfhdfdf', 40.000000000, NULL, 2, 'physical', '[\"/server/uploads/products/69a1ba14963073.51894396.jpg\"]', NULL, 'active', 1, '2026-02-27 15:36:52'),
+(20, 2, 5, 'mystery-1', 'mystery-1', 'djhsdjhgsjhdasgds', 50.000000000, NULL, 1, 'mystery_box', '[\"/server/uploads/products/69a1bc68603ce7.93450568.png\"]', NULL, 'active', 0, '2026-02-27 15:46:48');
 
 -- --------------------------------------------------------
 
@@ -643,7 +726,8 @@ CREATE TABLE `sellers` (
 
 INSERT INTO `sellers` (`account_id`, `store_name`, `store_slug`, `commission_rate`, `rating`, `total_sales`, `is_approved`) VALUES
 (1, 'Gashy Official Store', 'gashy-official', 5.00, 5.00, 0, 1),
-(2, 'CryptoKing Store', 'crypto-king', 5.00, 4.80, 0, 1);
+(2, 'CryptoKing Store', 'crypto-king', 5.00, 4.80, 0, 1),
+(3, 'DEVSELLER', 'devseller', 5.00, 0.00, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -668,8 +752,9 @@ INSERT INTO `settings` (`id`, `key_name`, `value`) VALUES
 (4, 'maintenance_mode', '0'),
 (5, 'burn_address', '1nc1nerator11111111111111111111111111111111'),
 (6, 'email', 'darinkrd2020@gmail.com'),
-(7, 'logo', 'https://skita.io/img/logo.png'),
-(8, 'token_address', 'DokPYQ33k3T9S7EEesvwvuuAtoQb4pY8NWszukKwXWjv');
+(7, 'logo', 'https://api.phantom.app/image-proxy/?image=https%3A%2F%2Fcoin-images.coingecko.com%2Fcoins%2Fimages%2F69906%2Flarge%2FUntitled_design_%25282%2529.png%3F1767493770&amp;anim=false&amp;fit=cover&amp;width=128&amp;height=128'),
+(8, 'token_address', 'DokPYQ33k3T9S7EEesvwvuuAtoQb4pY8NWszukKwXWjv'),
+(9, 'heluis', '1fca693b-e96d-42f8-94b7-ab1c5bb0c9ed');
 
 -- --------------------------------------------------------
 
@@ -689,8 +774,9 @@ CREATE TABLE `system_rate_limits` (
 --
 
 INSERT INTO `system_rate_limits` (`ip_address`, `endpoint`, `requests`, `reset_time`) VALUES
-('::1', 'auth_attempt', 1, 1772088006),
-('::1', 'global_api', 5, 1772088612);
+('::1', 'auth_attempt', 1, 1772206932),
+('::1', 'global_api', 7, 1772260091),
+('::1', 'transaction', 1, 1772206774);
 
 -- --------------------------------------------------------
 
@@ -747,7 +833,40 @@ INSERT INTO `transactions` (`id`, `account_id`, `type`, `amount`, `tx_signature`
 (8, 1, 'lottery_ticket', -40.000000000, '4b0001d39f107071935400c3adcc10f0cb951b0b09c478323127f11ce4b60869422d7c25a9b8d822960db078', 1, 'confirmed', '2026-02-24 09:03:07'),
 (9, 1, 'lottery_ticket', -100.000000000, '68212de81d02f22b4e1cbd439f0a82d3e5033ce1827c13ad0eadc677dd2c06b3aabb65ed6bf3a18e4ffa39e2', 1, 'confirmed', '2026-02-24 09:03:20'),
 (10, 1, 'reward', 160.000000000, NULL, 1, 'confirmed', '2026-02-24 09:03:42'),
-(11, 1, 'reward', 30.000000000, NULL, 2, 'confirmed', '2026-02-26 02:15:19');
+(11, 1, 'reward', 30.000000000, NULL, 2, 'confirmed', '2026-02-26 02:15:19'),
+(12, 1, 'purchase', -1.000000000, '9c8bFxnceMF9dryQsc1CfcFr8haaix1ZmTtWa5F1QPGs5GE4YmWapLzVjNUWwer7i9dSWezReVRhWLXvn2oxu9G', 10, 'confirmed', '2026-02-26 23:00:21'),
+(13, 1, 'purchase', -100.000000000, '2N13dzVHMWdiFA6u6AaTL5yB5xwP3xQbLjPsivWzSMUHd997CBUtXwF5DZ61vsaegy84CKiMaLdCE13XtaLQeA4w', 11, 'confirmed', '2026-02-26 23:05:22'),
+(14, 1, 'purchase', -100.000000000, '52L9EwRrnBTmmWRGZ35YTc38q46FNzSnCy9qurTR9Z11wj4Ve9SfD8MV1cGkn1fnxUAhBBdrTdA8NVhu7kC7JQKJ', 12, 'confirmed', '2026-02-26 23:11:12'),
+(15, 1, 'purchase', -100.000000000, '2CNnXCYXjWg2hYuPk3kGWC61ZMPD3tQMqxxnoLePeBN1yqpC3ufxS9qhiZa7eEbZbW4LBykLw1NUwdA4nEA8bU1P', 13, 'confirmed', '2026-02-26 23:16:01'),
+(16, 1, 'purchase', -100.000000000, '4fU6ZnAzPiVEmVgSe2EatPF8G5uimkxSaJahBJxSPRKc3xeWegyEetavoagbiLkZ6LMvSaTzStXMFaAQAwE9RwvJ', 14, 'confirmed', '2026-02-26 23:17:58'),
+(17, 1, 'purchase', -100.000000000, '3GopVLhXsxjjwHQhgZs1tcfcE1VET6cN85JEC9RoJ3oCYN7YyGtW1sKk4SZGp8TdiV9uNjJDKj8YDxChquXNJptk', 15, 'confirmed', '2026-02-27 03:42:25'),
+(18, 1, 'purchase', -100.000000000, 't7VjfFwPYEUMX63rL6WivxLWKczko51CRkuTK2UjLx5sDYFSRxAByUEQSQw3Gp7HQKfD8iwVByYae5juEFg5kJB', 16, 'confirmed', '2026-02-27 04:01:36'),
+(19, 1, 'purchase', -100.000000000, '3tnMfsvNwKsuPTjq9VEHsnTPbzw23KztyG9rf1MWQX8Diwj2ap9VrQA6seEAQvB8iqQVrL8b5gzEyfQFtLNKYDux', 17, 'confirmed', '2026-02-27 04:07:36'),
+(20, 1, 'purchase', -100.000000000, '1rg56AytzfrQ41x8oSJFEDwepr78iCr7m68D8bBXhD96XE8dv25kxC7YqKdoCmdmLfjJ6nWfmAkXokLcYz5PgcN', 18, 'confirmed', '2026-02-27 04:12:18'),
+(21, 1, 'purchase', -100.000000000, 'PeVeuQBrRA2ASGFNKUET7B4JVKpsMXrp9Y38psEj7RVoGD1pArPyKVZnp5MSUGEZFxE8ywTeyWPZNfA2qjLRaWc', 19, 'confirmed', '2026-02-27 04:14:33'),
+(22, 1, 'purchase', -100.000000000, '2y5Rwd1yg7EZ4xv8NZnBnyqin9nnoZanpEzWqZFUvZcPwLQPtsAMVWfNifPrMKqSur7oDJdaZRLydCNWMCdrpbt6', 20, 'confirmed', '2026-02-27 04:15:58'),
+(23, 1, 'purchase', -100.000000000, '5oKpEmGHnaxwMn992VACj5T2tRPcZMYAXh8mFrGGQr9tcTo7QfyQFBdqzBCQ6wUEsWs3o6H1SRCk8mjG415gGePG', 21, 'confirmed', '2026-02-27 04:18:44'),
+(24, 1, 'auction_bid', 3.000000000, 'BID_1772166176_1', 1, 'failed', '2026-02-27 04:22:56'),
+(25, 1, 'auction_bid', 4.000000000, 'BID_1772166568_1', 1, 'confirmed', '2026-02-27 04:29:28'),
+(26, 1, 'lottery_ticket', -20.000000000, '3tthQy57myz2TDamMaeTTc891woB7XuDJxHdwA8neAdpamNpCWSkec8ZUnp1FVJM6znWE6wR5CRUv6qqb1b8CKr3', 2, 'confirmed', '2026-02-27 04:32:39'),
+(27, 1, 'reward', 20.000000000, NULL, 2, 'confirmed', '2026-02-27 04:34:24'),
+(28, 1, 'purchase', 10.000000000, '4CV3HTTfNS6nQc3CLVUMMDqRkDHUoaYwQVfKNSEqe7wRUat3MoxY8QkXNBXMsXUJ5dh6eh7mHLoNghFKtZe3eMMo', NULL, 'confirmed', '2026-02-27 04:37:15'),
+(29, 1, 'reward', 10.000000000, NULL, 8, 'confirmed', '2026-02-27 04:37:15'),
+(30, 1, 'purchase', 50.000000000, 'MhPZ5G8uH6qy7Ks9nYth8pqqj2cfQr6VPLxdXr5cF5Lx9omrxdzcS8G4Y6gs7iXAMqFS2kKnDFPgtQDiWKQNByx', NULL, 'confirmed', '2026-02-27 04:52:14'),
+(31, 1, 'reward', 10.000000000, NULL, 6, 'confirmed', '2026-02-27 04:52:14'),
+(32, 1, 'purchase', 50.000000000, '3ebPVgJ8Wdnacv8xGJcEU8AoEtUxKeJdvMHQATKSXSAsQeDSX35YrWMwx7tqQdHpYtgjrKUk6XrAp7KtiZsyXSeo', NULL, 'confirmed', '2026-02-27 04:54:53'),
+(33, 1, 'reward', 10.000000000, NULL, 6, 'confirmed', '2026-02-27 04:54:53'),
+(34, 1, 'purchase', 50.000000000, '3so6VcHdJ6cqanBbvFRUVqpvn2gfVJjhrHr3ELiP797jNL24qYyZf2qHXrpvwJt1U8MMSPtShroostWwvrAn74RA', NULL, 'confirmed', '2026-02-27 04:55:59'),
+(35, 1, 'purchase', 50.000000000, '2epEhdrtrsmzh8S9PcTc4kaTx29ttdBrXNXeW5KgwxLGwaNGduojGjVcdTCBSTwE9xM8v2jTV251VUSFwTddEwUF', NULL, 'confirmed', '2026-02-27 05:01:37'),
+(36, 1, 'purchase', -10.000000000, 'yXkMJfipsahuGSGGAN9mfVQiQTHLh2qh7eEA4rU9nwMeV69Mq9JU5giBPR6d4RRGuFYmyCMdj6y8qpyAi5Az7VX', 25, 'confirmed', '2026-02-27 15:22:43'),
+(37, 1, 'purchase', -10.000000000, '4wNroSZEtMW7YNHCN3AWefT8A3yigA8tR8bmLHtX3redEiaboeeU5Pj4ShcvNVAFAXs4UPYE8vFGm1BnHshxiaTZ', 26, 'confirmed', '2026-02-27 15:25:47'),
+(38, 1, 'purchase', -15.000000000, 'QzYPE4J5ygBoxy8UqDwFNJKMC6axhRMqaXMLcRfSGA7CtjuFpWZU99y6dVGnmbJyX9yrtoYLFSt9tZvNZmejVKe', 27, 'confirmed', '2026-02-27 15:26:11'),
+(39, 1, 'auction_bid', 12.000000000, 'BID_1772206432_1', 2, 'failed', '2026-02-27 15:33:52'),
+(40, 1, 'lottery_ticket', -50.000000000, '4M8tY8ZVk6JdZz99q4LAyGxMT4FazoBbe2HMMRKiY73wMFvCqiLNwVojEqX1wthVWHMhtCHdpZ5J2cyyTgZmDUyi', 3, 'confirmed', '2026-02-27 15:35:26'),
+(41, 1, 'reward', 25.000000000, NULL, 3, 'confirmed', '2026-02-27 15:37:29'),
+(42, 1, 'purchase', -40.000000000, '4JVM2754gbQHiHiVCt57pzSJEhxk6NnfrJ7p5sFcu5Jxsynf9Rk9WFR7eokG43winusqEgqUmZvUNrqJtAdLK5Yz', 28, 'confirmed', '2026-02-27 15:38:34'),
+(43, 1, 'purchase', 50.000000000, '243haA8JdWQ8ZbiiabpUmr7u5FN7ct9984TKiyfkEjdcmsDE3cypoqrMrJVozd4TYbBqTrULEfwHaHMcoZjScZYt', NULL, 'confirmed', '2026-02-27 15:49:05'),
+(44, 1, 'reward', 60.000000000, NULL, 20, 'confirmed', '2026-02-27 15:49:06');
 
 -- --------------------------------------------------------
 
@@ -774,7 +893,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `role_id`, `username`, `email`, `password`, `avatar`, `is_active`, `created_at`, `updated_at`, `otp_code`, `otp_expires`) VALUES
-(1, 1, 'garduny', 'gardunydeveloper@gmail.com', '$2y$10$4OZPo3/fyf/Im87BpGzKTe4IKeJi1eKn.AnyjScOl0uHKZxDCjGZu', 'https://skita.io/img/logo.png', 1, '2026-01-23 15:28:44', '2026-02-24 04:50:14', NULL, NULL),
+(1, 1, 'garduny', 'gardunydeveloper@gmail.com', '$2y$10$4OZPo3/fyf/Im87BpGzKTe4IKeJi1eKn.AnyjScOl0uHKZxDCjGZu', 'https://api.phantom.app/image-proxy/?image=https%3A%2F%2Fcoin-images.coingecko.com%2Fcoins%2Fimages%2F69906%2Flarge%2FUntitled_design_%25282%2529.png%3F1767493770&amp;anim=false&amp;fit=cover&amp;width=128&amp;height=128', 1, '2026-01-23 15:28:44', '2026-02-27 15:20:55', NULL, NULL),
 (2, 1, 'shalaw', 'darinkrd2020@gmail.com', '$2y$10$TVnDIUB2wBP8RGmLr5Ze2O1O4C5i5.6YuXCVV5.3bGnGmeK.QnyvC', NULL, 1, '2026-01-23 16:21:13', '2026-01-31 00:54:32', NULL, NULL);
 
 -- --------------------------------------------------------
@@ -817,7 +936,8 @@ INSERT INTO `user_sessions` (`id`, `user_id`, `token`, `ip_address`, `user_agent
 (3, 1, '5e39455dd7b2f462b1b028d65d2903989f5c2c19a349b57872df96456d09bb4d', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', '2026-03-09 12:51:32', '2026-02-07 09:51:32'),
 (4, 1, 'accace3e7f3ce39e9975feb817792c280d115cd9b6f87caa75c1b1567f60f946', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-21 23:58:29', '2026-02-19 20:58:29'),
 (5, 1, '50275fcf5472048782d2f62ef99656adcf490b174400612233f2fe459ce930fc', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-23 02:10:29', '2026-02-20 23:10:29'),
-(6, 1, 'a4fd004714b4606a62ac64644b72357a5a89ab814d891a04fa0ba4f338258fa6', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-26 07:50:14', '2026-02-24 04:50:14');
+(6, 1, 'a4fd004714b4606a62ac64644b72357a5a89ab814d891a04fa0ba4f338258fa6', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-26 07:50:14', '2026-02-24 04:50:14'),
+(7, 1, '06cf8b756a8ad344d8d749d88a2186b81eff069444434b3095ebd4998744d8da', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-29 18:20:55', '2026-02-27 15:20:55');
 
 -- --------------------------------------------------------
 
@@ -876,7 +996,9 @@ CREATE TABLE `withdrawals` (
 --
 
 INSERT INTO `withdrawals` (`id`, `account_id`, `amount`, `status`, `tx_signature`, `created_at`) VALUES
-(1, 1, 20.000000000, 'approved', 'GASHYWITHDRAW', '2026-02-26 03:42:11');
+(1, 1, 20.000000000, 'approved', 'GASHYWITHDRAW', '2026-02-26 03:42:11'),
+(2, 1, 200.000000000, 'pending', NULL, '2026-02-27 15:40:25'),
+(3, 3, 38.000000000, 'pending', NULL, '2026-02-27 15:41:24');
 
 -- --------------------------------------------------------
 
@@ -1162,7 +1284,7 @@ ALTER TABLE `withdrawals`
 -- AUTO_INCREMENT for table `accounts`
 --
 ALTER TABLE `accounts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `account_quests`
@@ -1180,19 +1302,19 @@ ALTER TABLE `account_referrals`
 -- AUTO_INCREMENT for table `account_sessions`
 --
 ALTER TABLE `account_sessions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `activity_log`
 --
 ALTER TABLE `activity_log`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `auctions`
 --
 ALTER TABLE `auctions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `banners`
@@ -1204,7 +1326,7 @@ ALTER TABLE `banners`
 -- AUTO_INCREMENT for table `burn_log`
 --
 ALTER TABLE `burn_log`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -1216,25 +1338,25 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `gift_cards`
 --
 ALTER TABLE `gift_cards`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `lottery_entries`
 --
 ALTER TABLE `lottery_entries`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `lottery_rounds`
 --
 ALTER TABLE `lottery_rounds`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `mystery_box_loot`
 --
 ALTER TABLE `mystery_box_loot`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `nft_burns`
@@ -1270,13 +1392,13 @@ ALTER TABLE `nft_mints`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `permissions`
@@ -1288,7 +1410,7 @@ ALTER TABLE `permissions`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `quests`
@@ -1306,13 +1428,13 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -1330,13 +1452,13 @@ ALTER TABLE `users_forget`
 -- AUTO_INCREMENT for table `user_sessions`
 --
 ALTER TABLE `user_sessions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `withdrawals`
 --
 ALTER TABLE `withdrawals`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
