@@ -41,36 +41,4 @@ $drops = getQuery(" SELECT * FROM nft_drops WHERE status='approved' ORDER BY sta
         </div>
     </div>
 </main>
-<script>
-    async function mintDrop(id, price) {
-        if (!App.checkAuth()) return;
-        window.notyf.success('Approve transaction in wallet...');
-        try {
-            const nonce = Date.now();
-            const msg = `MINT NFT DROP:\n\nDrop ID: #${id}\nCost: ${price} GASHY\nNonce: ${nonce}\n\nClick Approve to mint.`;
-            const encoded = new TextEncoder().encode(msg);
-            const signed = await window.solana.signMessage(encoded, 'utf8');
-            let txSig = '';
-            if (signed.signature) {
-                const sb = signed.signature || signed;
-                txSig = Array.from(new Uint8Array(sb)).map(b => b.toString(16).padStart(2, '0')).join('');
-            } else {
-                txSig = 'MINT_SIG_' + nonce;
-            }
-            const res = await App.post('./api/nft/mint.php', {
-                drop_id: id,
-                tx_signature: txSig
-            });
-            if (res.status) {
-                window.notyf.success(res.message);
-                setTimeout(() => location.reload(), 1500);
-            } else {
-                window.notyf.error(res.message);
-            }
-        } catch (e) {
-            window.notyf.error('Mint Cancelled');
-        }
-    }
-</script>
-<script src="public/js/pages/nft-drops.js"></script>
 <?php require_once 'footer.php'; ?>
