@@ -331,172 +331,24 @@ require_once 'sidebar.php';
                             </svg>Burn Selected</span></button>
                 </div>
             </div>
-            <style>
-                @keyframes bcs-pulse {
-
-                    0%,
-                    100% {
-                        opacity: .5;
-                        transform: scale(1);
-                    }
-
-                    50% {
-                        opacity: 1;
-                        transform: scale(1.08);
-                    }
-                }
-
-                @keyframes bcs-scan {
-                    0% {
-                        transform: translateY(-100%);
-                    }
-
-                    100% {
-                        transform: translateY(400%);
-                    }
-                }
-
-                @keyframes bcs-blink {
-
-                    0%,
-                    100% {
-                        opacity: 1;
-                    }
-
-                    50% {
-                        opacity: 0;
-                    }
-                }
-
-                @keyframes bcs-progress {
-                    0% {
-                        width: 0%;
-                    }
-
-                    70% {
-                        width: 58%;
-                    }
-
-                    100% {
-                        width: 58%;
-                    }
-                }
-
-                .bcs-wrap {
-                    position: relative;
-                    overflow: hidden;
-                    border: 1px solid rgba(239, 68, 68, .15);
-                    background: rgba(19, 24, 36, .6);
-                    backdrop-filter: blur(12px);
-                }
-
-                html:not(.dark) .bcs-wrap {
-                    border-color: rgba(220, 38, 38, .15);
-                    background: rgba(255, 255, 255, .7);
-                }
-
-                .bcs-scan {
-                    position: absolute;
-                    left: 0;
-                    right: 0;
-                    height: 2px;
-                    background: linear-gradient(90deg, transparent, rgba(239, 68, 68, .4), transparent);
-                    animation: bcs-scan 3s linear infinite;
-                    pointer-events: none;
-                }
-
-                html:not(.dark) .bcs-scan {
-                    background: linear-gradient(90deg, transparent, rgba(220, 38, 38, .3), transparent);
-                }
-
-                .bcs-ring {
-                    border: 1px solid rgba(239, 68, 68, .2);
-                }
-
-                .bcs-ring2 {
-                    border: 1px solid rgba(249, 115, 22, .15);
-                }
-
-                .bcs-icon {
-                    background: linear-gradient(135deg, rgba(239, 68, 68, .15), rgba(249, 115, 22, .15));
-                    border: 1px solid rgba(239, 68, 68, .25);
-                }
-
-                html:not(.dark) .bcs-icon {
-                    background: linear-gradient(135deg, rgba(220, 38, 38, .1), rgba(234, 88, 12, .1));
-                    border-color: rgba(220, 38, 38, .25);
-                }
-
-                .bcs-bar-track {
-                    background: rgba(255, 255, 255, .06);
-                    border-radius: 99px;
-                    overflow: hidden;
-                    height: 6px;
-                }
-
-                html:not(.dark) .bcs-bar-track {
-                    background: rgba(0, 0, 0, .07);
-                }
-
-                .bcs-bar-fill {
-                    height: 100%;
-                    border-radius: 99px;
-                    background: linear-gradient(90deg, #ef4444, #f97316);
-                    animation: bcs-progress 2.5s ease-out forwards;
-                }
-
-                .bcs-blink {
-                    animation: bcs-blink 1.2s step-end infinite;
-                }
-
-                .bcs-feat {
-                    border: 1px solid rgba(255, 255, 255, .07);
-                    background: rgba(255, 255, 255, .03);
-                }
-
-                html:not(.dark) .bcs-feat {
-                    border-color: rgba(0, 0, 0, .07);
-                    background: rgba(0, 0, 0, .02);
-                }
-            </style>
-            <div id="burn-loader" class="hidden"></div>
-            <div id="burn-grid" class="hidden"></div>
-            <div id="burn-empty" class="hidden"></div>
-            <div class="bcs-wrap rounded-3xl p-10 md:p-16 text-center relative">
-                <div class="bcs-scan"></div>
-                <div class="relative inline-flex items-center justify-center mb-8">
-                    <div class="bcs-ring absolute w-32 h-32 rounded-full animate-ping" style="animation-duration:2.5s;animation-timing-function:ease-out;"></div>
-                    <div class="bcs-ring2 absolute w-24 h-24 rounded-full" style="animation:bcs-pulse 3s ease-in-out infinite;"></div>
-                    <div class="bcs-icon relative w-20 h-20 rounded-2xl flex items-center justify-center" style="box-shadow:0 0 40px rgba(239,68,68,.15);">
-                        <svg width="36" height="36" fill="none" viewBox="0 0 24 24">
-                            <defs>
-                                <linearGradient id="bg1" x1="0" y1="0" x2="1" y2="1">
-                                    <stop offset="0%" stop-color="#ef4444" />
-                                    <stop offset="100%" stop-color="#f97316" />
-                                </linearGradient>
-                            </defs>
-                            <path fill="url(#bg1)" d="M12 2C9 6 5 8.5 5 13a7 7 0 0 0 14 0c0-4.5-4-7-7-11zm0 17a5 5 0 0 1-5-5c0-3 2.5-5.5 5-8 2.5 2.5 5 5 5 8a5 5 0 0 1-5 5z" />
-                        </svg>
-                    </div>
+            <div id="burn-loader" class="text-center py-28">
+                <div class="inline-flex flex-col items-center gap-4">
+                    <svg class="spin-ring w-12 h-12" fill="none" viewBox="0 0 24 24" style="color:#ef4444;">
+                        <circle class="opacity-20" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" />
+                        <path class="opacity-90" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    <span class="mono text-xs txt-m uppercase tracking-widest">Fetching your NFTs…</span>
                 </div>
-                <div class="mono text-xs uppercase tracking-widest mb-3" style="color:#ef4444;">// Feature in development</div>
-                <h2 class="text-4xl md:text-5xl font-black mb-3 tracking-tight txt-h" style="font-family:'Syne',sans-serif;">Coming <span style="background:linear-gradient(135deg,#ef4444,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Soon</span></h2>
-                <p class="txt-m text-sm max-w-md mx-auto leading-relaxed mb-8">The NFT Incinerator is being forged. Burn your NFTs, reclaim 50% of your $GASHY, and free up your wallet.</p>
-                <div class="max-w-xs mx-auto mb-3">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="mono text-[10px] txt-m uppercase tracking-wider">Build Progress</span>
-                        <span class="mono text-[10px]" style="color:#f97316;">58%<span class="bcs-blink">_</span></span>
-                    </div>
-                    <div class="bcs-bar-track">
-                        <div class="bcs-bar-fill"></div>
-                    </div>
+            </div>
+            <div id="burn-grid" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"></div>
+            <div id="burn-empty" class="hidden text-center py-24 rounded-2xl empty-box">
+                <div class="w-16 h-16 rounded-full empty-icon flex items-center justify-center mx-auto mb-4">
+                    <svg width="24" height="24" fill="#ef4444" viewBox="0 0 24 24">
+                        <path d="M12 2C9 6 5 8.5 5 13a7 7 0 0 0 14 0c0-4.5-4-7-7-11z" />
+                    </svg>
                 </div>
-                <div class="flex flex-wrap justify-center gap-3 mt-8">
-                    <div class="bcs-feat mono text-[11px] txt-m px-4 py-2 rounded-xl uppercase tracking-wider">🔥 Batch Burn</div>
-                    <div class="bcs-feat mono text-[11px] txt-m px-4 py-2 rounded-xl uppercase tracking-wider">🔥 50% Refund</div>
-                    <div class="bcs-feat mono text-[11px] txt-m px-4 py-2 rounded-xl uppercase tracking-wider">🔥 On-chain Destroy</div>
-                    <div class="bcs-feat mono text-[11px] txt-m px-4 py-2 rounded-xl uppercase tracking-wider">🔥 Wallet Sync</div>
-                </div>
+                <div class="mono txt-m text-sm uppercase tracking-widest">// No active NFTs found</div>
+                <div class="mono text-xs mt-2" style="color:#2a3444;">Mint some NFTs on the Launchpad first</div>
             </div>
         </div>
     </div>

@@ -275,173 +275,78 @@ $drops = getQuery(" SELECT * FROM nft_drops WHERE status='approved' ORDER BY sta
                     </div>
                 </div>
             </div>
-            <style>
-                @keyframes cs-pulse {
-
-                    0%,
-                    100% {
-                        opacity: .5;
-                        transform: scale(1);
-                    }
-
-                    50% {
-                        opacity: 1;
-                        transform: scale(1.08);
-                    }
-                }
-
-                @keyframes cs-scan {
-                    0% {
-                        transform: translateY(-100%);
-                    }
-
-                    100% {
-                        transform: translateY(400%);
-                    }
-                }
-
-                @keyframes cs-blink {
-
-                    0%,
-                    100% {
-                        opacity: 1;
-                    }
-
-                    50% {
-                        opacity: 0;
-                    }
-                }
-
-                .cs-wrap {
-                    position: relative;
-                    overflow: hidden;
-                    border: 1px solid rgba(0, 212, 143, .15);
-                    background: rgba(19, 24, 36, .6);
-                    backdrop-filter: blur(12px);
-                }
-
-                html:not(.dark) .cs-wrap {
-                    border-color: rgba(0, 163, 114, .15);
-                    background: rgba(255, 255, 255, .7);
-                }
-
-                .cs-scan-line {
-                    position: absolute;
-                    left: 0;
-                    right: 0;
-                    height: 2px;
-                    background: linear-gradient(90deg, transparent, rgba(0, 212, 143, .4), transparent);
-                    animation: cs-scan 3s linear infinite;
-                    pointer-events: none;
-                }
-
-                html:not(.dark) .cs-scan-line {
-                    background: linear-gradient(90deg, transparent, rgba(0, 163, 114, .3), transparent);
-                }
-
-                .cs-ring {
-                    border: 1px solid rgba(0, 212, 143, .2);
-                }
-
-                html:not(.dark) .cs-ring {
-                    border-color: rgba(0, 163, 114, .2);
-                }
-
-                .cs-ring-2 {
-                    border: 1px solid rgba(139, 92, 246, .15);
-                }
-
-                .cs-icon-bg {
-                    background: linear-gradient(135deg, rgba(0, 212, 143, .15), rgba(139, 92, 246, .15));
-                    border: 1px solid rgba(0, 212, 143, .25);
-                }
-
-                html:not(.dark) .cs-icon-bg {
-                    background: linear-gradient(135deg, rgba(0, 163, 114, .12), rgba(139, 92, 246, .1));
-                    border-color: rgba(0, 163, 114, .25);
-                }
-
-                .cs-bar-track {
-                    background: rgba(255, 255, 255, .06);
-                    border-radius: 99px;
-                    overflow: hidden;
-                    height: 6px;
-                }
-
-                html:not(.dark) .cs-bar-track {
-                    background: rgba(0, 0, 0, .07);
-                }
-
-                @keyframes cs-progress {
-                    0% {
-                        width: 0%;
-                    }
-
-                    70% {
-                        width: 72%;
-                    }
-
-                    100% {
-                        width: 72%;
-                    }
-                }
-
-                .cs-bar-fill {
-                    height: 100%;
-                    border-radius: 99px;
-                    background: linear-gradient(90deg, #8B5CF6, #00d48f);
-                    animation: cs-progress 2.5s ease-out forwards;
-                }
-
-                .cs-blink {
-                    animation: cs-blink 1.2s step-end infinite;
-                }
-
-                .cs-feat {
-                    border: 1px solid rgba(255, 255, 255, .07);
-                    background: rgba(255, 255, 255, .03);
-                }
-
-                html:not(.dark) .cs-feat {
-                    border-color: rgba(0, 0, 0, .07);
-                    background: rgba(0, 0, 0, .02);
-                }
-            </style>
-            <div class="cs-wrap rounded-3xl p-10 md:p-16 text-center relative">
-                <div class="cs-scan-line"></div>
-                <div class="relative inline-flex items-center justify-center mb-8">
-                    <div class="cs-ring absolute w-32 h-32 rounded-full animate-ping" style="animation-duration:2.5s;animation-timing-function:ease-out;"></div>
-                    <div class="cs-ring-2 absolute w-24 h-24 rounded-full" style="animation:cs-pulse 3s ease-in-out infinite;"></div>
-                    <div class="cs-icon-bg relative w-20 h-20 rounded-2xl flex items-center justify-center" style="box-shadow:0 0 40px rgba(0,212,143,.15);">
-                        <svg width="36" height="36" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
-                            <defs>
-                                <linearGradient id="ig1" x1="0" y1="0" x2="1" y2="1">
-                                    <stop offset="0%" stop-color="#8B5CF6" />
-                                    <stop offset="100%" stop-color="#00d48f" />
-                                </linearGradient>
-                            </defs>
-                            <path stroke="url(#ig1)" stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <?php foreach ($drops as $i => $d):
+                    $pct     = $d['max_supply'] > 0 ? ($d['minted_count'] / $d['max_supply']) * 100 : 0;
+                    $live    = time() >= strtotime($d['start_time']) && time() <= strtotime($d['end_time']);
+                    $soldout = $d['minted_count'] >= $d['max_supply'];
+                    $upcoming = !$live && !$soldout;
+                ?>
+                    <div class="drop-card dc rounded-2xl flex flex-col group">
+                        <div class="relative h-60 overflow-hidden rounded-t-2xl">
+                            <img src="<?= htmlspecialchars($d['image_uri']) ?>" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+                            <div class="img-ov absolute inset-0"></div>
+                            <div class="absolute top-4 left-4 z-10">
+                                <?php if ($soldout): ?>
+                                    <span class="mono badge-sold px-3 py-1 rounded-lg text-xs font-bold uppercase">✕ Sold Out</span>
+                                <?php elseif ($live): ?>
+                                    <span class="badge-live mono badge-on px-3 py-1 rounded-lg text-xs font-bold uppercase inline-flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background:#00d48f;"></span>Live</span>
+                                <?php else: ?>
+                                    <span class="mono badge-up px-3 py-1 rounded-lg text-xs font-bold uppercase">◷ Upcoming</span>
+                                <?php endif; ?>
+                            </div>
+                            <div class="absolute top-4 right-4 z-10 mono text-xs" style="color:rgba(255,255,255,.2);">#<?= str_pad($i + 1, 3, '0', STR_PAD_LEFT) ?></div>
+                            <div class="absolute bottom-0 left-0 right-0 p-4 z-10">
+                                <h3 class="text-xl font-black text-white leading-tight" style="font-family:'Syne',sans-serif;"><?= htmlspecialchars($d['collection_name']) ?><span class="mono text-xs ml-2 font-normal opacity-70" style="color:#00d48f;">$<?= htmlspecialchars($d['symbol']) ?></span></h3>
+                            </div>
+                        </div>
+                        <div class="p-5 flex-1 flex flex-col gap-4">
+                            <p class="text-sm txt-m line-clamp-2 leading-relaxed"><?= htmlspecialchars($d['description']) ?></p>
+                            <div class="dc-div"></div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="dc-mini rounded-xl p-3">
+                                    <div class="text-[10px] txt-m mono uppercase tracking-wider mb-1">Minted</div>
+                                    <div class="mono txt-h font-bold text-sm"><?= number_format($d['minted_count']) ?><span class="txt-m font-normal"> / <?= number_format($d['max_supply']) ?></span></div>
+                                </div>
+                                <div class="dc-mini rounded-xl p-3">
+                                    <div class="text-[10px] txt-m mono uppercase tracking-wider mb-1">Price</div>
+                                    <div class="mono font-bold text-sm" style="color:#00d48f;"><?= number_format($d['price_gashy']) ?><span class="txt-m font-normal"> G</span></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-[10px] mono txt-m uppercase tracking-wider">Supply Minted</span>
+                                    <span class="text-[10px] mono" style="color:#8B5CF6;"><?= round($pct) ?>%</span>
+                                </div>
+                                <div class="prog-bar">
+                                    <div class="prog-fill" style="width:<?= $pct ?>%;"></div>
+                                </div>
+                            </div>
+                            <?php if ($upcoming): ?>
+                                <div class="mono text-[10px] txt-m flex items-center gap-2"><span style="color:#8B5CF6;">▶</span>Starts <?= date('M d, Y · H:i', strtotime($d['start_time'])) ?> UTC</div>
+                            <?php elseif ($live): ?>
+                                <div class="mono text-[10px] txt-m flex items-center gap-2"><span style="color:#00d48f;">■</span>Ends <?= date('M d, Y · H:i', strtotime($d['end_time'])) ?> UTC</div>
+                            <?php endif; ?>
+                            <div class="mt-auto">
+                                <?php if ($soldout): ?>
+                                    <button disabled class="btn-mint w-full py-3.5 rounded-xl font-bold text-sm mono uppercase tracking-widest cursor-not-allowed" style="border:1px solid rgba(239,68,68,.2);color:rgba(248,113,113,.35);">✕ Sold Out</button>
+                                <?php elseif (!$live): ?>
+                                    <button disabled class="btn-mint w-full py-3.5 rounded-xl font-bold text-sm mono uppercase tracking-widest cursor-not-allowed" style="border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.2);">◷ <?= date('M d', strtotime($d['start_time'])) ?></button>
+                                <?php else: ?>
+                                    <button onclick="mintDrop(<?= $d['id'] ?>,<?= $d['price_gashy'] ?>)" class="btn-mint w-full py-3.5 rounded-xl font-black text-sm text-white mono uppercase tracking-widest" style="box-shadow:0 4px 20px rgba(139,92,246,.25);"><span class="relative z-10 flex items-center justify-center gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                                            </svg>Mint NFT</span></button>
+                                <?php endif; ?>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="mono text-xs uppercase tracking-widest mb-3" style="color:#00d48f;">// Feature in development</div>
-                <h2 class="text-4xl md:text-5xl font-black mb-3 tracking-tight txt-h" style="font-family:'Syne',sans-serif;">Coming <span style="background:linear-gradient(135deg,#8B5CF6,#00ffaa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Soon</span></h2>
-                <p class="txt-m text-sm max-w-md mx-auto leading-relaxed mb-8">The NFT Launchpad is being built. Exclusive drops, on-chain minting, and $GASHY payments are on the way.</p>
-                <div class="max-w-xs mx-auto mb-3">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="mono text-[10px] txt-m uppercase tracking-wider">Build Progress</span>
-                        <span class="mono text-[10px]" style="color:#8B5CF6;">72%<span class="cs-blink">_</span></span>
+                <?php endforeach; ?>
+                <?php if (empty($drops)): ?>
+                    <div class="col-span-3 text-center py-24">
+                        <div class="mono txt-m text-sm tracking-widest uppercase">// No approved drops found</div>
+                        <div class="mono text-xs mt-2" style="color:#2a3444;">Check back soon for upcoming collections</div>
                     </div>
-                    <div class="cs-bar-track">
-                        <div class="cs-bar-fill"></div>
-                    </div>
-                </div>
-                <div class="flex flex-wrap justify-center gap-3 mt-8">
-                    <div class="cs-feat mono text-[11px] txt-m px-4 py-2 rounded-xl uppercase tracking-wider">◆ On-chain Minting</div>
-                    <div class="cs-feat mono text-[11px] txt-m px-4 py-2 rounded-xl uppercase tracking-wider">◆ $GASHY Payments</div>
-                    <div class="cs-feat mono text-[11px] txt-m px-4 py-2 rounded-xl uppercase tracking-wider">◆ Exclusive Collections</div>
-                    <div class="cs-feat mono text-[11px] txt-m px-4 py-2 rounded-xl uppercase tracking-wider">◆ Live Drop Tracker</div>
-                </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
