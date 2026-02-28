@@ -205,7 +205,7 @@ require_once 'sidebar.php';
     async function loadQuests() {
         const container = document.getElementById('quests-container');
         try {
-            const res = await App.post('api/account/quests.php', {});
+            const res = await App.post('./api/account/quests.php', {});
             if (res.status && res.data) {
                 if (res.data.length === 0) {
                     container.innerHTML = `
@@ -287,7 +287,7 @@ Claim ${q.reward_gashy} G
     }
     async function claimReward(qid) {
         try {
-            const res = await App.post('api/account/claim_quest.php', {
+            const res = await App.post('./api/account/claim_quest.php', {
                 quest_id: qid
             });
             if (res.status) {

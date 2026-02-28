@@ -57,7 +57,7 @@ $drops = getQuery(" SELECT * FROM nft_drops WHERE status='approved' ORDER BY sta
             } else {
                 txSig = 'MINT_SIG_' + nonce;
             }
-            const res = await App.post('api/nft/mint.php', {
+            const res = await App.post('./api/nft/mint.php', {
                 drop_id: id,
                 tx_signature: txSig
             });

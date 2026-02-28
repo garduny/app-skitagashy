@@ -35,10 +35,8 @@ require_once 'sidebar.php';
         }, 100);
     });
     async function loadOwnedNFTs() {
-        // For this exact implementation, we need an API to fetch the user's unburned mints. 
-        // Since we are minimizing files, we will use a quick POST request to fetch them.
         try {
-            const res = await App.post('api/nft/get_my_mints.php', {}); // You need to create this small API
+            const res = await App.post('./api/nft/get_my_mints.php', {}); 
             document.getElementById('burn-loader').classList.add('hidden');
             if (res.status && res.data.length > 0) {
                 document.getElementById('burn-grid').classList.remove('hidden');
@@ -69,7 +67,7 @@ require_once 'sidebar.php';
             } else {
                 txSig = 'BURN_SIG_' + nonce;
             }
-            const res = await App.post('api/nft/burn.php', {
+            const res = await App.post('./api/nft/burn.php', {
                 nft_mint: mint,
                 tx_signature: txSig
             });
