@@ -4,11 +4,11 @@ if (file_exists('../../server/init.php')) {
 } else {
     exit;
 }
-$token = request('token', 'post') ?? str_replace('Bearer ', '', $_SERVER['HTTP_AUTHORIZATION'] ?? '');
+$token = request('token') ?? str_replace('Bearer ', '', $_SERVER['HTTP_AUTHORIZATION'] ?? '');
 $session = findQuery(" SELECT account_id FROM account_sessions WHERE token='$token' AND expires_at>NOW() ");
 if (!$session) encode(['status' => false, 'message' => 'Unauthorized']);
 $uid = $session['account_id'];
-$amount = (float)request('amount', 'post');
+$amount = (float)request('amount');
 if ($amount <= 0) encode(['status' => false, 'message' => 'Invalid amount']);
 $isSeller = (bool)findQuery(" SELECT account_id FROM sellers WHERE account_id=$uid AND is_approved=1 ");
 $reward_balance = findQuery(" SELECT COALESCE(SUM(amount),0) t FROM transactions WHERE account_id=$uid AND status='confirmed' AND type IN ('reward','referral','bonus','mystery_reward') ")['t'] ?? 0;
@@ -26,7 +26,7 @@ $withdrawable = max($total_pool - $withdrawn, 0);
 if ($amount > $withdrawable) {
     encode(['status' => false, 'message' => 'Insufficient funds. Available: ' . number_format($withdrawable, 3)]);
 }
-execute("INSERT INTO withdrawals (account_id,amount,status,created_at) VALUES ($uid,$amount,'pending',NOW()) ");
+execute(" INSERT INTO withdrawals (account_id,amount,status,created_at) VALUES ($uid,$amount,'pending',NOW()) ");
 $account = findQuery(" SELECT email,accountname FROM accounts WHERE id=$uid ");
 if ($account && function_exists('mailer')) {
     $adminEmail = findQuery(" SELECT value FROM settings WHERE key_name='email' ")['value'] ?? '';
