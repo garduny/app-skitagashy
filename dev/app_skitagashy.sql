@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 01, 2026 at 09:51 PM
+-- Generation Time: Mar 02, 2026 at 05:37 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -47,7 +47,7 @@ CREATE TABLE `accounts` (
 --
 
 INSERT INTO `accounts` (`id`, `wallet_address`, `accountname`, `email`, `role`, `tier`, `nonce`, `is_verified`, `created_at`, `updated_at`, `is_banned`, `my_referral_code`) VALUES
-(1, '6dygwo6jHPrExGKrohykhYoC1DkAA6CyPp9qDbhMe1JT', 'gardunydev', 'gardunydeveloper@gmail.com', 'seller', 'bronze', 'bd45660a3cd2a193c8f2578d9ff80752', 0, '2026-01-16 04:03:30', '2026-02-21 13:35:22', 0, 'c6a0bad7'),
+(1, '6dygwo6jHPrExGKrohykhYoC1DkAA6CyPp9qDbhMe1JT', 'gardunydev', 'gardunydeveloper@gmail.com', 'seller', 'bronze', 'bd45660a3cd2a193c8f2578d9ff80752', 0, '2026-01-16 04:03:30', '2026-03-02 04:36:26', 0, 'c6a0bad7'),
 (2, 'Di6...TEST_WALLET_2', 'CryptoKing', 'seller2@test.com', 'account', 'bronze', NULL, 0, '2026-02-02 02:50:08', '2026-02-02 03:14:25', 0, NULL),
 (3, 'Hmdv1Asp6uhvG9SCX64fdCX7wVkYZ792v5uavjEjACXb', NULL, NULL, 'account', 'bronze', 'b46799ba324cc88d29b1432bd1fabfdb', 0, '2026-02-26 22:23:11', '2026-02-26 22:23:11', 0, 'be443d4c');
 
@@ -121,7 +121,8 @@ INSERT INTO `account_sessions` (`id`, `account_id`, `token`, `ip_address`, `acco
 (11, 3, 'c15cf4b5df02c9743430c98530408b38a7096878504c5476e486d43e1ee73962', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', '2026-03-06 01:23:11', '2026-02-26 22:23:11'),
 (12, 1, 'ae7bb995b0535f10cdaf7ba12a7679085f53524982d798bbca10e1854d23f9cc', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-06 18:18:54', '2026-02-27 15:18:54'),
 (13, 3, '4aa66fa3df846c7b313dd13368bd9b1c3262729e49c9ba1084bb88af0ea0fcb7', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', '2026-03-06 18:19:48', '2026-02-27 15:19:48'),
-(14, 3, 'edd77ce4e4cdd87c9f0b877025df91c340edc2306ca7d01dd082c5559a40fd04', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', '2026-03-06 18:41:12', '2026-02-27 15:41:12');
+(14, 3, 'edd77ce4e4cdd87c9f0b877025df91c340edc2306ca7d01dd082c5559a40fd04', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', '2026-03-06 18:41:12', '2026-02-27 15:41:12'),
+(15, 1, '35c4e1c25d872f19c6c107c4c34da8659e53329292de476785596eeb0c740197', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-09 07:36:38', '2026-03-02 04:36:38');
 
 -- --------------------------------------------------------
 
@@ -512,7 +513,7 @@ INSERT INTO `orders` (`id`, `account_id`, `total_gashy`, `tx_signature`, `status
 (2, 1, 2.000000000, 'AUC_WIN_1_1771916171.5768', 'completed', '2026-02-24 06:56:11'),
 (4, 1, 25.000000000, '6659c81730b41d861a9db3e8e25d9596962493c7c56604f88edfe0fc9a0ae2a4d66519f3aab21c4d5e0f086d', 'completed', '2026-02-24 07:02:39'),
 (7, 1, 25.000000000, '34d0f397b78299a91d4d3f8bcc9dd6e6bf9e1c870d7e2415db235ca987773a53fae9be590b0191b6d170d359', 'completed', '2026-02-24 07:28:30'),
-(8, 2, 10.000000000, '34d0f397b78299a9hh4d3f8bcc9dd6e6bf9e1c870d7dffa65db235ca987773a53fae9be590b0191b6d170d35', 'delivered', '2026-02-24 07:28:30'),
+(8, 2, 10.000000000, '34d0f397b78299a9hh4d3f8bcc9dd6e6bf9e1c870d7dffa65db235ca987773a53fae9be590b0191b6d170d35', 'completed', '2026-02-24 07:28:30'),
 (10, 1, 1.000000000, '9c8bFxnceMF9dryQsc1CfcFr8haaix1ZmTtWa5F1QPGs5GE4YmWapLzVjNUWwer7i9dSWezReVRhWLXvn2oxu9G', 'completed', '2026-02-26 23:00:21'),
 (11, 1, 100.000000000, '2N13dzVHMWdiFA6u6AaTL5yB5xwP3xQbLjPsivWzSMUHd997CBUtXwF5DZ61vsaegy84CKiMaLdCE13XtaLQeA4w', 'processing', '2026-02-26 23:05:22'),
 (12, 1, 100.000000000, '52L9EwRrnBTmmWRGZ35YTc38q46FNzSnCy9qurTR9Z11wj4Ve9SfD8MV1cGkn1fnxUAhBBdrTdA8NVhu7kC7JQKJ', 'processing', '2026-02-26 23:11:12'),
@@ -774,9 +775,8 @@ CREATE TABLE `system_rate_limits` (
 --
 
 INSERT INTO `system_rate_limits` (`ip_address`, `endpoint`, `requests`, `reset_time`) VALUES
-('::1', 'auth_attempt', 1, 1772206932),
-('::1', 'global_api', 5, 1772398287),
-('::1', 'transaction', 1, 1772206774);
+('::1', 'auth_attempt', 1, 1772426258),
+('::1', 'global_api', 34, 1772426258);
 
 -- --------------------------------------------------------
 
@@ -999,7 +999,9 @@ INSERT INTO `withdrawals` (`id`, `account_id`, `amount`, `status`, `tx_signature
 (1, 1, 20.000000000, 'approved', 'GASHYWITHDRAW', '2026-02-26 03:42:11'),
 (2, 1, 200.000000000, 'rejected', NULL, '2026-02-27 15:40:25'),
 (3, 3, 38.000000000, 'pending', NULL, '2026-02-27 15:41:24'),
-(4, 1, 349.000000000, 'approved', 'PAYOUT_69a4a6847a2c1', '2026-03-01 20:49:49');
+(4, 1, 349.000000000, 'approved', 'PAYOUT_69a4a6847a2c1', '2026-03-01 20:49:49'),
+(5, 1, 1.000000000, 'pending', NULL, '2026-03-02 04:35:07'),
+(6, 3, 38.000000000, 'approved', 'PAYOUT_69a513a2d8174', '2026-03-02 04:35:35');
 
 -- --------------------------------------------------------
 
@@ -1303,7 +1305,7 @@ ALTER TABLE `account_referrals`
 -- AUTO_INCREMENT for table `account_sessions`
 --
 ALTER TABLE `account_sessions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `activity_log`
@@ -1459,7 +1461,7 @@ ALTER TABLE `user_sessions`
 -- AUTO_INCREMENT for table `withdrawals`
 --
 ALTER TABLE `withdrawals`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables
