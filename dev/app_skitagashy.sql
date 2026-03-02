@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 28, 2026 at 07:28 AM
+-- Generation Time: Mar 01, 2026 at 09:51 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -775,7 +775,7 @@ CREATE TABLE `system_rate_limits` (
 
 INSERT INTO `system_rate_limits` (`ip_address`, `endpoint`, `requests`, `reset_time`) VALUES
 ('::1', 'auth_attempt', 1, 1772206932),
-('::1', 'global_api', 7, 1772260091),
+('::1', 'global_api', 5, 1772398287),
 ('::1', 'transaction', 1, 1772206774);
 
 -- --------------------------------------------------------
@@ -997,8 +997,9 @@ CREATE TABLE `withdrawals` (
 
 INSERT INTO `withdrawals` (`id`, `account_id`, `amount`, `status`, `tx_signature`, `created_at`) VALUES
 (1, 1, 20.000000000, 'approved', 'GASHYWITHDRAW', '2026-02-26 03:42:11'),
-(2, 1, 200.000000000, 'pending', NULL, '2026-02-27 15:40:25'),
-(3, 3, 38.000000000, 'pending', NULL, '2026-02-27 15:41:24');
+(2, 1, 200.000000000, 'rejected', NULL, '2026-02-27 15:40:25'),
+(3, 3, 38.000000000, 'pending', NULL, '2026-02-27 15:41:24'),
+(4, 1, 349.000000000, 'approved', 'PAYOUT_69a4a6847a2c1', '2026-03-01 20:49:49');
 
 -- --------------------------------------------------------
 
@@ -1458,7 +1459,7 @@ ALTER TABLE `user_sessions`
 -- AUTO_INCREMENT for table `withdrawals`
 --
 ALTER TABLE `withdrawals`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables

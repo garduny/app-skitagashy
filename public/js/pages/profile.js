@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('guest-view').classList.add('hidden');
     document.getElementById('auth-view').classList.remove('hidden');
     await loadAccountData();
+    await loadWithdrawals();
     await loadRecentOrders();
 });
 async function loadAccountData() {
@@ -22,12 +23,54 @@ async function loadAccountData() {
             document.getElementById('input-accountname').value = u.accountname || '';
             document.getElementById('input-email').value = u.email || '';
             document.getElementById('referral-code').value = 'GASHY-REF-Account' + u.id;
+            document.getElementById('withdrawable-balance').innerText =
+                parseFloat(u.wallet_stats.withdrawable || 0).toFixed(3) + ' GASHY';
             const tiers = { 'bronze': '🥉', 'silver': '🥈', 'gold': '🥇', 'platinum': '💎', 'diamond': '👑' };
             document.getElementById('account-tier-icon').innerText = tiers[u.tier] || '🥉';
         }
     } catch (e) {
         console.error("Profile Load Error", e);
     }
+}
+async function requestWithdraw() {
+    const amount = parseFloat(document.getElementById('withdraw-amount').value || 0);
+    if (amount <= 0) { notyf.error('Invalid amount'); return; }
+    try {
+        const res = await App.post('./api/account/withdrawal.php', { amount });
+        if (res.status) {
+            notyf.success(res.message);
+            document.getElementById('withdrawable-balance').innerText =
+                parseFloat(res.available).toFixed(3) + ' GASHY';
+        } else notyf.error(res.message);
+    } catch (e) { notyf.error('Withdraw failed'); }
+}
+async function loadWithdrawals() {
+    const box = document.getElementById('withdrawals-list');
+    try {
+        const res = await App.post('./api/account/withdrawals.php', {});
+        if (res.status && res.data.length) {
+            box.innerHTML = res.data.map(w => `
+<div class="flex items-center justify-between p-4 bg-white dark:bg-[#151A23] rounded-xl border border-gray-200 dark:border-white/5">
+<div>
+<div class="font-bold text-gray-900 dark:text-white">${parseFloat(w.amount).toFixed(3)} GASHY</div>
+<div class="text-xs text-gray-500">${new Date(w.created_at).toLocaleDateString()}</div>
+</div>
+<div class="text-right">
+<span class="px-2 py-1 rounded text-[10px] font-bold uppercase ${getWithdrawColor(w.status)}">${w.status}</span>
+</div>
+</div>
+`).join('');
+        } else {
+            box.innerHTML = `<div class="text-center text-gray-500 text-sm py-6">No withdrawals yet</div>`;
+        }
+    } catch (e) {
+        box.innerHTML = `<div class="text-center text-red-500 text-sm py-6">Failed to load</div>`;
+    }
+}
+function getWithdrawColor(status) {
+    if (status === 'approved') return 'bg-green-100 text-green-600 dark:bg-green-500/20 dark:text-green-400';
+    if (status === 'pending') return 'bg-yellow-100 text-yellow-600 dark:bg-yellow-500/20 dark:text-yellow-400';
+    return 'bg-red-100 text-red-600 dark:bg-red-500/20 dark:text-red-400';
 }
 async function loadRecentOrders() {
     const list = document.getElementById('recent-orders-list');

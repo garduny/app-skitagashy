@@ -112,4 +112,4 @@ RewriteRule ^ /app-skitagashy/404.php [L,R=302]
 # 2. Production (Live)
 RewriteCond %{HTTP_HOST} !^localhost$ [NC]
 RewriteCond %{REMOTE_ADDR} !^127\.0\.0\.1$
-RewriteRule ^ /skitagashy/404.php [L,R=302]
+RewriteRule ^ /404.php [L,R=302]
