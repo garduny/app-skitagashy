@@ -42,7 +42,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         --font-body: 'Rajdhani', sans-serif;
         --font-mono: 'JetBrains Mono', monospace;
     }
-
     *,
     *::before,
     *::after {
@@ -50,272 +49,216 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         margin: 0;
         padding: 0;
     }
-
     html {
         scroll-behavior: smooth;
     }
-
     body {
         background: var(--void);
         color: #e2e8f0;
         font-family: var(--font-body);
         overflow-x: hidden;
     }
-
     @keyframes ticker {
         0% {
             transform: translateX(0)
         }
-
         100% {
             transform: translateX(-50%)
         }
     }
-
     @keyframes scanline {
         0% {
             transform: translateY(-100%)
         }
-
         100% {
             transform: translateY(100vh)
         }
     }
-
     @keyframes flicker {
-
         0%,
         100% {
             opacity: 1
         }
-
         92% {
             opacity: 1
         }
-
         93% {
             opacity: 0.8
         }
-
         94% {
             opacity: 1
         }
-
         96% {
             opacity: 0.9
         }
-
         97% {
             opacity: 1
         }
     }
-
     @keyframes glitch-1 {
-
         0%,
         100% {
             clip-path: inset(0 0 100% 0);
             transform: translateX(0)
         }
-
         20% {
             clip-path: inset(20% 0 60% 0);
             transform: translateX(-4px)
         }
-
         40% {
             clip-path: inset(50% 0 30% 0);
             transform: translateX(4px)
         }
-
         60% {
             clip-path: inset(70% 0 10% 0);
             transform: translateX(-2px)
         }
-
         80% {
             clip-path: inset(10% 0 80% 0);
             transform: translateX(2px)
         }
     }
-
     @keyframes glitch-2 {
-
         0%,
         100% {
             clip-path: inset(0 0 100% 0);
             transform: translateX(0)
         }
-
         20% {
             clip-path: inset(60% 0 20% 0);
             transform: translateX(3px)
         }
-
         40% {
             clip-path: inset(30% 0 50% 0);
             transform: translateX(-3px)
         }
-
         60% {
             clip-path: inset(10% 0 70% 0);
             transform: translateX(2px)
         }
-
         80% {
             clip-path: inset(80% 0 5% 0);
             transform: translateX(-2px)
         }
     }
-
     @keyframes neon-pulse {
-
         0%,
         100% {
             text-shadow: 0 0 10px var(--neon), 0 0 20px var(--neon), 0 0 40px var(--neon)
         }
-
         50% {
             text-shadow: 0 0 5px var(--neon), 0 0 10px var(--neon), 0 0 20px var(--neon), 0 0 60px var(--neon), 0 0 80px var(--neon)
         }
     }
-
     @keyframes border-spin {
         0% {
             transform: rotate(0deg)
         }
-
         100% {
             transform: rotate(360deg)
         }
     }
-
     @keyframes float-up {
         from {
             opacity: 0;
             transform: translateY(40px)
         }
-
         to {
             opacity: 1;
             transform: translateY(0)
         }
     }
-
     @keyframes matrix-rain {
         0% {
             transform: translateY(-100%);
             opacity: 1
         }
-
         100% {
             transform: translateY(100vh);
             opacity: 0
         }
     }
-
     @keyframes bg-pan {
         0% {
             background-position: 0% 50%
         }
-
         50% {
             background-position: 100% 50%
         }
-
         100% {
             background-position: 0% 50%
         }
     }
-
     @keyframes shimmer {
         0% {
             background-position: -200% center
         }
-
         100% {
             background-position: 200% center
         }
     }
-
     @keyframes card-glow {
-
         0%,
         100% {
             box-shadow: 0 0 20px rgba(0, 255, 170, 0.05), inset 0 1px 0 rgba(0, 255, 170, 0.1)
         }
-
         50% {
             box-shadow: 0 0 40px rgba(0, 255, 170, 0.12), inset 0 1px 0 rgba(0, 255, 170, 0.2)
         }
     }
-
     @keyframes counter-up {
         from {
             opacity: 0;
             transform: translateY(20px)
         }
-
         to {
             opacity: 1;
             transform: translateY(0)
         }
     }
-
     @keyframes reveal {
         from {
             opacity: 0;
             transform: translateY(50px)
         }
-
         to {
             opacity: 1;
             transform: translateY(0)
         }
     }
-
     .reveal {
         opacity: 0;
         animation: reveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards
     }
-
     .d1 {
         animation-delay: 0.05s
     }
-
     .d2 {
         animation-delay: 0.15s
     }
-
     .d3 {
         animation-delay: 0.25s
     }
-
     .d4 {
         animation-delay: 0.35s
     }
-
     .d5 {
         animation-delay: 0.45s
     }
-
     .d6 {
         animation-delay: 0.55s
     }
-
     .main-wrap {
         padding-top: 6rem;
         padding-left: 0;
         min-height: 100vh;
         position: relative;
     }
-
     @media(min-width:1024px) {
         .main-wrap {
             padding-left: 18rem
         }
     }
-
     .bg-grid {
         position: fixed;
         inset: 0;
@@ -326,7 +269,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
             linear-gradient(90deg, rgba(0, 255, 170, 0.025) 1px, transparent 1px);
         background-size: 60px 60px;
     }
-
     .bg-orbs {
         position: fixed;
         inset: 0;
@@ -334,14 +276,12 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         z-index: 0;
         overflow: hidden;
     }
-
     .orb {
         position: absolute;
         border-radius: 50%;
         filter: blur(120px);
         opacity: 0.06;
     }
-
     .orb-1 {
         width: 700px;
         height: 700px;
@@ -349,7 +289,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         top: -200px;
         left: 10%;
     }
-
     .orb-2 {
         width: 600px;
         height: 600px;
@@ -357,7 +296,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         bottom: -100px;
         right: 5%;
     }
-
     .orb-3 {
         width: 500px;
         height: 500px;
@@ -365,7 +303,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         top: 40%;
         left: 40%;
     }
-
     .scanline-overlay {
         position: fixed;
         inset: 0;
@@ -377,7 +314,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
                 rgba(0, 0, 0, 0.03) 2px,
                 rgba(0, 0, 0, 0.03) 4px);
     }
-
     .content {
         position: relative;
         z-index: 10;
@@ -385,7 +321,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         margin: 0 auto;
         padding: 0 1.5rem 5rem;
     }
-
     .ticker-bar {
         position: sticky;
         top: 5rem;
@@ -396,7 +331,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         background: rgba(3, 5, 13, 0.95);
         backdrop-filter: blur(20px);
     }
-
     .ticker-bar::before,
     .ticker-bar::after {
         content: '';
@@ -407,17 +341,14 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         z-index: 2;
         pointer-events: none;
     }
-
     .ticker-bar::before {
         left: 0;
         background: linear-gradient(90deg, rgba(3, 5, 13, 1), transparent)
     }
-
     .ticker-bar::after {
         right: 0;
         background: linear-gradient(90deg, transparent, rgba(3, 5, 13, 1))
     }
-
     .ticker-inner {
         display: inline-flex;
         gap: 3rem;
@@ -426,7 +357,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         will-change: transform;
         white-space: nowrap;
     }
-
     .ticker-item {
         font-family: var(--font-mono);
         font-size: 0.7rem;
@@ -436,20 +366,17 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         align-items: center;
         gap: 0.4rem;
     }
-
     .ticker-dot {
         width: 5px;
         height: 5px;
         border-radius: 50%;
         flex-shrink: 0;
     }
-
     .hero-section {
         padding: 5rem 0 3rem;
         text-align: center;
         position: relative;
     }
-
     .hero-badge {
         display: inline-flex;
         align-items: center;
@@ -466,7 +393,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         text-transform: uppercase;
         margin-bottom: 2rem;
     }
-
     .hero-badge-dot {
         width: 6px;
         height: 6px;
@@ -475,7 +401,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         box-shadow: 0 0 8px var(--neon);
         animation: neon-pulse 2s ease-in-out infinite;
     }
-
     .hero-title {
         font-family: var(--font-display);
         font-size: clamp(3rem, 10vw, 8rem);
@@ -486,7 +411,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         position: relative;
         margin-bottom: 0.5rem;
     }
-
     .hero-title-accent {
         font-family: var(--font-display);
         font-size: clamp(3.5rem, 11vw, 9.5rem);
@@ -503,7 +427,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         margin-bottom: 2rem;
         position: relative;
     }
-
     .hero-title-accent::before,
     .hero-title-accent::after {
         content: attr(data-text);
@@ -518,21 +441,18 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         -webkit-background-clip: text;
         background-clip: text;
     }
-
     .hero-title-accent::before {
         color: var(--plasma);
         -webkit-text-fill-color: rgba(255, 45, 120, 0.5);
         animation: glitch-1 5s infinite linear;
         left: 2px;
     }
-
     .hero-title-accent::after {
         color: #00c8ff;
         -webkit-text-fill-color: rgba(0, 200, 255, 0.4);
         animation: glitch-2 5s 0.1s infinite linear;
         left: -2px;
     }
-
     .hero-desc {
         font-family: var(--font-body);
         font-size: 1.2rem;
@@ -542,12 +462,10 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         margin: 0 auto 3rem;
         line-height: 1.7;
     }
-
     .hero-desc span {
         color: var(--neon);
         font-weight: 700;
     }
-
     .btn-primary {
         display: inline-flex;
         align-items: center;
@@ -567,7 +485,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         position: relative;
         overflow: hidden;
     }
-
     .btn-primary::before {
         content: '';
         position: absolute;
@@ -576,17 +493,14 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         transform: translateX(-100%);
         transition: transform 0.4s;
     }
-
     .btn-primary:hover::before {
         transform: translateX(100%)
     }
-
     .btn-primary:hover {
         background: #00ffcc;
         box-shadow: 0 0 30px rgba(0, 255, 170, 0.5), 0 8px 20px rgba(0, 255, 170, 0.2);
         transform: translateY(-2px);
     }
-
     .btn-secondary {
         display: inline-flex;
         align-items: center;
@@ -606,14 +520,12 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         position: relative;
         overflow: hidden;
     }
-
     .btn-secondary:hover {
         background: rgba(0, 255, 170, 0.08);
         border-color: var(--neon);
         box-shadow: 0 0 20px rgba(0, 255, 170, 0.2);
         transform: translateY(-2px);
     }
-
     .btn-cg {
         display: inline-flex;
         align-items: center;
@@ -631,20 +543,17 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         transition: all 0.2s;
         text-decoration: none;
     }
-
     .btn-cg:hover {
         background: #7caf43;
         box-shadow: 0 8px 20px rgba(141, 195, 81, 0.3);
         transform: translateY(-2px);
     }
-
     .hero-buttons {
         display: flex;
         flex-wrap: wrap;
         gap: 1rem;
         justify-content: center;
     }
-
     .stat-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -655,13 +564,11 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         overflow: hidden;
         margin: 4rem 0;
     }
-
     @media(min-width:768px) {
         .stat-grid {
             grid-template-columns: repeat(4, 1fr)
         }
     }
-
     .stat-cell {
         background: var(--panel);
         padding: 2rem 1.5rem;
@@ -671,18 +578,15 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         transition: background 0.3s;
         animation: card-glow 4s ease-in-out infinite;
     }
-
     .stat-cell:hover {
         background: rgba(0, 255, 170, 0.04)
     }
-
     .stat-cell::before {
         content: '';
         position: absolute;
         inset: 0;
         background: linear-gradient(135deg, transparent 40%, rgba(0, 255, 170, 0.04) 100%);
     }
-
     .stat-label {
         font-family: var(--font-mono);
         font-size: 0.6rem;
@@ -692,7 +596,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         text-transform: uppercase;
         margin-bottom: 0.75rem;
     }
-
     .stat-val {
         font-family: var(--font-display);
         font-size: clamp(1.5rem, 4vw, 2.5rem);
@@ -700,11 +603,9 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         color: var(--neon);
         line-height: 1;
     }
-
     .stat-val.white {
         color: #fff
     }
-
     .panel {
         background: var(--panel);
         border: 1px solid var(--panel-border);
@@ -713,7 +614,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         overflow: hidden;
         transition: border-color 0.3s, box-shadow 0.3s;
     }
-
     .panel::before {
         content: '';
         position: absolute;
@@ -723,23 +623,19 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         height: 1px;
         background: linear-gradient(90deg, transparent, rgba(0, 255, 170, 0.4), transparent);
     }
-
     .panel:hover {
         border-color: rgba(0, 255, 170, 0.25);
         box-shadow: 0 0 40px rgba(0, 255, 170, 0.05), 0 20px 60px rgba(0, 0, 0, 0.4);
     }
-
     .chart-panel {
         padding: 2rem;
     }
-
     .chart-header {
         display: flex;
         align-items: center;
         gap: 0.75rem;
         margin-bottom: 2rem;
     }
-
     .chart-title {
         font-family: var(--font-display);
         font-size: 1.1rem;
@@ -747,7 +643,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         letter-spacing: 0.05em;
         color: #fff;
     }
-
     .section-title {
         font-family: var(--font-display);
         font-size: clamp(1.5rem, 4vw, 2.5rem);
@@ -756,36 +651,30 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         color: #fff;
         margin-bottom: 0.5rem;
     }
-
     .section-title .accent {
         color: var(--neon)
     }
-
     .section-sub {
         font-family: var(--font-body);
         font-size: 1rem;
         color: var(--text-dim);
         margin-bottom: 3rem;
     }
-
     .feature-grid {
         display: grid;
         grid-template-columns: repeat(1, 1fr);
         gap: 1.5rem;
     }
-
     @media(min-width:640px) {
         .feature-grid {
             grid-template-columns: repeat(2, 1fr)
         }
     }
-
     @media(min-width:1024px) {
         .feature-grid {
             grid-template-columns: repeat(3, 1fr)
         }
     }
-
     .feature-card {
         background: var(--panel);
         border: 1px solid var(--panel-border);
@@ -796,7 +685,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         cursor: default;
     }
-
     .feature-card::after {
         content: '';
         position: absolute;
@@ -805,17 +693,14 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         opacity: 0;
         transition: opacity 0.3s;
     }
-
     .feature-card:hover::after {
         opacity: 1
     }
-
     .feature-card:hover {
         border-color: rgba(0, 255, 170, 0.3);
         transform: translateY(-6px);
         box-shadow: 0 20px 60px rgba(0, 255, 170, 0.08), 0 0 0 1px rgba(0, 255, 170, 0.1);
     }
-
     .feature-icon {
         width: 3.5rem;
         height: 3.5rem;
@@ -829,12 +714,10 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         margin-bottom: 1.5rem;
         transition: all 0.3s;
     }
-
     .feature-card:hover .feature-icon {
         background: rgba(0, 255, 170, 0.15);
         box-shadow: 0 0 20px rgba(0, 255, 170, 0.2);
     }
-
     .feature-title {
         font-family: var(--font-display);
         font-size: 0.95rem;
@@ -843,7 +726,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         color: #fff;
         margin-bottom: 0.75rem;
     }
-
     .feature-desc {
         font-family: var(--font-body);
         font-size: 0.9rem;
@@ -851,20 +733,17 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         line-height: 1.6;
         font-weight: 500;
     }
-
     .hero-banner-grid {
         display: grid;
         grid-template-columns: 1fr;
         gap: 1.5rem;
         margin-bottom: 5rem;
     }
-
     @media(min-width:1024px) {
         .hero-banner-grid {
             grid-template-columns: 3fr 1fr
         }
     }
-
     .main-banner {
         position: relative;
         height: 480px;
@@ -872,24 +751,20 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         overflow: hidden;
         border: 1px solid rgba(0, 255, 170, 0.1);
     }
-
     .main-banner img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         transition: transform 0.7s ease;
     }
-
     .main-banner:hover img {
         transform: scale(1.05)
     }
-
     .main-banner-overlay {
         position: absolute;
         inset: 0;
         background: linear-gradient(to top, rgba(3, 5, 13, 0.97) 0%, rgba(3, 5, 13, 0.5) 50%, transparent 100%);
     }
-
     .main-banner-content {
         position: absolute;
         bottom: 0;
@@ -897,7 +772,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         padding: 2.5rem;
         z-index: 10;
     }
-
     .banner-tag {
         display: inline-block;
         padding: 0.3rem 0.8rem;
@@ -911,7 +785,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         text-transform: uppercase;
         margin-bottom: 1rem;
     }
-
     .banner-title {
         font-family: var(--font-display);
         font-size: clamp(2rem, 5vw, 3.5rem);
@@ -921,18 +794,15 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         letter-spacing: 0.02em;
         margin-bottom: 1.5rem;
     }
-
     .banner-title .hl {
         color: var(--neon);
         text-shadow: 0 0 20px var(--neon);
     }
-
     .side-promos {
         display: flex;
         flex-direction: column;
         gap: 1.5rem
     }
-
     .promo-card {
         flex: 1;
         border-radius: 1.25rem;
@@ -947,12 +817,10 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         text-decoration: none;
         color: #fff;
     }
-
     .promo-card:hover {
         transform: translateY(-4px);
         box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
     }
-
     .promo-card::before {
         content: '';
         position: absolute;
@@ -961,19 +829,15 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         opacity: 0;
         transition: opacity 0.3s;
     }
-
     .promo-card:hover::before {
         opacity: 1
     }
-
     .promo-bg-1 {
         background: linear-gradient(135deg, #7c3aed, #ec4899)
     }
-
     .promo-bg-2 {
         background: linear-gradient(135deg, #059669, #0891b2)
     }
-
     .promo-label {
         font-family: var(--font-display);
         font-size: 1.4rem;
@@ -981,13 +845,11 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         letter-spacing: 0.04em;
         margin-bottom: 0.4rem;
     }
-
     .promo-sub {
         font-family: var(--font-mono);
         font-size: 0.7rem;
         opacity: 0.8;
     }
-
     .promo-btn {
         padding: 0.75rem;
         background: rgba(255, 255, 255, 0.15);
@@ -1001,11 +863,9 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         transition: background 0.2s;
         backdrop-filter: blur(10px);
     }
-
     .promo-btn:hover {
         background: rgba(255, 255, 255, 0.25)
     }
-
     .promo-deco {
         position: absolute;
         top: 1rem;
@@ -1014,14 +874,12 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         height: 5rem;
         opacity: 0.1;
     }
-
     .deals-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
         margin-bottom: 2rem;
     }
-
     .timer-badge {
         display: flex;
         align-items: center;
@@ -1035,7 +893,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         font-weight: 700;
         color: #f87171;
     }
-
     .timer-dot {
         width: 6px;
         height: 6px;
@@ -1044,25 +901,21 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         animation: neon-pulse 1s ease-in-out infinite;
         box-shadow: 0 0 6px #f87171;
     }
-
     .products-grid {
         display: grid;
         grid-template-columns: repeat(1, 1fr);
         gap: 1.5rem;
     }
-
     @media(min-width:640px) {
         .products-grid {
             grid-template-columns: repeat(2, 1fr)
         }
     }
-
     @media(min-width:1024px) {
         .products-grid {
             grid-template-columns: repeat(4, 1fr)
         }
     }
-
     .product-card {
         background: var(--panel);
         border: 1px solid var(--panel-border);
@@ -1073,31 +926,26 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         display: block;
         position: relative;
     }
-
     .product-card:hover {
         border-color: rgba(0, 255, 170, 0.3);
         transform: translateY(-6px);
         box-shadow: 0 20px 50px rgba(0, 255, 170, 0.08);
     }
-
     .product-img {
         aspect-ratio: 1;
         overflow: hidden;
         position: relative;
         background: var(--void-3);
     }
-
     .product-img img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         transition: transform 0.5s ease;
     }
-
     .product-card:hover .product-img img {
         transform: scale(1.08)
     }
-
     .product-badge {
         position: absolute;
         top: 0.75rem;
@@ -1111,11 +959,9 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         border-radius: 0.25rem;
         letter-spacing: 0.05em;
     }
-
     .product-info {
         padding: 1.25rem
     }
-
     .product-name {
         font-family: var(--font-display);
         font-size: 0.85rem;
@@ -1127,39 +973,33 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         overflow: hidden;
         text-overflow: ellipsis;
     }
-
     .product-price-row {
         display: flex;
         align-items: center;
         justify-content: space-between;
     }
-
     .product-price {
         font-family: var(--font-mono);
         font-size: 1rem;
         font-weight: 700;
         color: var(--neon);
     }
-
     .product-price-old {
         font-family: var(--font-mono);
         font-size: 0.75rem;
         color: rgba(148, 163, 184, 0.5);
         text-decoration: line-through;
     }
-
     .arrivals-sellers-grid {
         display: grid;
         grid-template-columns: 1fr;
         gap: 2rem;
     }
-
     @media(min-width:1024px) {
         .arrivals-sellers-grid {
             grid-template-columns: 2fr 1fr
         }
     }
-
     .arrival-item {
         display: flex;
         align-items: center;
@@ -1173,7 +1013,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         position: relative;
         overflow: hidden;
     }
-
     .arrival-item::before {
         content: '';
         position: absolute;
@@ -1186,17 +1025,14 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         transition: transform 0.3s;
         transform-origin: bottom;
     }
-
     .arrival-item:hover::before {
         transform: scaleY(1)
     }
-
     .arrival-item:hover {
         border-color: rgba(0, 255, 170, 0.25);
         background: rgba(0, 255, 170, 0.02);
         transform: translateX(4px);
     }
-
     .arrival-thumb {
         width: 5.5rem;
         height: 5.5rem;
@@ -1206,18 +1042,15 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         border: 1px solid rgba(255, 255, 255, 0.05);
         background: var(--void-3);
     }
-
     .arrival-thumb img {
         width: 100%;
         height: 100%;
         object-fit: cover
     }
-
     .arrival-info {
         flex: 1;
         min-width: 0
     }
-
     .arrival-name {
         font-family: var(--font-display);
         font-size: 0.9rem;
@@ -1226,7 +1059,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         letter-spacing: 0.03em;
         margin-bottom: 0.25rem;
     }
-
     .arrival-type {
         font-family: var(--font-mono);
         font-size: 0.6rem;
@@ -1235,19 +1067,16 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         color: rgba(148, 163, 184, 0.5);
         text-transform: uppercase;
     }
-
     .arrival-right {
         text-align: right;
         flex-shrink: 0
     }
-
     .arrival-price {
         font-family: var(--font-mono);
         font-size: 1.1rem;
         font-weight: 700;
         color: var(--neon);
     }
-
     .buy-pill {
         margin-top: 0.4rem;
         padding: 0.3rem 0.8rem;
@@ -1264,19 +1093,16 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         display: inline-block;
         text-decoration: none;
     }
-
     .buy-pill:hover {
         background: rgba(0, 255, 170, 0.15);
         border-color: rgba(0, 255, 170, 0.5);
     }
-
     .sellers-panel {
         background: var(--panel);
         border: 1px solid var(--panel-border);
         border-radius: 1rem;
         padding: 1.5rem;
     }
-
     .seller-row {
         display: flex;
         align-items: center;
@@ -1284,11 +1110,9 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         padding: 1rem 0;
         border-bottom: 1px solid rgba(255, 255, 255, 0.04);
     }
-
     .seller-row:last-child {
         border-bottom: none
     }
-
     .seller-rank {
         width: 2.5rem;
         height: 2.5rem;
@@ -1301,28 +1125,23 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         font-weight: 900;
         flex-shrink: 0;
     }
-
     .rank-1 {
         background: linear-gradient(135deg, #f59e0b, #ef4444);
         color: #000
     }
-
     .rank-2 {
         background: linear-gradient(135deg, #6b7280, #9ca3af);
         color: #000
     }
-
     .rank-3 {
         background: linear-gradient(135deg, #92400e, #b45309);
         color: #fff
     }
-
     .rank-other {
         background: rgba(0, 255, 170, 0.08);
         border: 1px solid rgba(0, 255, 170, 0.2);
         color: var(--neon)
     }
-
     .seller-name {
         font-family: var(--font-display);
         font-size: 0.85rem;
@@ -1330,7 +1149,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         color: #fff;
         letter-spacing: 0.03em;
     }
-
     .seller-rating {
         font-family: var(--font-mono);
         font-size: 0.65rem;
@@ -1339,7 +1157,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         align-items: center;
         gap: 0.25rem;
     }
-
     .seller-sales {
         font-family: var(--font-mono);
         font-size: 0.65rem;
@@ -1348,7 +1165,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         margin-left: auto;
         flex-shrink: 0;
     }
-
     .become-seller {
         border-radius: 1rem;
         padding: 2rem;
@@ -1358,14 +1174,12 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         overflow: hidden;
         margin-top: 1.5rem;
     }
-
     .become-seller::before {
         content: '';
         position: absolute;
         inset: 0;
         background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent);
     }
-
     .become-title {
         font-family: var(--font-display);
         font-size: 1.3rem;
@@ -1374,52 +1188,42 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         letter-spacing: 0.05em;
         margin-bottom: 0.5rem;
     }
-
     .become-sub {
         font-family: var(--font-mono);
         font-size: 0.7rem;
         color: rgba(255, 255, 255, 0.7);
         margin-bottom: 1.5rem;
     }
-
     .spacer {
         margin-bottom: 5rem
     }
-
     .section-heading {
         margin-bottom: 1rem
     }
-
     html:not(.dark) body {
         background: #f1f5f9;
         color: #0f172a;
     }
-
     html:not(.dark) .bg-grid {
         background-image:
             linear-gradient(rgba(0, 163, 114, 0.06) 1px, transparent 1px),
             linear-gradient(90deg, rgba(0, 163, 114, 0.06) 1px, transparent 1px);
     }
-
     html:not(.dark) .orb-1 {
         background: #00c896;
         opacity: 0.07;
     }
-
     html:not(.dark) .orb-2 {
         background: #3b82f6;
         opacity: 0.05;
     }
-
     html:not(.dark) .orb-3 {
         background: #8b5cf6;
         opacity: 0.04;
     }
-
     html:not(.dark) .scanline-overlay {
         display: none;
     }
-
     html:not(.dark) .ticker-bar {
         background: rgba(255, 255, 255, 0.95);
         border-top: 1px solid rgba(0, 163, 114, 0.25);
@@ -1427,34 +1231,27 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         backdrop-filter: blur(20px);
         box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
     }
-
     html:not(.dark) .ticker-bar::before {
         background: linear-gradient(90deg, rgba(255, 255, 255, 1), transparent);
     }
-
     html:not(.dark) .ticker-bar::after {
         background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 1));
     }
-
     html:not(.dark) .ticker-item span[style*="rgba(148,163,184,0.7)"] {
         color: #475569 !important;
     }
-
     html:not(.dark) .hero-badge {
         border-color: rgba(0, 163, 114, 0.4);
         background: rgba(0, 163, 114, 0.08);
         color: #007a55;
     }
-
     html:not(.dark) .hero-badge-dot {
         background: #007a55;
         box-shadow: 0 0 8px rgba(0, 163, 114, 0.5);
     }
-
     html:not(.dark) .hero-title {
         color: #0f172a;
     }
-
     html:not(.dark) .hero-title-accent {
         background: linear-gradient(135deg, #007a55, #0ea5e9, #007a55);
         background-size: 200% auto;
@@ -1462,235 +1259,184 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         -webkit-text-fill-color: transparent;
         background-clip: text;
     }
-
     html:not(.dark) .hero-title-accent::before {
         -webkit-text-fill-color: rgba(236, 72, 153, 0.3);
     }
-
     html:not(.dark) .hero-title-accent::after {
         -webkit-text-fill-color: rgba(14, 165, 233, 0.3);
     }
-
     html:not(.dark) .hero-desc {
         color: #475569;
     }
-
     html:not(.dark) .hero-desc span {
         color: #007a55;
     }
-
     html:not(.dark) .btn-primary {
         background: linear-gradient(135deg, #00a372, #00c896);
         color: #fff;
         box-shadow: 0 4px 15px rgba(0, 163, 114, 0.3);
     }
-
     html:not(.dark) .btn-primary:hover {
         background: linear-gradient(135deg, #007a55, #00a372);
         box-shadow: 0 6px 25px rgba(0, 163, 114, 0.4);
     }
-
     html:not(.dark) .btn-secondary {
         border-color: rgba(0, 163, 114, 0.5);
         color: #007a55;
         background: transparent;
     }
-
     html:not(.dark) .btn-secondary:hover {
         background: rgba(0, 163, 114, 0.08);
         border-color: #00a372;
         box-shadow: 0 0 20px rgba(0, 163, 114, 0.15);
     }
-
     html:not(.dark) .stat-grid {
         background: rgba(0, 163, 114, 0.08);
         border-color: rgba(0, 163, 114, 0.15);
     }
-
     html:not(.dark) .stat-cell {
         background: rgba(255, 255, 255, 0.95);
     }
-
     html:not(.dark) .stat-cell:hover {
         background: rgba(0, 163, 114, 0.04);
     }
-
     html:not(.dark) .stat-cell::before {
         background: linear-gradient(135deg, transparent 40%, rgba(0, 163, 114, 0.04) 100%);
     }
-
     html:not(.dark) .stat-label {
         color: #64748b;
     }
-
     html:not(.dark) .stat-val {
         color: #007a55;
     }
-
     html:not(.dark) .stat-val.white {
         color: #0f172a;
     }
-
     html:not(.dark) .panel {
         background: rgba(255, 255, 255, 0.97);
         border-color: rgba(0, 163, 114, 0.12);
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     }
-
     html:not(.dark) .panel::before {
         background: linear-gradient(90deg, transparent, rgba(0, 163, 114, 0.25), transparent);
     }
-
     html:not(.dark) .panel:hover {
         border-color: rgba(0, 163, 114, 0.25);
         box-shadow: 0 8px 40px rgba(0, 163, 114, 0.08), 0 20px 60px rgba(0, 0, 0, 0.06);
     }
-
     html:not(.dark) .chart-title {
         color: #0f172a;
     }
-
     html:not(.dark) .section-title {
         color: #0f172a;
     }
-
     html:not(.dark) .section-title .accent {
         color: #007a55;
     }
-
     html:not(.dark) .section-sub {
         color: #64748b;
     }
-
     html:not(.dark) .feature-card {
         background: rgba(255, 255, 255, 0.97);
         border-color: rgba(0, 163, 114, 0.12);
         box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
     }
-
     html:not(.dark) .feature-card::after {
         background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(0, 163, 114, 0.06) 0%, transparent 60%);
     }
-
     html:not(.dark) .feature-card:hover {
         border-color: rgba(0, 163, 114, 0.3);
         box-shadow: 0 20px 60px rgba(0, 163, 114, 0.1), 0 0 0 1px rgba(0, 163, 114, 0.12);
     }
-
     html:not(.dark) .feature-icon {
         background: rgba(0, 163, 114, 0.08);
         border-color: rgba(0, 163, 114, 0.2);
     }
-
     html:not(.dark) .feature-card:hover .feature-icon {
         background: rgba(0, 163, 114, 0.14);
         box-shadow: 0 0 20px rgba(0, 163, 114, 0.15);
     }
-
     html:not(.dark) .feature-title {
         color: #0f172a;
     }
-
     html:not(.dark) .feature-desc {
         color: #475569;
     }
-
     html:not(.dark) .main-banner {
         border-color: rgba(0, 163, 114, 0.15);
     }
-
     html:not(.dark) .deals-header .section-title {
         color: #0f172a;
     }
-
     html:not(.dark) .product-card {
         background: rgba(255, 255, 255, 0.97);
         border-color: rgba(0, 0, 0, 0.07);
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     }
-
     html:not(.dark) .product-card:hover {
         border-color: rgba(0, 163, 114, 0.3);
         box-shadow: 0 20px 50px rgba(0, 163, 114, 0.1);
     }
-
     html:not(.dark) .product-img {
         background: #f1f5f9;
     }
-
     html:not(.dark) .product-name {
         color: #0f172a;
     }
-
     html:not(.dark) .product-price {
         color: #007a55;
     }
-
     html:not(.dark) .product-price-old {
         color: #94a3b8;
     }
-
     html:not(.dark) .arrival-item {
         background: rgba(255, 255, 255, 0.97);
         border-color: rgba(0, 0, 0, 0.07);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     }
-
     html:not(.dark) .arrival-item::before {
         background: #007a55;
     }
-
     html:not(.dark) .arrival-item:hover {
         border-color: rgba(0, 163, 114, 0.25);
         background: rgba(0, 163, 114, 0.02);
     }
-
     html:not(.dark) .arrival-thumb {
         border-color: rgba(0, 0, 0, 0.06);
         background: #f1f5f9;
     }
-
     html:not(.dark) .arrival-name {
         color: #0f172a;
     }
-
     html:not(.dark) .arrival-type {
         color: #94a3b8;
     }
-
     html:not(.dark) .arrival-price {
         color: #007a55;
     }
-
     html:not(.dark) .buy-pill {
         background: rgba(0, 163, 114, 0.08);
         border-color: rgba(0, 163, 114, 0.2);
         color: #007a55;
     }
-
     html:not(.dark) .buy-pill:hover {
         background: rgba(0, 163, 114, 0.15);
         border-color: rgba(0, 163, 114, 0.4);
     }
-
     html:not(.dark) .sellers-panel {
         background: rgba(255, 255, 255, 0.97);
         border-color: rgba(0, 163, 114, 0.12);
         box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
     }
-
     html:not(.dark) .seller-row {
         border-bottom-color: rgba(0, 0, 0, 0.05);
     }
-
     html:not(.dark) .seller-name {
         color: #0f172a;
     }
-
     html:not(.dark) .seller-sales {
         color: #94a3b8;
     }
-
     html:not(.dark) .rank-other {
         background: rgba(0, 163, 114, 0.1);
         border-color: rgba(0, 163, 114, 0.2);
@@ -1797,7 +1543,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
                             </div>
                         </div>
                     <?php endforeach; ?>
-                    <!-- Dots -->
                     <div style="position:absolute;bottom:1.2rem;right:1.5rem;z-index:10;display:flex;gap:0.5rem;">
                         <?php foreach ($banners as $bi => $b): ?>
                             <button onclick="goSlide(<?= $bi ?>)" id="dot-<?= $bi ?>" style="width:8px;height:8px;border-radius:50%;border:none;cursor:pointer;transition:all 0.3s;background:<?= $bi === 0 ? 'var(--neon)' : 'rgba(255,255,255,0.35)' ?>;box-shadow:<?= $bi === 0 ? '0 0 8px var(--neon)' : '' ?>"></button>
@@ -1957,7 +1702,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
             data = [];
         var now = Date.now();
         var last = basePrice;
-
         function nextPrice(p) {
             var drift = (Math.random() - 0.48) * 0.035;
             var shock = (Math.random() < 0.08) ? (Math.random() - 0.5) * 0.12 : 0;
@@ -2153,7 +1897,6 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
         var cur = 0,
             total = slides.length;
         if (total < 2) return;
-
         function goSlide(n) {
             slides[cur].style.opacity = '0';
             slides[cur].style.zIndex = '1';
@@ -2173,5 +1916,4 @@ $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images FRO
 </script>
 <?php require_once 'footer.php'; ?>
 </body>
-
 </html>

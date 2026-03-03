@@ -166,7 +166,7 @@
             }
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -175,7 +175,7 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Rajdhani', sans-serif;
             background: #0a0e1a;
             overflow-x: hidden
         }
@@ -576,33 +576,51 @@
                     </div>
                 </div>
             </div>
-            <div class="flex items-center gap-1.5 sm:gap-2 md:gap-3 z-10 flex-shrink-0">
-                <button onclick="document.getElementById('mobile-search-modal').classList.add('active');setTimeout(()=>document.getElementById('mobile-search-input').focus(),100)" class="md:hidden btn-secondary btn-glow p-2.5 rounded-xl transition-all header-icon" aria-label="Search">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            <div class="flex items-center gap-1 sm:gap-1.5 md:gap-2 z-10 flex-shrink-0">
+                <button onclick="document.getElementById('mobile-search-modal').classList.add('active');setTimeout(()=>document.getElementById('mobile-search-input').focus(),100)"
+                    class="md:hidden btn-secondary btn-glow p-2 rounded-lg transition-all header-icon"
+                    aria-label="Search">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                 </button>
-                <button onclick="App.toggleTheme()" class="btn-secondary btn-glow p-2.5 md:p-3 rounded-xl transition-all header-icon" aria-label="Toggle theme">
-                    <svg id="theme-sun" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                <button onclick="App.toggleTheme()"
+                    class="btn-secondary btn-glow p-2 rounded-lg transition-all header-icon"
+                    aria-label="Toggle theme">
+                    <svg id="theme-sun" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
-                    <svg id="theme-moon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    <svg id="theme-moon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                     </svg>
                 </button>
-                <div id="account-info" class="balance-card hidden lg:flex flex-col items-end opacity-0 transition-all duration-300 hover:shadow-glow">
-                    <span class="balance-label text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Balance</span>
-                    <span class="text-base font-black bg-gradient-to-r from-green-400 to-primary-500 bg-clip-text text-transparent font-mono" id="account-balance">0.00 SOL</span>
+                <div id="account-info"
+                    class="balance-card hidden lg:flex flex-col items-end opacity-0 transition-all duration-300">
+                    <span class="balance-label text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">
+                        Balance
+                    </span>
+                    <span
+                        class="text-sm font-black bg-gradient-to-r from-green-400 to-primary-500 bg-clip-text text-transparent font-mono"
+                        id="account-balance">
+                        0.00 SOL
+                    </span>
                 </div>
-                <button id="wallet-btn" onclick="App.connectWallet()" class="btn-primary btn-glow flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 md:px-6 py-2.5 md:py-3 rounded-xl font-bold text-sm md:text-base shadow-lg hover:shadow-glow-lg transition-all">
-                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                <button id="wallet-btn" onclick="App.connectWallet()"
+                    class="btn-primary btn-glow flex items-center gap-1 px-2.5 sm:px-3 py-2 rounded-lg font-bold text-xs sm:text-sm shadow-md transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                     <span id="wallet-text" class="hidden sm:inline">Connect</span>
                 </button>
-                <button id="logout-btn" onclick="App.logout()" class="hidden btn-glow items-center gap-1.5 sm:gap-2 px-3 sm:px-4 md:px-6 py-2.5 md:py-3 rounded-xl bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold text-sm md:text-base shadow-lg transition-all">
-                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                <button id="logout-btn" onclick="App.logout()"
+                    class="hidden btn-glow items-center gap-1 px-2.5 sm:px-3 py-2 rounded-lg bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold text-xs sm:text-sm shadow-md transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
                 </button>
             </div>
