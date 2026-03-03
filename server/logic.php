@@ -2308,3 +2308,9 @@ function sellerStats($sellerId)
         'total_revenue' => $fmt($row['total_revenue'] ?? 0)
     ];
 }
+
+function toGashy()
+{
+    $priceData = json_decode(@file_get_contents('./.cache/price.json'), true) ?: [];
+    return $priceData['price'] ?? 0.0;
+}

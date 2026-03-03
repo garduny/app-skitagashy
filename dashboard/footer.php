@@ -77,9 +77,7 @@
         <div class="flex flex-col sm:flex-row items-center gap-4">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#00ffaa] to-[#00d48f] flex items-center justify-center shadow-lg">
-                    <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
+                    <img src="../public/img/logo.png" alt="GASHY" class="w-full h-full rounded-xl">
                 </div>
                 <div>
                     <p class="text-xs font-black text-gray-700 dark:text-gray-300" style="font-family:'Space Mono',monospace">&copy; <?= date('Y') ?> GASHY BAZAAR</p>
