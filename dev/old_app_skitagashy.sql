@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 02, 2026 at 05:37 AM
+-- Generation Time: Mar 07, 2026 at 04:12 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -122,7 +122,9 @@ INSERT INTO `account_sessions` (`id`, `account_id`, `token`, `ip_address`, `acco
 (12, 1, 'ae7bb995b0535f10cdaf7ba12a7679085f53524982d798bbca10e1854d23f9cc', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-06 18:18:54', '2026-02-27 15:18:54'),
 (13, 3, '4aa66fa3df846c7b313dd13368bd9b1c3262729e49c9ba1084bb88af0ea0fcb7', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', '2026-03-06 18:19:48', '2026-02-27 15:19:48'),
 (14, 3, 'edd77ce4e4cdd87c9f0b877025df91c340edc2306ca7d01dd082c5559a40fd04', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', '2026-03-06 18:41:12', '2026-02-27 15:41:12'),
-(15, 1, '35c4e1c25d872f19c6c107c4c34da8659e53329292de476785596eeb0c740197', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-09 07:36:38', '2026-03-02 04:36:38');
+(15, 1, '35c4e1c25d872f19c6c107c4c34da8659e53329292de476785596eeb0c740197', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-09 07:36:38', '2026-03-02 04:36:38'),
+(16, 1, 'dcfb26165c7c65d0c074c53107ce5287586a1f0f1f7088bcb020a403a322fed1', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-10 15:28:21', '2026-03-03 12:28:21'),
+(17, 1, 'c33f32c4c7e7ccfffa673001147d29bb0cd5302ee9e4eb89a86f6086909f8483', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-10 21:58:38', '2026-03-03 18:58:38');
 
 -- --------------------------------------------------------
 
@@ -650,14 +652,14 @@ INSERT INTO `products` (`id`, `seller_id`, `category_id`, `title`, `slug`, `desc
 (8, 1, 5, 'Starter Mystery Box', 'starter-mystery-box', 'jhfgdjfhdgfjdhf', 10.000000000, NULL, 493, 'mystery_box', '[\"/server/uploads/products/6998fa4b9e5517.58520314.webp\"]', NULL, 'active', 12, '2026-01-17 12:23:19'),
 (9, 1, 1, 'GTA-6', 'gta-6', 'undefined', 10.000000000, NULL, 4, 'digital', '[\"/server/uploads/products/6998fa1e769023.06569469.jpg\"]', NULL, 'active', 19, '2026-01-29 01:53:02'),
 (10, 1, 4, 'nft test', 'nft-test', 'test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product', 1.000000000, NULL, 1, 'nft', '[\"/server/uploads/products/6998fa76d88368.86052092.jfif\"]', NULL, 'active', 7, '2026-01-29 01:53:43'),
-(11, 1, 1, 'Gifts', 'gifts', '....', 1.000000000, NULL, 2, 'gift_card', '[\"/server/uploads/products/6998fbbba44ac0.24472211.webp\"]', NULL, 'active', 9, '2026-02-02 01:11:44'),
+(11, 1, 1, 'Gifts', 'gifts', '....', 1.000000000, NULL, 2, 'gift_card', '[\"/server/uploads/products/6998fbbba44ac0.24472211.webp\"]', NULL, 'active', 12, '2026-02-02 01:11:44'),
 (12, 2, 2, 'Valorant 1000 Points', 'valorant-1000-points', 'Instant delivery code.', 25.000000000, NULL, 0, 'digital', '[\"/server/uploads/products/6998f945730096.26491339.jpg\"]', NULL, 'active', 34, '2026-02-02 02:50:08'),
 (13, 1, 5, 'first mystery', 'first-mystery', 'first mystery  detail', 10.000000000, NULL, 1, 'digital', '[\"/server/uploads/products/6998fbb4c5f740.95288782.jfif\"]', NULL, 'active', 2, '2026-02-07 10:27:45'),
 (15, 1, 1, 'loxera software 1YEAR', 'sdsd-482', 'loxera software license key 1 year', 1.000000000, NULL, 8, 'digital', '[\"/server/uploads/products/699fd5ea7639d0.75533383.png\"]', NULL, 'active', 47, '2026-02-26 05:10:37'),
 (16, 2, 6, 'test gashy', 'test-gashy', 'ddsdsdsdsd', 100.000000000, NULL, 4, 'physical', '[\"/server/uploads/products/69a0d1969cbd83.73127799.png\"]', NULL, 'active', 40, '2026-02-26 23:04:54'),
 (17, 2, 6, 'test test', 'test-test', 'dghjsdgsdjs', 10.000000000, NULL, 8, 'physical', '[\"/server/uploads/products/69a1b695d2de12.26621603.jpg\"]', NULL, 'active', 2, '2026-02-27 15:21:57'),
-(18, 2, 3, 'test test 2', 'test-test-2', 'cmxcdxjhdgdsj', 15.000000000, NULL, 2, 'digital', '[\"/server/uploads/products/69a1b745a98b80.34502289.jpg\"]', NULL, 'active', 1, '2026-02-27 15:24:53'),
-(19, 3, 6, 'seller-2 product-1', 'seller-2-product-1-894', 'fhdjkfhdfdf', 40.000000000, NULL, 2, 'physical', '[\"/server/uploads/products/69a1ba14963073.51894396.jpg\"]', NULL, 'active', 1, '2026-02-27 15:36:52'),
+(18, 2, 3, 'test test 2', 'test-test-2', 'cmxcdxjhdgdsj', 15.000000000, NULL, 2, 'digital', '[\"/server/uploads/products/69a1b745a98b80.34502289.jpg\"]', NULL, 'active', 3, '2026-02-27 15:24:53'),
+(19, 3, 6, 'seller-2 product-1', 'seller-2-product-1-894', 'fhdjkfhdfdf', 40.000000000, NULL, 2, 'physical', '[\"/server/uploads/products/69a1ba14963073.51894396.jpg\"]', NULL, 'active', 2, '2026-02-27 15:36:52'),
 (20, 2, 5, 'mystery-1', 'mystery-1', 'djhsdjhgsjhdasgds', 50.000000000, NULL, 1, 'mystery_box', '[\"/server/uploads/products/69a1bc68603ce7.93450568.png\"]', NULL, 'active', 0, '2026-02-27 15:46:48');
 
 -- --------------------------------------------------------
@@ -775,8 +777,9 @@ CREATE TABLE `system_rate_limits` (
 --
 
 INSERT INTO `system_rate_limits` (`ip_address`, `endpoint`, `requests`, `reset_time`) VALUES
-('::1', 'auth_attempt', 1, 1772426258),
-('::1', 'global_api', 34, 1772426258);
+('192.168.0.104', 'global_api', 2, 1772564653),
+('::1', 'auth_attempt', 1, 1772564378),
+('::1', 'global_api', 29, 1772852291);
 
 -- --------------------------------------------------------
 
@@ -893,7 +896,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `role_id`, `username`, `email`, `password`, `avatar`, `is_active`, `created_at`, `updated_at`, `otp_code`, `otp_expires`) VALUES
-(1, 1, 'garduny', 'gardunydeveloper@gmail.com', '$2y$10$4OZPo3/fyf/Im87BpGzKTe4IKeJi1eKn.AnyjScOl0uHKZxDCjGZu', 'https://api.phantom.app/image-proxy/?image=https%3A%2F%2Fcoin-images.coingecko.com%2Fcoins%2Fimages%2F69906%2Flarge%2FUntitled_design_%25282%2529.png%3F1767493770&amp;anim=false&amp;fit=cover&amp;width=128&amp;height=128', 1, '2026-01-23 15:28:44', '2026-02-27 15:20:55', NULL, NULL),
+(1, 1, 'garduny', 'gardunydeveloper@gmail.com', '$2y$10$4OZPo3/fyf/Im87BpGzKTe4IKeJi1eKn.AnyjScOl0uHKZxDCjGZu', 'https://api.phantom.app/image-proxy/?image=https%3A%2F%2Fcoin-images.coingecko.com%2Fcoins%2Fimages%2F69906%2Flarge%2FUntitled_design_%25282%2529.png%3F1767493770&amp;anim=false&amp;fit=cover&amp;width=128&amp;height=128', 1, '2026-01-23 15:28:44', '2026-03-03 12:19:50', NULL, NULL),
 (2, 1, 'shalaw', 'darinkrd2020@gmail.com', '$2y$10$TVnDIUB2wBP8RGmLr5Ze2O1O4C5i5.6YuXCVV5.3bGnGmeK.QnyvC', NULL, 1, '2026-01-23 16:21:13', '2026-01-31 00:54:32', NULL, NULL);
 
 -- --------------------------------------------------------
@@ -937,7 +940,8 @@ INSERT INTO `user_sessions` (`id`, `user_id`, `token`, `ip_address`, `user_agent
 (4, 1, 'accace3e7f3ce39e9975feb817792c280d115cd9b6f87caa75c1b1567f60f946', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-21 23:58:29', '2026-02-19 20:58:29'),
 (5, 1, '50275fcf5472048782d2f62ef99656adcf490b174400612233f2fe459ce930fc', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-23 02:10:29', '2026-02-20 23:10:29'),
 (6, 1, 'a4fd004714b4606a62ac64644b72357a5a89ab814d891a04fa0ba4f338258fa6', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-26 07:50:14', '2026-02-24 04:50:14'),
-(7, 1, '06cf8b756a8ad344d8d749d88a2186b81eff069444434b3095ebd4998744d8da', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-29 18:20:55', '2026-02-27 15:20:55');
+(7, 1, '06cf8b756a8ad344d8d749d88a2186b81eff069444434b3095ebd4998744d8da', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-29 18:20:55', '2026-02-27 15:20:55'),
+(8, 1, '1186854f667d02ed93d3913edc22169179c57d056af7916a31747a36ce71d8a0', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-04-02 15:19:50', '2026-03-03 12:19:50');
 
 -- --------------------------------------------------------
 
@@ -1010,7 +1014,7 @@ INSERT INTO `withdrawals` (`id`, `account_id`, `amount`, `status`, `tx_signature
 --
 DROP TABLE IF EXISTS `view_auctions_live`;
 
-CREATE VIEW `view_auctions_live`  AS SELECT `a`.`id` AS `id`, `a`.`end_time` AS `end_time`, `a`.`current_bid` AS `current_bid`, `a`.`status` AS `status`, `p`.`title` AS `title`, `p`.`images` AS `images`, `p`.`slug` AS `product_slug` FROM (`auctions` `a` join `products` `p` on(`a`.`product_id` = `p`.`id`)) WHERE `a`.`status` = 'active' AND `a`.`end_time` > current_timestamp() ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_auctions_live`  AS SELECT `a`.`id` AS `id`, `a`.`end_time` AS `end_time`, `a`.`current_bid` AS `current_bid`, `a`.`status` AS `status`, `p`.`title` AS `title`, `p`.`images` AS `images`, `p`.`slug` AS `product_slug` FROM (`auctions` `a` join `products` `p` on(`a`.`product_id` = `p`.`id`)) WHERE `a`.`status` = 'active' AND `a`.`end_time` > current_timestamp() ;
 
 -- --------------------------------------------------------
 
@@ -1019,7 +1023,7 @@ CREATE VIEW `view_auctions_live`  AS SELECT `a`.`id` AS `id`, `a`.`end_time` AS 
 --
 DROP TABLE IF EXISTS `view_products_marketplace`;
 
-CREATE VIEW `view_products_marketplace`  AS SELECT `p`.`id` AS `id`, `p`.`title` AS `title`, `p`.`slug` AS `slug`, `p`.`price_gashy` AS `price_gashy`, `p`.`type` AS `type`, `p`.`images` AS `images`, `p`.`stock` AS `stock`, `c`.`name` AS `category_name`, `c`.`slug` AS `category_slug`, `s`.`store_name` AS `store_name`, `s`.`rating` AS `seller_rating`, `s`.`is_approved` AS `is_approved` FROM ((`products` `p` join `categories` `c` on(`p`.`category_id` = `c`.`id`)) join `sellers` `s` on(`p`.`seller_id` = `s`.`account_id`)) WHERE `p`.`status` = 'active' AND `p`.`stock` > 0 AND `s`.`is_approved` = 1 ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_products_marketplace`  AS SELECT `p`.`id` AS `id`, `p`.`title` AS `title`, `p`.`slug` AS `slug`, `p`.`price_gashy` AS `price_gashy`, `p`.`type` AS `type`, `p`.`images` AS `images`, `p`.`stock` AS `stock`, `c`.`name` AS `category_name`, `c`.`slug` AS `category_slug`, `s`.`store_name` AS `store_name`, `s`.`rating` AS `seller_rating`, `s`.`is_approved` AS `is_approved` FROM ((`products` `p` join `categories` `c` on(`p`.`category_id` = `c`.`id`)) join `sellers` `s` on(`p`.`seller_id` = `s`.`account_id`)) WHERE `p`.`status` = 'active' AND `p`.`stock` > 0 AND `s`.`is_approved` = 1 ;
 
 --
 -- Indexes for dumped tables
@@ -1305,7 +1309,7 @@ ALTER TABLE `account_referrals`
 -- AUTO_INCREMENT for table `account_sessions`
 --
 ALTER TABLE `account_sessions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `activity_log`
@@ -1455,7 +1459,7 @@ ALTER TABLE `users_forget`
 -- AUTO_INCREMENT for table `user_sessions`
 --
 ALTER TABLE `user_sessions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `withdrawals`

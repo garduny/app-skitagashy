@@ -41,7 +41,7 @@ if (post('save_product')) {
     $id = (int)request('id', 'post');
     $title = secure(request('title', 'post'));
     $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $title)));
-    $price = (float)request('price_gashy', 'post');
+    $price = (float)request('price_usd', 'post');
     $stock = (int)request('stock', 'post');
     $type = request('type', 'post');
     $cat = (int)request('category_id', 'post');
@@ -63,12 +63,12 @@ if (post('save_product')) {
             if (file_exists($f)) @unlink($f);
         }
         $imgs = json_encode([$finalImg]);
-        execute(" UPDATE products SET title='$title',slug='$slug',price_gashy=$price,stock=$stock,type='$type',category_id=$cat,seller_id=$sid,description='$desc',images='$imgs' WHERE id=$id ");
+        execute(" UPDATE products SET title='$title',slug='$slug',price_usd=$price,stock=$stock,type='$type',category_id=$cat,seller_id=$sid,description='$desc',images='$imgs' WHERE id=$id ");
         redirect(productsBaseUrl(['msg' => 'updated']));
     } else {
         $img = $newImage ? $dbPath . $newImage : '';
         $imgs = json_encode([$img]);
-        execute(" INSERT INTO products (title,slug,price_gashy,stock,type,category_id,seller_id,description,images,status) VALUES ('$title','$slug',$price,$stock,'$type',$cat,$sid,'$desc','$imgs','active') ");
+        execute(" INSERT INTO products (title,slug,price_usd,stock,type,category_id,seller_id,description,images,status) VALUES ('$title','$slug',$price,$stock,'$type',$cat,$sid,'$desc','$imgs','active') ");
         redirect(productsBaseUrl(['msg' => 'created']));
     }
 }
@@ -95,8 +95,8 @@ if ($status) {
 }
 $order = " ORDER BY p.id DESC ";
 if ($sort === 'oldest') $order = " ORDER BY p.id ASC ";
-if ($sort === 'price_high') $order = " ORDER BY p.price_gashy DESC ";
-if ($sort === 'price_low') $order = " ORDER BY p.price_gashy ASC ";
+if ($sort === 'price_high') $order = " ORDER BY p.price_usd DESC ";
+if ($sort === 'price_low') $order = " ORDER BY p.price_usd ASC ";
 if ($sort === 'stock_low') $order = " ORDER BY p.stock ASC ";
 $products = getQuery(" SELECT p.*,c.name cat_name,s.store_name FROM products p JOIN categories c ON p.category_id=c.id JOIN sellers s ON p.seller_id=s.account_id $where $order LIMIT $limit OFFSET $offset ");
 $total = countQuery(" SELECT 1 FROM products p JOIN categories c ON p.category_id=c.id $where ");
@@ -111,7 +111,6 @@ function filterUrl($key, $val)
 require_once 'header.php';
 require_once 'sidebar.php';
 ?>
-
 <main class="ml-0 lg:ml-64 pt-20 p-6 min-h-screen transition-all duration-300">
     <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
         <div>
@@ -126,8 +125,7 @@ require_once 'sidebar.php';
         <div class="p-4 border-b border-gray-200 dark:border-white/5">
             <form class="grid grid-cols-1 md:grid-cols-6 gap-4">
                 <input type="text" name="search" value="<?= $search ?>" placeholder="Search products..." class="bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2 text-gray-900 dark:text-white outline-none">
-                <select name="limit" class="bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2 text-gray-900 dark:text-white outline-none">
-                    <?php foreach ([10, 25, 50, 100] as $l): ?><option value="<?= $l ?>" <?= $limit == $l ? 'selected' : '' ?>><?= $l ?>/page</option><?php endforeach; ?></select>
+                <select name="limit" class="bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2 text-gray-900 dark:text-white outline-none"><?php foreach ([10, 25, 50, 100] as $l): ?><option value="<?= $l ?>" <?= $limit == $l ? 'selected' : '' ?>><?= $l ?>/page</option><?php endforeach; ?></select>
                 <button type="submit" class="px-4 py-2 bg-gray-100 dark:bg-white/5 rounded-xl"><i class="fa-solid fa-filter"></i></button>
                 <a href="products.php" class="px-4 py-2 bg-red-50 dark:bg-red-900/10 text-red-500 rounded-xl flex items-center justify-center"><i class="fa-solid fa-times"></i></a>
             </form>
@@ -138,7 +136,7 @@ require_once 'sidebar.php';
                     <tr class="bg-gray-50 dark:bg-white/5 border-b border-gray-200 dark:border-white/5 text-xs uppercase text-gray-500 font-bold">
                         <th class="px-6 py-4">Product</th>
                         <th class="px-6 py-4">Seller</th>
-                        <th class="px-6 py-4">Price</th>
+                        <th class="px-6 py-4">Price USD</th>
                         <th class="px-6 py-4">Stock</th>
                         <th class="px-6 py-4">Type</th>
                         <th class="px-6 py-4">Status</th>
@@ -157,41 +155,24 @@ require_once 'sidebar.php';
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300"><?= $p['store_name'] ?></td>
-                            <td class="px-6 py-4 font-mono font-bold text-gray-900 dark:text-white"><?= number_format($p['price_gashy'], 2) ?></td>
+                            <td class="px-6 py-4 font-mono font-bold text-gray-900 dark:text-white">$<?= number_format($p['price_usd'], 2) ?></td>
                             <td class="px-6 py-4"><span class="px-2 py-1 bg-gray-100 dark:bg-white/10 rounded text-xs font-bold <?= $p['stock'] < 5 ? 'text-red-500' : 'text-gray-600 dark:text-gray-300' ?>"><?= $p['stock'] ?></span></td>
                             <td class="px-6 py-4"><span class="uppercase text-[10px] font-bold tracking-wider px-2 py-1 rounded bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400"><?= $p['type'] ?></span></td>
                             <td class="px-6 py-4"><?php if ($p['status'] == 'active'): ?><span class="text-green-500 text-xs font-bold bg-green-500/10 px-2 py-1 rounded">Active</span><?php elseif ($p['status'] == 'banned'): ?><span class="text-red-500 text-xs font-bold bg-red-500/10 px-2 py-1 rounded">Banned</span><?php else: ?><span class="text-gray-500 text-xs font-bold bg-gray-500/10 px-2 py-1 rounded">Inactive</span><?php endif; ?></td>
                             <td class="px-6 py-4 text-right">
                                 <div class="flex items-center justify-end gap-1">
-
-                                    <a href="productdetail.php?id=<?= $p['id'] ?>" class="p-2 text-gray-400 hover:text-blue-500">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </a>
-
+                                    <a href="productdetail.php?id=<?= $p['id'] ?>" class="p-2 text-gray-400 hover:text-blue-500"><i class="fa-solid fa-eye"></i></a>
                                     <?php if (isInventoryType($p['type'])): ?>
-                                        <a href="inventory.php?product_id=<?= $p['id'] ?>" class="p-2 text-gray-400 hover:text-purple-500">
-                                            <i class="fa-solid fa-box-open"></i>
-                                        </a>
+                                        <a href="inventory.php?product_id=<?= $p['id'] ?>" class="p-2 text-gray-400 hover:text-purple-500"><i class="fa-solid fa-box-open"></i></a>
                                     <?php endif; ?>
-
                                     <?php if (isMysteryBox($p['type'])): ?>
-                                        <a href="mystery-box-detail.php?id=<?= $p['id'] ?>" class="p-2 text-gray-400 hover:text-amber-500">
-                                            <i class="fa-solid fa-gift"></i>
-                                        </a>
+                                        <a href="mystery-box-detail.php?id=<?= $p['id'] ?>" class="p-2 text-gray-400 hover:text-amber-500"><i class="fa-solid fa-gift"></i></a>
                                     <?php endif; ?>
-
-                                    <button onclick='editProduct(<?= json_encode($p) ?>)' class="p-2 text-gray-400 hover:text-primary-500">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
-
+                                    <button onclick='editProduct(<?= json_encode($p) ?>)' class="p-2 text-gray-400 hover:text-primary-500"><i class="fa-solid fa-pen-to-square"></i></button>
                                     <?php if ($p['status'] == 'banned'): ?>
-                                        <a href="?restore=<?= $p['id'] ?>" class="p-2 text-green-500">
-                                            <i class="fa-solid fa-rotate-left"></i>
-                                        </a>
+                                        <a href="?restore=<?= $p['id'] ?>" class="p-2 text-green-500"><i class="fa-solid fa-rotate-left"></i></a>
                                     <?php else: ?>
-                                        <a href="?delete=<?= $p['id'] ?>" class="p-2 text-gray-400 hover:text-red-500">
-                                            <i class="fa-solid fa-ban"></i>
-                                        </a>
+                                        <a href="?delete=<?= $p['id'] ?>" class="p-2 text-gray-400 hover:text-red-500"><i class="fa-solid fa-ban"></i></a>
                                     <?php endif; ?>
                                 </div>
                             </td>
@@ -221,7 +202,7 @@ require_once 'sidebar.php';
                         <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Image</label><input type="file" name="image" id="prod_image" accept="image/*" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none"></div>
                     </div>
                     <div class="lg:col-span-1 space-y-4">
-                        <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Price (GASHY)</label><input type="number" step="0.000000001" name="price_gashy" id="prod_price" required class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none"></div>
+                        <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Price USD</label><input type="number" step="0.01" name="price_usd" id="prod_price" required class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none"></div>
                         <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Stock</label><input type="number" name="stock" id="prod_stock" required class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none"></div>
                         <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Type</label><select name="type" id="prod_type" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none">
                                 <option value="digital">Digital</option>
@@ -231,7 +212,8 @@ require_once 'sidebar.php';
                                 <option value="mystery_box">Mystery Box</option>
                             </select></div>
                         <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Category</label><select name="category_id" id="prod_cat" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none"><?php foreach ($cats as $c): ?><option value="<?= $c['id'] ?>"><?= $c['name'] ?></option><?php endforeach; ?></select></div>
-                        <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Seller</label><select name="seller_id" id="prod_seller" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none"><?php foreach ($sellers as $s): ?><option value="<?= $s['account_id'] ?>"><?= $s['store_name'] ?></option><?php endforeach; ?></select></div><button type="submit" name="save_product" value="1" class="w-full py-3 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-primary-500/20">Save Product</button>
+                        <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Seller</label><select name="seller_id" id="prod_seller" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none"><?php foreach ($sellers as $s): ?><option value="<?= $s['account_id'] ?>"><?= $s['store_name'] ?></option><?php endforeach; ?></select></div>
+                        <button type="submit" name="save_product" value="1" class="w-full py-3 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-primary-500/20">Save Product</button>
                     </div>
                 </div>
             </form>
@@ -263,7 +245,7 @@ require_once 'sidebar.php';
         map('prod_id', p.id);
         map('prod_title', p.title);
         map('prod_desc', p.description);
-        map('prod_price', p.price_gashy);
+        map('prod_price', p.price_usd);
         map('prod_stock', p.stock);
         map('prod_type', p.type);
         map('prod_cat', p.category_id);

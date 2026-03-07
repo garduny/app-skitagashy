@@ -2,11 +2,15 @@
 require_once 'init.php';
 $id = (int)request('id', 'get');
 if (!$id) redirect('products.php');
-$productfound = findQuery(" SELECT p.*,c.name as cat_name,s.store_name FROM products p LEFT JOIN categories c ON p.category_id=c.id LEFT JOIN sellers s ON p.seller_id=s.account_id WHERE p.id=$id ");
+$productfound = findQuery(" SELECT p.*,c.name cat_name,s.store_name FROM products p LEFT JOIN categories c ON p.category_id=c.id LEFT JOIN sellers s ON p.seller_id=s.account_id WHERE p.id=$id ");
 if (!$productfound) redirect('products.php');
-$sold_data = findQuery(" SELECT SUM(oi.quantity) as total FROM order_items oi JOIN orders o ON oi.order_id=o.id WHERE oi.product_id=$id AND o.status IN ('completed','processing','shipped','delivered') ");
+$options = [];
+if ($productfound['type'] == 'gift_card') {
+    $options = getQuery(" SELECT * FROM gift_card_options WHERE product_id=$id ORDER BY id ASC ");
+}
+$sold_data = findQuery(" SELECT SUM(oi.quantity) total FROM order_items oi JOIN orders o ON oi.order_id=o.id WHERE oi.product_id=$id AND o.status IN ('completed','processing','shipped','delivered') ");
 $sold = (int)($sold_data['total'] ?? 0);
-$revenue = $sold * (float)$productfound['price_gashy'];
+$revenue = $sold * (float)$productfound['price_usd'];
 $orders = getQuery(" SELECT o.id,o.status,o.created_at,oi.quantity,a.accountname FROM order_items oi JOIN orders o ON oi.order_id=o.id LEFT JOIN accounts a ON o.account_id=a.id WHERE oi.product_id=$id ORDER BY o.id DESC LIMIT 20 ");
 $img = json_decode($productfound['images'], true)[0] ?? '';
 require_once 'header.php';
@@ -19,7 +23,7 @@ require_once 'sidebar.php';
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <div class="bg-white dark:bg-dark-800 p-6 rounded-2xl border border-gray-200 dark:border-white/5 shadow-sm">
             <div class="text-xs font-bold text-gray-500 uppercase mb-2">Total Revenue</div>
-            <div class="text-3xl font-black text-primary-500"><?= number_format($revenue, 2) ?> <span class="text-sm text-gray-400">GASHY</span></div>
+            <div class="text-3xl font-black text-primary-500">$<?= number_format($revenue, 2) ?></div>
         </div>
         <div class="bg-white dark:bg-dark-800 p-6 rounded-2xl border border-gray-200 dark:border-white/5 shadow-sm">
             <div class="text-xs font-bold text-gray-500 uppercase mb-2">Inventory Status</div>
@@ -74,10 +78,21 @@ require_once 'sidebar.php';
         <div class="lg:col-span-1 bg-white dark:bg-dark-800 rounded-2xl border border-gray-200 dark:border-white/5 shadow-sm p-6">
             <h3 class="font-bold text-gray-900 dark:text-white mb-4">Product Details</h3>
             <div class="space-y-4 text-sm">
-                <div class="flex justify-between"><span class="text-gray-500">Unit Price</span><span class="font-mono font-bold text-gray-900 dark:text-white"><?= number_format($productfound['price_gashy'], 2) ?></span></div>
+                <div class="flex justify-between"><span class="text-gray-500">Unit Price</span><span class="font-mono font-bold text-gray-900 dark:text-white">$<?= number_format($productfound['price_usd'], 2) ?></span></div>
                 <div class="flex justify-between"><span class="text-gray-500">Type</span><span class="uppercase font-bold text-gray-900 dark:text-white"><?= $productfound['type'] ?></span></div>
                 <div class="flex justify-between"><span class="text-gray-500">Created</span><span class="text-gray-900 dark:text-white"><?= date('M d, Y', strtotime($productfound['created_at'])) ?></span></div>
                 <div class="flex justify-between"><span class="text-gray-500">Views</span><span class="text-gray-900 dark:text-white"><?= number_format($productfound['views']) ?></span></div>
+                <?php if ($productfound['type'] == 'gift_card'): ?>
+                    <div class="pt-4 border-t border-gray-100 dark:border-white/5">
+                        <span class="block text-gray-500 mb-2">Gift Card Options</span>
+                        <div class="space-y-2">
+                            <?php if (!$options): ?><div class="text-xs text-gray-400">No options created yet.</div><?php else: foreach ($options as $op): ?>
+                                    <div class="flex justify-between text-xs bg-gray-50 dark:bg-white/5 px-3 py-2 rounded"><span><?= $op['name'] ?></span><span class="font-mono font-bold">$<?= number_format($op['price_usd'], 2) ?></span></div>
+                            <?php endforeach;
+                                                                                                                endif; ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
                 <div class="pt-4 border-t border-gray-100 dark:border-white/5"><span class="block text-gray-500 mb-2">Description</span>
                     <p class="text-gray-600 dark:text-gray-400 leading-relaxed text-xs"><?= nl2br($productfound['description']) ?></p>
                 </div>
