@@ -67,6 +67,7 @@ $q .= " ORDER BY is_sold ASC,id DESC";
 $codes = getQuery($q);
 $sold_count = countQuery(" SELECT 1 FROM gift_cards WHERE product_id=$pid" . ($oid ? " AND gift_card_option_id=$oid" : "") . " AND is_sold=1");
 $total_count = count($codes);
+$countOptions = count($options);
 require_once 'header.php';
 require_once 'sidebar.php';
 ?>
@@ -87,7 +88,7 @@ require_once 'sidebar.php';
                         <div class="text-xs text-gray-500">$<?= number_format($o['price_usd'], 2) ?></div>
                     </div>
                     <div class="flex gap-2">
-                        <a href="?product_id=<?= $pid ?>&option_id=<?= $o['id'] ?>" class="text-blue-500 text-xs">Open</a>
+                        <a href="?product_id=<?= $pid ?>&option_id=<?= $o['id'] ?>" class="text-blue-500 text-xs <?= $countOptions > 1 ? 'block' : 'hidden' ?>">Open</a>
                         <a href="?product_id=<?= $pid ?>&delete_option=<?= $o['id'] ?>" onclick="return confirm('Delete option?')" class="text-red-500 text-xs">Del</a>
                         <button onclick="editOption(<?= $o['id'] ?>,'<?= $o['name'] ?>','<?= $o['price_usd'] ?>')" class="text-gray-500 text-xs">Edit</button>
                     </div>

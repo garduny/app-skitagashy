@@ -12,8 +12,8 @@ if ($status) {
 if ($search) {
     $where .= " AND (o.tx_signature LIKE '%$search%' OR a.accountname LIKE '%$search%' OR a.wallet_address LIKE '%$search%') ";
 }
-$orders = getQuery(" SELECT o.*,a.accountname,a.wallet_address FROM orders o JOIN accounts a ON o.account_id=a.id $where ORDER BY o.id DESC LIMIT $limit OFFSET $offset ");
-$total = countQuery(" SELECT 1 FROM orders o JOIN accounts a ON o.account_id=a.id $where ");
+$orders = getQuery(" SELECT o.*,a.accountname,a.wallet_address FROM orders o JOIN accounts a ON o.account_id=a.id $where ORDER BY o.id DESC LIMIT $limit OFFSET $offset");
+$total = countQuery(" SELECT 1 FROM orders o JOIN accounts a ON o.account_id=a.id $where");
 $pages = ceil($total / $limit);
 function filterUrl($key, $val)
 {
@@ -22,6 +22,7 @@ function filterUrl($key, $val)
     $p[$key] = $val;
     return '?' . http_build_query(array_filter($p));
 }
+$gashyRate = toGashy();
 require_once 'header.php';
 require_once 'sidebar.php';
 ?>
@@ -72,18 +73,32 @@ require_once 'sidebar.php';
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100 dark:divide-white/5">
-                    <?php foreach ($orders as $o): ?>
+                    <?php foreach ($orders as $o):
+                        $usd = $o['total_usd'];
+                        $gashy = $gashyRate ? ($usd / $gashyRate) : 0;
+                    ?>
                         <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
                             <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">#<?= $o['id'] ?></td>
                             <td class="px-6 py-4">
                                 <div class="text-sm font-bold text-gray-900 dark:text-white"><?= $o['accountname'] ?? 'Guest' ?></div>
                                 <div class="text-xs text-gray-500 font-mono"><?= substr($o['wallet_address'], 0, 6) ?>...</div>
                             </td>
-                            <td class="px-6 py-4 font-mono font-bold text-primary-500"><?= number_format($o['total_gashy'], 2) ?></td>
+                            <td class="px-6 py-4 font-mono font-bold text-primary-500">
+                                $<?= number_format($usd, 2) ?>
+                                <span class="text-yellow-500 ml-2"><?= number_format($gashy, 2) ?> GASHY</span>
+                            </td>
                             <td class="px-6 py-4 text-xs font-mono text-gray-500 truncate max-w-[100px]"><?= $o['tx_signature'] ?></td>
-                            <td class="px-6 py-4"><span class="px-2 py-1 rounded text-[10px] uppercase font-bold <?= $o['status'] == 'completed' ? 'text-green-500 bg-green-500/10' : ($o['status'] == 'pending' ? 'text-yellow-500 bg-yellow-500/10' : ($o['status'] == 'processing' ? 'text-blue-500 bg-blue-500/10' : 'text-red-500 bg-red-500/10')) ?>"><?= $o['status'] ?></span></td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 rounded text-[10px] uppercase font-bold <?= $o['status'] == 'completed' ? 'text-green-500 bg-green-500/10' : ($o['status'] == 'pending' ? 'text-yellow-500 bg-yellow-500/10' : ($o['status'] == 'processing' ? 'text-blue-500 bg-blue-500/10' : 'text-red-500 bg-red-500/10')) ?>">
+                                    <?= $o['status'] ?>
+                                </span>
+                            </td>
                             <td class="px-6 py-4 text-sm text-gray-500"><?= date('M d, H:i', strtotime($o['created_at'])) ?></td>
-                            <td class="px-6 py-4 text-right"><a href="orderdetail.php?id=<?= $o['id'] ?>" class="p-2 text-gray-400 hover:text-primary-500 transition-colors"><i class="fa-solid fa-eye"></i></a></td>
+                            <td class="px-6 py-4 text-right">
+                                <a href="orderdetail.php?id=<?= $o['id'] ?>" class="p-2 text-gray-400 hover:text-primary-500 transition-colors">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -93,10 +108,18 @@ require_once 'sidebar.php';
             <?php if ($pages > 1):
                 $start = max(1, $page - 2);
                 $end = min($pages, $page + 2);
-                if ($page > 1): ?><a href="<?= filterUrl('page', $page - 1) ?>" class="px-3 py-1 rounded-lg text-sm font-bold bg-gray-100 dark:bg-white/5 text-gray-500 hover:bg-gray-200 dark:hover:bg-white/10"><i class="fa-solid fa-chevron-left"></i></a><?php endif;
-                                                                                                                                                                                                                                    for ($i = $start; $i <= $end; $i++): ?><a href="<?= filterUrl('page', $i) ?>" class="px-3 py-1 rounded-lg text-sm font-bold <?= $i == $page ? 'bg-primary-600 text-white' : 'bg-gray-100 dark:bg-white/5 text-gray-500 hover:bg-gray-200 dark:hover:bg-white/10' ?>"><?= $i ?></a><?php endfor;
-                                                                                                                                                                                                                                                            if ($page < $pages): ?><a href="<?= filterUrl('page', $page + 1) ?>" class="px-3 py-1 rounded-lg text-sm font-bold bg-gray-100 dark:bg-white/5 text-gray-500 hover:bg-gray-200 dark:hover:bg-white/10"><i class="fa-solid fa-chevron-right"></i></a><?php endif;
-                                                                                                                                                                                                                                                        endif; ?>
+                if ($page > 1): ?>
+                    <a href="<?= filterUrl('page', $page - 1) ?>" class="px-3 py-1 rounded-lg text-sm font-bold bg-gray-100 dark:bg-white/5 text-gray-500 hover:bg-gray-200 dark:hover:bg-white/10"><i class="fa-solid fa-chevron-left"></i></a>
+                <?php endif;
+                for ($i = $start; $i <= $end; $i++): ?>
+                    <a href="<?= filterUrl('page', $i) ?>" class="px-3 py-1 rounded-lg text-sm font-bold <?= $i == $page ? 'bg-primary-600 text-white' : 'bg-gray-100 dark:bg-white/5 text-gray-500 hover:bg-gray-200 dark:hover:bg-white/10' ?>">
+                        <?= $i ?>
+                    </a>
+                <?php endfor;
+                if ($page < $pages): ?>
+                    <a href="<?= filterUrl('page', $page + 1) ?>" class="px-3 py-1 rounded-lg text-sm font-bold bg-gray-100 dark:bg-white/5 text-gray-500 hover:bg-gray-200 dark:hover:bg-white/10"><i class="fa-solid fa-chevron-right"></i></a>
+            <?php endif;
+            endif; ?>
         </div>
     </div>
 </main>

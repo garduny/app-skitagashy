@@ -12,6 +12,7 @@ if (post('update_auction')) {
     redirect("auctiondetail.php?id=$id&msg=updated");
 }
 $bids = getQuery(" SELECT t.*,acc.accountname FROM transactions t JOIN accounts acc ON t.account_id=acc.id WHERE t.type='auction_bid' AND t.reference_id=$id ORDER BY t.amount DESC ");
+$gashyRate = toGashy();
 require_once 'header.php';
 require_once 'sidebar.php';
 ?>
@@ -24,10 +25,13 @@ require_once 'sidebar.php';
             <div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-200 dark:border-white/5 p-6 shadow-sm">
                 <div class="aspect-video rounded-xl bg-gray-100 dark:bg-white/5 mb-4 overflow-hidden"><img src="../<?= json_decode($a['images'])[0] ?? '' ?>" class="w-full h-full object-cover"></div>
                 <h3 class="font-bold text-gray-900 dark:text-white mb-1"><?= $a['title'] ?></h3>
+                <?php $usd = $a['current_bid'];
+                $gashy = $gashyRate ? ($usd / $gashyRate) : 0; ?>
                 <div class="flex justify-between items-center mt-4 p-3 bg-gray-50 dark:bg-white/5 rounded-xl border border-gray-100 dark:border-white/5">
                     <div>
                         <div class="text-xs text-gray-500 uppercase">Current Bid</div>
-                        <div class="text-lg font-bold text-primary-500"><?= number_format($a['current_bid'], 2) ?></div>
+                        <div class="text-lg font-bold text-primary-500">$<?= number_format($usd, 2) ?><div class="text-xs"><?= number_format($gashy, 2) ?> GASHY</div>
+                        </div>
                     </div>
                     <div class="text-right">
                         <div class="text-xs text-gray-500 uppercase">Status</div><span class="text-sm font-bold uppercase"><?= $a['status'] ?></span>
@@ -64,12 +68,16 @@ require_once 'sidebar.php';
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 dark:divide-white/5">
-                        <?php foreach ($bids as $b): ?><tr>
+                        <?php foreach ($bids as $b): $usd = $b['amount'];
+                            $gashy = $gashyRate ? ($usd / $gashyRate) : 0; ?>
+                            <tr>
                                 <td class="py-3 font-bold text-gray-900 dark:text-white"><?= $b['accountname'] ?></td>
-                                <td class="py-3 font-mono text-primary-500"><?= number_format($b['amount'], 2) ?></td>
+                                <td class="py-3 font-mono text-primary-500">$<?= number_format($usd, 2) ?><div class="text-xs"><?= number_format($gashy, 2) ?> GASHY</div>
+                                </td>
                                 <td class="py-3 text-xs text-gray-500 font-mono truncate max-w-[150px]"><?= $b['tx_signature'] ?></td>
                                 <td class="py-3 text-right text-gray-500"><?= date('M d, H:i', strtotime($b['created_at'])) ?></td>
-                            </tr><?php endforeach; ?>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>

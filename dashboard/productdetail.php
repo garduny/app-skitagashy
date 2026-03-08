@@ -13,11 +13,13 @@ $sold = (int)($sold_data['total'] ?? 0);
 $revenue = $sold * (float)$productfound['price_usd'];
 $orders = getQuery(" SELECT o.id,o.status,o.created_at,oi.quantity,a.accountname FROM order_items oi JOIN orders o ON oi.order_id=o.id LEFT JOIN accounts a ON o.account_id=a.id WHERE oi.product_id=$id ORDER BY o.id DESC LIMIT 20 ");
 $img = json_decode($productfound['images'], true)[0] ?? '';
+$gashyRate = toGashy();
 require_once 'header.php';
 require_once 'sidebar.php';
 ?>
 <main class="ml-0 lg:ml-64 pt-20 p-6 min-h-screen transition-all duration-300">
-    <div class="flex items-center gap-4 mb-6"><a href="products.php" class="p-2 rounded-lg bg-white dark:bg-white/5 text-gray-500 hover:text-white transition-colors"><i class="fa-solid fa-arrow-left"></i></a>
+    <div class="flex items-center gap-4 mb-6">
+        <a href="products.php" class="p-2 rounded-lg bg-white dark:bg-white/5 text-gray-500 hover:text-white transition-colors"><i class="fa-solid fa-arrow-left"></i></a>
         <h1 class="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Product Overview</h1>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -28,7 +30,8 @@ require_once 'sidebar.php';
         <div class="bg-white dark:bg-dark-800 p-6 rounded-2xl border border-gray-200 dark:border-white/5 shadow-sm">
             <div class="text-xs font-bold text-gray-500 uppercase mb-2">Inventory Status</div>
             <div class="flex items-end gap-2">
-                <div class="text-3xl font-black text-gray-900 dark:text-white"><?= $productfound['stock'] ?></div><span class="text-sm text-gray-500 mb-1">In Stock</span>
+                <div class="text-3xl font-black text-gray-900 dark:text-white"><?= $productfound['stock'] ?></div>
+                <span class="text-sm text-gray-500 mb-1">In Stock</span>
             </div>
             <div class="w-full bg-gray-100 dark:bg-white/10 h-1.5 rounded-full mt-3 overflow-hidden">
                 <div class="bg-blue-500 h-full" style="width:<?= min(100, ($productfound['stock'] / ($productfound['stock'] + $sold + 1)) * 100) ?>%"></div>
@@ -36,7 +39,9 @@ require_once 'sidebar.php';
             <div class="text-[10px] text-gray-400 mt-2 text-right"><?= $sold ?> Units Sold</div>
         </div>
         <div class="bg-white dark:bg-dark-800 p-6 rounded-2xl border border-gray-200 dark:border-white/5 shadow-sm flex items-center gap-4">
-            <div class="w-16 h-16 rounded-xl bg-gray-100 dark:bg-white/5 flex-shrink-0 overflow-hidden"><img src="../<?= $img ?>" class="w-full h-full object-cover"></div>
+            <div class="w-16 h-16 rounded-xl bg-gray-100 dark:bg-white/5 flex-shrink-0 overflow-hidden">
+                <img src="../<?= $img ?>" class="w-full h-full object-cover">
+            </div>
             <div class="overflow-hidden">
                 <div class="text-xs font-bold text-primary-500 uppercase mb-1"><?= $productfound['cat_name'] ?></div>
                 <h3 class="font-bold text-gray-900 dark:text-white truncate"><?= $productfound['title'] ?></h3>
@@ -59,18 +64,24 @@ require_once 'sidebar.php';
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 dark:divide-white/5">
-                        <?php if (empty($orders)): ?><tr>
+                        <?php if (empty($orders)): ?>
+                            <tr>
                                 <td colspan="5" class="py-8 text-center text-gray-500">No orders yet.</td>
-                            </tr><?php else: foreach ($orders as $o): ?>
+                            </tr>
+                            <?php else: foreach ($orders as $o): ?>
                                 <tr>
                                     <td class="py-3 font-bold text-primary-500"><a href="orderdetail.php?id=<?= $o['id'] ?>">#<?= $o['id'] ?></a></td>
                                     <td class="py-3 font-bold text-gray-900 dark:text-white"><?= $o['accountname'] ?? 'Guest' ?></td>
                                     <td class="py-3 text-center"><?= $o['quantity'] ?></td>
-                                    <td class="py-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] uppercase font-bold <?= $o['status'] == 'completed' ? 'bg-green-500/10 text-green-500' : 'bg-gray-100 dark:bg-white/10 text-gray-500' ?>"><?= $o['status'] ?></span></td>
+                                    <td class="py-3 text-center">
+                                        <span class="px-2 py-0.5 rounded text-[10px] uppercase font-bold <?= $o['status'] == 'completed' ? 'bg-green-500/10 text-green-500' : 'bg-gray-100 dark:bg-white/10 text-gray-500' ?>">
+                                            <?= $o['status'] ?>
+                                        </span>
+                                    </td>
                                     <td class="py-3 text-right text-gray-500"><?= date('M d', strtotime($o['created_at'])) ?></td>
                                 </tr>
                         <?php endforeach;
-                                endif; ?>
+                        endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -78,22 +89,53 @@ require_once 'sidebar.php';
         <div class="lg:col-span-1 bg-white dark:bg-dark-800 rounded-2xl border border-gray-200 dark:border-white/5 shadow-sm p-6">
             <h3 class="font-bold text-gray-900 dark:text-white mb-4">Product Details</h3>
             <div class="space-y-4 text-sm">
-                <div class="flex justify-between"><span class="text-gray-500">Unit Price</span><span class="font-mono font-bold text-gray-900 dark:text-white">$<?= number_format($productfound['price_usd'], 2) ?></span></div>
-                <div class="flex justify-between"><span class="text-gray-500">Type</span><span class="uppercase font-bold text-gray-900 dark:text-white"><?= $productfound['type'] ?></span></div>
-                <div class="flex justify-between"><span class="text-gray-500">Created</span><span class="text-gray-900 dark:text-white"><?= date('M d, Y', strtotime($productfound['created_at'])) ?></span></div>
-                <div class="flex justify-between"><span class="text-gray-500">Views</span><span class="text-gray-900 dark:text-white"><?= number_format($productfound['views']) ?></span></div>
+                <?php
+                $usd = $productfound['price_usd'];
+                $gashy = $gashyRate ? ($usd / $gashyRate) : 0;
+                ?>
+                <div class="flex justify-between">
+                    <span class="text-gray-500">Unit Price</span>
+                    <span class="font-mono font-bold text-gray-900 dark:text-white">
+                        $<?= number_format($usd, 2) ?>
+                        <span class="text-primary-500 text-xs"><?= number_format($gashy, 2) ?> GASHY</span>
+                    </span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-500">Type</span>
+                    <span class="uppercase font-bold text-gray-900 dark:text-white"><?= $productfound['type'] ?></span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-500">Created</span>
+                    <span class="text-gray-900 dark:text-white"><?= date('M d, Y', strtotime($productfound['created_at'])) ?></span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-500">Views</span>
+                    <span class="text-gray-900 dark:text-white"><?= number_format($productfound['views']) ?></span>
+                </div>
                 <?php if ($productfound['type'] == 'gift_card'): ?>
                     <div class="pt-4 border-t border-gray-100 dark:border-white/5">
                         <span class="block text-gray-500 mb-2">Gift Card Options</span>
                         <div class="space-y-2">
-                            <?php if (!$options): ?><div class="text-xs text-gray-400">No options created yet.</div><?php else: foreach ($options as $op): ?>
-                                    <div class="flex justify-between text-xs bg-gray-50 dark:bg-white/5 px-3 py-2 rounded"><span><?= $op['name'] ?></span><span class="font-mono font-bold">$<?= number_format($op['price_usd'], 2) ?></span></div>
+                            <?php if (!$options): ?>
+                                <div class="text-xs text-gray-400">No options created yet.</div>
+                                <?php else: foreach ($options as $op):
+                                    $usd = $op['price_usd'];
+                                    $gashy = $gashyRate ? ($usd / $gashyRate) : 0;
+                                ?>
+                                    <div class="flex justify-between text-xs bg-gray-50 dark:bg-white/5 px-3 py-2 rounded">
+                                        <span><?= $op['name'] ?></span>
+                                        <span class="font-mono font-bold">
+                                            $<?= number_format($usd, 2) ?>
+                                            <span class="text-primary-500"><?= number_format($gashy, 2) ?> GASHY</span>
+                                        </span>
+                                    </div>
                             <?php endforeach;
-                                                                                                                endif; ?>
+                            endif; ?>
                         </div>
                     </div>
                 <?php endif; ?>
-                <div class="pt-4 border-t border-gray-100 dark:border-white/5"><span class="block text-gray-500 mb-2">Description</span>
+                <div class="pt-4 border-t border-gray-100 dark:border-white/5">
+                    <span class="block text-gray-500 mb-2">Description</span>
                     <p class="text-gray-600 dark:text-gray-400 leading-relaxed text-xs"><?= nl2br($productfound['description']) ?></p>
                 </div>
             </div>

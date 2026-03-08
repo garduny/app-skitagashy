@@ -1,7 +1,7 @@
 <?php
 require_once 'init.php';
 if (post('new_round')) {
-    $last = findQuery(" SELECT MAX(round_number) as r FROM lottery_rounds");
+    $last = findQuery(" SELECT MAX(round_number) as r FROM lottery_rounds ");
     $next = ($last['r'] ?? 0) + 1;
     $draw = request('draw_time', 'post');
     execute(" INSERT INTO lottery_rounds (round_number,prize_pool,draw_time,status) VALUES ($next,0,'$draw','open') ");
@@ -52,7 +52,7 @@ require_once 'sidebar.php';
                     <?php foreach ($rounds as $r): ?>
                         <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
                             <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">#<?= $r['round_number'] ?></td>
-                            <td class="px-6 py-4 font-mono font-bold text-green-500"><?= number_format($r['prize_pool']) ?> G</td>
+                            <td class="px-6 py-4 font-mono font-bold text-green-500"><?= number_format($r['prize_pool'], 2) ?> GASHY</td>
                             <td class="px-6 py-4 text-sm text-gray-500"><?= date('M d, Y H:i', strtotime($r['draw_time'])) ?></td>
                             <td class="px-6 py-4"><span class="px-2 py-1 rounded text-[10px] uppercase font-bold <?= $r['status'] == 'open' ? 'bg-green-500/10 text-green-500' : 'bg-gray-100 dark:bg-white/10 text-gray-500' ?>"><?= $r['status'] ?></span></td>
                             <td class="px-6 py-4 text-right"><a href="lotterydetail.php?id=<?= $r['id'] ?>" class="p-2 text-gray-400 hover:text-primary-500"><i class="fa-solid fa-eye"></i> Manage</a></td>
@@ -62,7 +62,7 @@ require_once 'sidebar.php';
             </table>
         </div>
         <div class="p-4 border-t border-gray-200 dark:border-white/5 flex justify-center gap-2"><?php if ($pages > 1): for ($i = 1; $i <= $pages; $i++): ?><a href="?page=<?= $i ?>&status=<?= $status ?>" class="px-3 py-1 rounded-lg text-sm font-bold <?= $i == $page ? 'bg-primary-500 text-white' : 'bg-gray-100 dark:bg-white/5 text-gray-500 hover:bg-gray-200 dark:hover:bg-white/10' ?>"><?= $i ?></a><?php endfor;
-                                                                                                                                                                                                                                                                                                                                                                                                        endif; ?></div>
+                                                                                                                                                                                                                                                                                                                                                                                        endif; ?></div>
     </div>
 </main>
 <div id="addModal" class="fixed inset-0 z-[60] hidden">
@@ -71,18 +71,19 @@ require_once 'sidebar.php';
         <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Start New Round</h3>
         <form method="POST">
             <div class="space-y-4">
-                <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Draw Date</label><input type="datetime-local" name="draw_time" required class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none"></div><button type="submit" name="new_round" value="1" class="w-full py-3 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-xl">Create</button>
+                <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Draw Date</label><input type="datetime-local" name="draw_time" required class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none"></div>
+                <button type="submit" name="new_round" value="1" class="w-full py-3 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-xl">Create</button>
             </div>
         </form>
     </div>
 </div>
 <script>
     function openModal(id) {
-        document.getElementById(id).classList.remove('hidden');
+        document.getElementById(id).classList.remove('hidden')
     }
 
     function closeModal(id) {
-        document.getElementById(id).classList.add('hidden');
+        document.getElementById(id).classList.add('hidden')
     }
 </script>
 <?php require_once 'footer.php'; ?>

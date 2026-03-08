@@ -2311,6 +2311,6 @@ function sellerStats($sellerId)
 
 function toGashy()
 {
-    $priceData = json_decode(@file_get_contents('./.cache/price.json'), true) ?: [];
+    $priceData = json_decode(@file_get_contents(__DIR__ . '/.cache/price.json'), true) ?: [];
     return $priceData['price'] ?? 0.0;
 }

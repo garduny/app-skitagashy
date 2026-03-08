@@ -34,7 +34,7 @@ if ($search) {
 if ($status) {
     $where .= " AND a.status='$status' ";
 }
-$auctions = getQuery(" SELECT a.*,p.title,p.images,acc.accountname as bidder_name FROM auctions a JOIN products p ON a.product_id=p.id LEFT JOIN accounts acc ON a.highest_bidder_id=acc.id $where ORDER BY a.status ASC, a.end_time ASC LIMIT $limit OFFSET $offset ");
+$auctions = getQuery(" SELECT a.*,p.title,p.images,acc.accountname as bidder_name FROM auctions a JOIN products p ON a.product_id=p.id LEFT JOIN accounts acc ON a.highest_bidder_id=acc.id $where ORDER BY a.status ASC,a.end_time ASC LIMIT $limit OFFSET $offset ");
 $total = countQuery(" SELECT 1 FROM auctions a JOIN products p ON a.product_id=p.id $where ");
 $pages = ceil($total / $limit);
 function filterUrl($key, $val)
@@ -44,6 +44,7 @@ function filterUrl($key, $val)
     $p[$key] = $val;
     return '?' . http_build_query(array_filter($p));
 }
+$gashyRate = toGashy();
 require_once 'header.php';
 require_once 'sidebar.php';
 ?>
@@ -82,19 +83,28 @@ require_once 'sidebar.php';
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100 dark:divide-white/5">
-                    <?php foreach ($auctions as $a): $img = json_decode($a['images'])[0] ?? '';
+                    <?php foreach ($auctions as $a):
+                        $img = json_decode($a['images'])[0] ?? '';
                         $time = strtotime($a['end_time']);
                         $diff = $time - time();
                         $h = floor($diff / 3600);
-                        $m = floor(($diff % 3600) / 60); ?>
+                        $m = floor(($diff % 3600) / 60);
+                        $usd = $a['current_bid'];
+                        $gashy = $gashyRate ? ($usd / $gashyRate) : 0;
+                        $resusd = $a['reserve_price'] ?? 0;
+                        $resgashy = $gashyRate ? ($resusd / $gashyRate) : 0;
+                    ?>
                         <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
                             <td class="px-6 py-4">
-                                <div class="flex items-center gap-3"><img src="../<?= $img ?>" class="w-10 h-10 rounded-lg object-cover bg-gray-100 dark:bg-white/5">
+                                <div class="flex items-center gap-3">
+                                    <img src="../<?= $img ?>" class="w-10 h-10 rounded-lg object-cover bg-gray-100 dark:bg-white/5">
                                     <div class="font-bold text-gray-900 dark:text-white truncate max-w-[200px]"><?= $a['title'] ?></div>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 font-mono font-bold text-primary-500"><?= number_format($a['current_bid'], 2) ?></td>
-                            <td class="px-6 py-4 font-mono text-xs text-gray-500"><?= number_format($a['reserve_price'] ?? 0, 2) ?></td>
+                            <td class="px-6 py-4 font-mono font-bold text-primary-500">$<?= number_format($usd, 2) ?><div class="text-xs text-primary-500"><?= number_format($gashy, 2) ?> GASHY</div>
+                            </td>
+                            <td class="px-6 py-4 font-mono text-xs text-gray-500">$<?= number_format($resusd, 2) ?><div><?= number_format($resgashy, 2) ?> GASHY</div>
+                            </td>
                             <td class="px-6 py-4 text-sm"><?= $a['bidder_name'] ?? '<span class="text-gray-400 italic">No Bids</span>' ?></td>
                             <td class="px-6 py-4"><span class="text-sm font-mono <?= $diff > 0 && $diff < 3600 ? 'text-red-500 font-bold' : '' ?>"><?= $diff > 0 ? "{$h}h {$m}m" : 'Ended' ?></span></td>
                             <td class="px-6 py-4"><span class="px-2 py-1 rounded text-[10px] uppercase font-bold <?= $a['status'] == 'active' ? 'bg-green-500/10 text-green-500' : ($a['status'] == 'ended' ? 'bg-blue-500/10 text-blue-500' : 'bg-red-500/10 text-red-500') ?>"><?= $a['status'] ?></span></td>
@@ -135,17 +145,17 @@ require_once 'sidebar.php';
 </div>
 <script>
     function openModal(id) {
-        document.getElementById(id).classList.remove('hidden');
+        document.getElementById(id).classList.remove('hidden')
     }
 
     function closeModal(id) {
-        document.getElementById(id).classList.add('hidden');
+        document.getElementById(id).classList.add('hidden')
     }
 
     function resetForm() {
         document.getElementById('auc_id').value = '';
         document.getElementById('modalTitle').innerText = 'New Auction';
-        document.getElementById('status_field').classList.add('hidden');
+        document.getElementById('status_field').classList.add('hidden')
     }
 
     function editAuction(a) {
@@ -158,7 +168,7 @@ require_once 'sidebar.php';
         document.getElementById('auc_status').value = a.status;
         document.getElementById('status_field').classList.remove('hidden');
         document.getElementById('modalTitle').innerText = 'Edit Auction';
-        openModal('auctionModal');
+        openModal('auctionModal')
     }
 </script>
 <?php require_once 'footer.php'; ?>

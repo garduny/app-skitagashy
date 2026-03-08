@@ -12,7 +12,7 @@ if (post('draw_winner')) {
     if (empty($pool)) {
         execute(" UPDATE lottery_rounds SET status='closed' WHERE id=$id ");
     } else {
-        $winner_id = $pool[array_rand($pool)];
+        $winner_id = (int)$pool[array_rand($pool)];
         $win_data = [['rank' => 1, 'user' => $winner_id, 'amount' => $r['prize_pool']]];
         $win_json = json_encode($win_data);
         execute(" UPDATE lottery_rounds SET status='closed',winning_numbers='$win_json' WHERE id=$id ");
@@ -58,7 +58,7 @@ require_once 'sidebar.php';
                         <div class="space-y-3">
                             <?php foreach ($winners as $w):
                                 $uid = (int)($w['user'] ?? 0);
-                                $u = $uid ? findQuery(" SELECT accountname FROM accounts WHERE id=$uid") : [];
+                                $u = $uid ? findQuery(" SELECT accountname FROM accounts WHERE id=$uid ") : [];
                                 $rankColor = $w['rank'] == 1 ? 'text-yellow-500' : ($w['rank'] == 2 ? 'text-gray-400' : 'text-orange-500');
                             ?>
                                 <div class="flex items-center justify-between p-3 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5">
