@@ -44,7 +44,7 @@ require_once 'sidebar.php';
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="md:col-span-1 space-y-6">
                 <div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-200 dark:border-white/5 p-6 text-center shadow-sm">
-                    <img src="<?= $u['avatar'] ?: 'https://ui-avatars.com/api/?name=' . $u['username'] . '&background=00ffaa&color=000' ?>" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gray-100 dark:border-white/5">
+                    <img src="../<?= $u['avatar'] ?: 'https://ui-avatars.com/api/?name=' . $u['username'] . '&background=00ffaa&color=000' ?>" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gray-100 dark:border-white/5">
                     <h2 class="text-xl font-bold text-gray-900 dark:text-white"><?= $u['username'] ?></h2>
                     <p class="text-sm text-gray-500 uppercase tracking-wider font-bold mb-4"><?= $u['role_name'] ?></p>
                     <div class="text-xs text-gray-400">Member since <?= date('M Y', strtotime($u['created_at'])) ?></div>

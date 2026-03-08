@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <link rel="shortcut icon" href="../public/img/logo.png" type="image/x-icon">
+    <link rel="shortcut icon" href="<?= '../' . $settings['site_logo'] ?? 'https://ui-avatars.com/api/?name=GB&background=00ffaa&color=000' ?>" type="image/x-icon">
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -167,13 +167,14 @@
             </button>
             <div class="flex items-center gap-3">
                 <div class="logo-glow w-10 h-10 rounded-xl bg-gradient-to-br from-[#00ffaa] to-[#00d48f] flex items-center justify-center shadow-lg shadow-[#00ffaa]/30">
-                    <img src="../public/img/logo.png" alt="GASHY" class="w-full h-full rounded-xl">
+                    <img src="<?= '..' . $settings['site_logo'] ?? 'https://ui-avatars.com/api/?name=GB&background=00ffaa&color=000' ?>" alt="GASHY LOGO" class="w-full h-full rounded-xl">
                 </div>
+
                 <div>
                     <div class="text-xl font-black tracking-tighter" style="font-family:'Space Mono',monospace">
                         GASHY<span class="text-[#00ffaa]">ADMIN</span>
                     </div>
-                    <div class="text-[9px] text-gray-500 dark:text-gray-500 font-bold uppercase tracking-widest -mt-1">Dashboard v2.0</div>
+                    <div class="text-[9px] text-gray-500 dark:text-gray-500 font-bold uppercase tracking-widest -mt-1">Dashboard v1.0</div>
                 </div>
             </div>
         </div>
@@ -188,7 +189,7 @@
                     <div class="text-[9px] text-[#00ffaa] font-bold uppercase tracking-widest"><?= user()['role_name'] ?></div>
                 </div>
                 <div class="relative">
-                    <img src="<?= user()['avatar'] ?? 'https://ui-avatars.com/api/?name=' . user()['username'] . '&background=00ffaa&color=000' ?>" class="w-10 h-10 rounded-xl border-2 border-[#00ffaa]/30 shadow-lg" alt="Avatar">
+                    <img src="<?= '../' . user()['avatar'] ?? 'https://ui-avatars.com/api/?name=' . user()['username'] . '&background=00ffaa&color=000' ?>" class="w-10 h-10 rounded-xl border-2 border-[#00ffaa]/30 shadow-lg" alt="Avatar">
                     <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-dark-800"></div>
                 </div>
             </a>
