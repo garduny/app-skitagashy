@@ -2,30 +2,31 @@
 require_once 'init.php';
 require_once 'header.php';
 require_once 'sidebar.php';
+$gashyRate = (float)toGashy();
 $today = date('Y-m-d');
 $yesterday = date('Y-m-d', strtotime('-1 day'));
-$sales_today = findQuery(" SELECT SUM(total_gashy) as t FROM orders WHERE status='completed' AND DATE(created_at)='$today' ")['t'] ?? 0;
-$sales_yesterday = findQuery(" SELECT SUM(total_gashy) as t FROM orders WHERE status='completed' AND DATE(created_at)='$yesterday' ")['t'] ?? 1;
+$sales_today = (float)(findQuery(" SELECT SUM(total_usd) as t FROM orders WHERE status='completed' AND DATE(created_at)='$today' ")['t'] ?? 0);
+$sales_yesterday = (float)(findQuery(" SELECT SUM(total_usd) as t FROM orders WHERE status='completed' AND DATE(created_at)='$yesterday' ")['t'] ?? 0);
 $sales_growth = $sales_yesterday > 0 ? (($sales_today - $sales_yesterday) / $sales_yesterday) * 100 : 0;
 $orders_today = countQuery(" SELECT 1 FROM orders WHERE DATE(created_at)='$today' ");
 $orders_yesterday = countQuery(" SELECT 1 FROM orders WHERE DATE(created_at)='$yesterday' ");
 $orders_growth = $orders_yesterday > 0 ? (($orders_today - $orders_yesterday) / $orders_yesterday) * 100 : 0;
 $stats = [
     'users' => countQuery(" SELECT 1 FROM accounts "),
-    'sales_total' => findQuery(" SELECT SUM(total_gashy) as t FROM orders WHERE status='completed' ")['t'] ?? 0,
+    'sales_total' => (float)(findQuery(" SELECT SUM(total_usd) as t FROM orders WHERE status='completed' ")['t'] ?? 0),
     'sales_today' => $sales_today,
     'sales_growth' => round($sales_growth, 1),
     'orders_total' => countQuery(" SELECT 1 FROM orders "),
     'orders_today' => $orders_today,
     'orders_growth' => round($orders_growth, 1),
-    'avg_order' => findQuery(" SELECT AVG(total_gashy) as t FROM orders WHERE status='completed' ")['t'] ?? 0,
-    'burned' => findQuery(" SELECT SUM(amount) as t FROM burn_log ")['t'] ?? 0,
+    'avg_order' => (float)(findQuery(" SELECT AVG(total_usd) as t FROM orders WHERE status='completed' ")['t'] ?? 0),
+    'burned' => (float)(findQuery(" SELECT SUM(amount) as t FROM burn_log ")['t'] ?? 0),
     'sellers' => countQuery(" SELECT 1 FROM sellers WHERE is_approved=1 ")
 ];
-$recent = getQuery(" SELECT o.id,o.total_gashy,o.status,o.created_at,a.accountname FROM orders o JOIN accounts a ON o.account_id=a.id ORDER BY o.id DESC LIMIT 6 ");
-$top_products = getQuery(" SELECT p.title,SUM(oi.quantity) as sold,p.images,p.price_gashy FROM order_items oi JOIN products p ON oi.product_id=p.id GROUP BY oi.product_id ORDER BY sold DESC LIMIT 5 ");
+$recent = getQuery(" SELECT o.id,o.total_usd,o.status,o.created_at,a.accountname FROM orders o JOIN accounts a ON o.account_id=a.id ORDER BY o.id DESC LIMIT 6 ");
+$top_products = getQuery(" SELECT p.title,SUM(oi.quantity) as sold,p.images,p.price_usd FROM order_items oi JOIN products p ON oi.product_id=p.id GROUP BY oi.product_id ORDER BY sold DESC LIMIT 5 ");
 $top_sellers = getQuery(" SELECT store_name,total_sales,rating,account_id FROM sellers WHERE is_approved=1 ORDER BY total_sales DESC LIMIT 5 ");
-$chart_data = getQuery(" SELECT DATE(created_at) as d, SUM(total_gashy) as t FROM orders WHERE status='completed' AND created_at>=DATE_SUB(NOW(), INTERVAL 7 DAY) GROUP BY DATE(created_at) ORDER BY d ASC ");
+$chart_data = getQuery(" SELECT DATE(created_at) as d,SUM(total_usd) as t FROM orders WHERE status='completed' AND created_at>=DATE_SUB(NOW(), INTERVAL 7 DAY) GROUP BY DATE(created_at) ORDER BY d ASC ");
 $dates = [];
 $vols = [];
 for ($i = 6; $i >= 0; $i--) {
@@ -50,7 +51,8 @@ $cat_counts = array_column($cat_stats, 'count');
         <div class="bg-white dark:bg-dark-800 p-6 rounded-2xl border border-gray-200 dark:border-white/5 shadow-sm relative overflow-hidden group hover:border-primary-500/50 transition-colors">
             <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"><i class="fa-solid fa-wallet text-4xl text-primary-500"></i></div>
             <div class="text-gray-500 text-xs font-bold uppercase mb-2">Total Volume</div>
-            <div class="text-3xl font-black text-gray-900 dark:text-white"><?= number_format($stats['sales_total']) ?> <span class="text-sm text-gray-400">G</span></div>
+            <div class="text-3xl font-black text-gray-900 dark:text-white">$<?= number_format($stats['sales_total'], 2) ?></div>
+            <div class="mt-1 text-xs text-gray-400 font-bold"><?= $gashyRate > 0 ? number_format($stats['sales_total'] / $gashyRate, 2) : '0.00' ?> G</div>
             <div class="mt-2 text-xs font-bold flex items-center gap-1 <?= $stats['sales_growth'] >= 0 ? 'text-green-500' : 'text-red-500' ?>">
                 <i class="fa-solid fa-<?= $stats['sales_growth'] >= 0 ? 'arrow-up' : 'arrow-down' ?>"></i> <?= $stats['sales_growth'] ?>% (24h)
             </div>
@@ -66,13 +68,14 @@ $cat_counts = array_column($cat_stats, 'count');
         <div class="bg-white dark:bg-dark-800 p-6 rounded-2xl border border-gray-200 dark:border-white/5 shadow-sm relative overflow-hidden group hover:border-red-500/50 transition-colors">
             <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"><i class="fa-solid fa-fire text-4xl text-red-500"></i></div>
             <div class="text-gray-500 text-xs font-bold uppercase mb-2">Total Burned</div>
-            <div class="text-3xl font-black text-gray-900 dark:text-white"><?= number_format($stats['burned']) ?> <span class="text-sm text-gray-400">G</span></div>
+            <div class="text-3xl font-black text-gray-900 dark:text-white"><?= number_format($stats['burned'], 2) ?> <span class="text-sm text-gray-400">G</span></div>
             <div class="mt-2 text-xs text-red-500 font-bold">Deflationary Asset</div>
         </div>
         <div class="bg-white dark:bg-dark-800 p-6 rounded-2xl border border-gray-200 dark:border-white/5 shadow-sm relative overflow-hidden group hover:border-purple-500/50 transition-colors">
             <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"><i class="fa-solid fa-chart-line text-4xl text-purple-500"></i></div>
             <div class="text-gray-500 text-xs font-bold uppercase mb-2">Avg Order Value</div>
-            <div class="text-3xl font-black text-gray-900 dark:text-white"><?= number_format($stats['avg_order'], 1) ?> <span class="text-sm text-gray-400">G</span></div>
+            <div class="text-3xl font-black text-gray-900 dark:text-white">$<?= number_format($stats['avg_order'], 2) ?></div>
+            <div class="mt-1 text-xs text-gray-400 font-bold"><?= $gashyRate > 0 ? number_format($stats['avg_order'] / $gashyRate, 2) : '0.00' ?> G</div>
             <div class="mt-2 text-xs text-gray-400 font-bold"><?= number_format($stats['sellers']) ?> Active Sellers</div>
         </div>
     </div>
@@ -102,7 +105,8 @@ $cat_counts = array_column($cat_stats, 'count');
                             <div class="text-xs text-gray-500"><?= date('M d, H:i', strtotime($r['created_at'])) ?></div>
                         </div>
                         <div class="text-right">
-                            <div class="font-bold text-sm text-primary-500"><?= number_format($r['total_gashy']) ?></div>
+                            <div class="font-bold text-sm text-primary-500">$<?= number_format((float)$r['total_usd'], 2) ?></div>
+                            <div class="text-[10px] text-gray-400"><?= $gashyRate > 0 ? number_format((float)$r['total_usd'] / $gashyRate, 2) . ' G' : '0.00 G' ?></div>
                             <div class="text-[10px] uppercase font-bold text-gray-400"><?= $r['status'] ?></div>
                         </div>
                     </div>
@@ -112,12 +116,14 @@ $cat_counts = array_column($cat_stats, 'count');
         <div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-200 dark:border-white/5 shadow-sm p-6">
             <h3 class="font-bold text-gray-900 dark:text-white mb-6">Top Products</h3>
             <div class="space-y-4">
-                <?php foreach ($top_products as $i => $tp): $img = json_decode($tp['images'])[0] ?? ''; ?>
+                <?php foreach ($top_products as $i => $tp): $images = json_decode($tp['images'], true) ?: [];
+                    $img = $images[0] ?? ''; ?>
                     <div class="flex items-center gap-3 pb-4 border-b border-gray-100 dark:border-white/5 last:border-0 last:pb-0">
                         <img src="../<?= $img ?>" class="w-10 h-10 rounded bg-gray-100 dark:bg-white/5 object-cover">
                         <div class="flex-1 min-w-0">
                             <div class="font-bold text-sm text-gray-900 dark:text-white truncate"><?= $tp['title'] ?></div>
-                            <div class="text-xs text-gray-500"><?= number_format($tp['price_gashy']) ?> G</div>
+                            <div class="text-xs text-gray-500">$<?= number_format((float)$tp['price_usd'], 2) ?></div>
+                            <div class="text-[10px] text-gray-400"><?= $gashyRate > 0 ? number_format((float)$tp['price_usd'] / $gashyRate, 2) . ' G' : '0.00 G' ?></div>
                         </div>
                         <div class="text-right">
                             <div class="text-primary-500 font-bold text-sm"><?= $tp['sold'] ?></div>
@@ -133,7 +139,7 @@ $cat_counts = array_column($cat_stats, 'count');
                 <?php foreach ($top_sellers as $i => $ts): ?>
                     <div class="flex items-center justify-between pb-4 border-b border-gray-100 dark:border-white/5 last:border-0 last:pb-0">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center font-bold text-gray-500 text-xs"><?= ($i + 1) ?></div>
+                            <div class="w-8 h-8 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center font-bold text-gray-500 text-xs"><?= $i + 1 ?></div>
                             <div class="font-bold text-sm text-gray-900 dark:text-white"><?= $ts['store_name'] ?></div>
                         </div>
                         <div class="text-right">
@@ -150,7 +156,7 @@ $cat_counts = array_column($cat_stats, 'count');
 <script>
     var revOpts = {
         series: [{
-            name: 'Volume',
+            name: 'Revenue',
             data: <?= json_encode($vols) ?>
         }],
         chart: {
@@ -196,6 +202,9 @@ $cat_counts = array_column($cat_stats, 'count');
         },
         yaxis: {
             labels: {
+                formatter: function(val) {
+                    return '$' + Number(val).toFixed(0);
+                },
                 style: {
                     colors: '#9ca3af',
                     fontSize: '10px'
@@ -215,7 +224,7 @@ $cat_counts = array_column($cat_stats, 'count');
             theme: 'dark',
             y: {
                 formatter: function(val) {
-                    return val + " G"
+                    return '$' + Number(val).toFixed(2);
                 }
             }
         }

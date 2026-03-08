@@ -4,12 +4,18 @@ $u = user();
 if (post('update_info')) {
     $username = request('username', 'post');
     $email = request('email', 'post');
-    $avatar = request('avatar', 'post');
+    $avatar = $u['avatar'];
     $check = findQuery(" SELECT id FROM users WHERE (email='$email' OR username='$username') AND id!={$u['id']} ");
     if ($check) {
         $error = "Username or Email already taken.";
     } else {
-        execute(" UPDATE users SET username='$username', email='$email', avatar='$avatar' WHERE id={$u['id']} ");
+        $uploadPath = '../server/uploads/users/';
+        $dbPath = '/server/uploads/users/';
+        if (!empty($_FILES['image']['name'])) {
+            $newImage = upload('image', $uploadPath);
+            if ($newImage) $avatar = $dbPath . basename($newImage);
+        }
+        execute(" UPDATE users SET username='$username',email='$email',avatar='$avatar' WHERE id={$u['id']} ");
         redirect('profile.php?msg=updated');
     }
 }
@@ -38,7 +44,7 @@ require_once 'sidebar.php';
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="md:col-span-1 space-y-6">
                 <div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-200 dark:border-white/5 p-6 text-center shadow-sm">
-                    <img src="<?= $u['avatar'] ?? 'https://ui-avatars.com/api/?name=' . $u['username'] . '&background=00ffaa&color=000' ?>" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gray-100 dark:border-white/5">
+                    <img src="<?= $u['avatar'] ?: 'https://ui-avatars.com/api/?name=' . $u['username'] . '&background=00ffaa&color=000' ?>" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gray-100 dark:border-white/5">
                     <h2 class="text-xl font-bold text-gray-900 dark:text-white"><?= $u['username'] ?></h2>
                     <p class="text-sm text-gray-500 uppercase tracking-wider font-bold mb-4"><?= $u['role_name'] ?></p>
                     <div class="text-xs text-gray-400">Member since <?= date('M Y', strtotime($u['created_at'])) ?></div>
@@ -47,7 +53,7 @@ require_once 'sidebar.php';
             <div class="md:col-span-2 space-y-6">
                 <div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-200 dark:border-white/5 p-6 shadow-sm">
                     <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-100 dark:border-white/5 pb-4">Personal Information</h3>
-                    <form method="POST">
+                    <form method="POST" enctype="multipart/form-data">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
                                 <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Username</label>
@@ -59,8 +65,8 @@ require_once 'sidebar.php';
                             </div>
                         </div>
                         <div class="mb-6">
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Avatar URL</label>
-                            <input type="text" name="avatar" value="<?= $u['avatar'] ?>" placeholder="https://..." class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white focus:border-primary-500 outline-none">
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Avatar</label>
+                            <input type="file" name="image" accept="image/*" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white focus:border-primary-500 outline-none">
                         </div>
                         <button type="submit" name="update_info" value="1" class="px-6 py-2.5 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-xl transition-all">Update Profile</button>
                     </form>

@@ -1,26 +1,37 @@
-<?php require_once 'init.php';
+<?php
+require_once 'init.php';
 if (get('del')) {
-    execute(" DELETE FROM settings WHERE id = '" . request('del', 'get') . "' ");
+    execute(" DELETE FROM settings WHERE id='" . request('del', 'get') . "' ");
     redirect('setting?msg=deleted');
+}
+if (post('update_logo')) {
+    $uploadPath = '../server/uploads/setting/';
+    $dbPath = '/server/uploads/setting/';
+    if (!empty($_FILES['image']['name'])) {
+        $newImage = upload('image', $uploadPath);
+        if ($newImage) {
+            $logo = $dbPath . basename($newImage);
+            $exist = findQuery(" SELECT id FROM settings WHERE key_name='site_logo' ");
+            if ($exist) execute(" UPDATE settings SET value='$logo' WHERE key_name='site_logo' ");
+            else execute(" INSERT INTO settings(key_name,value) VALUES('site_logo','$logo') ");
+        }
+    }
+    redirect('setting?msg=saved');
 }
 if (post('save')) {
     $id = request('id', 'post');
     $k = request('key_name', 'post');
     $v = request('value', 'post');
-    if ($id) {
-        execute(" UPDATE settings SET key_name = '$k' , value = '$v' WHERE id = '$id' ");
-    } else {
-        execute(" INSERT INTO settings (key_name,value) VALUES ('$k','$v') ");
-    }
+    if ($id) execute(" UPDATE settings SET key_name='$k',value='$v' WHERE id='$id' ");
+    else execute(" INSERT INTO settings(key_name,value) VALUES('$k','$v') ");
     redirect('setting?msg=saved');
 }
 $edit_data = null;
-if (get('edit')) {
-    $edit_data = findQuery(" SELECT * FROM settings WHERE id = '" . request('edit', 'get') . "' ");
-}
+if (get('edit')) $edit_data = findQuery(" SELECT * FROM settings WHERE id='" . request('edit', 'get') . "' ");
 $settings = getQuery(" SELECT * FROM settings ORDER BY id DESC ");
 require_once 'header.php';
-require_once 'sidebar.php'; ?>
+require_once 'sidebar.php';
+?>
 <main class="ml-0 lg:ml-64 pt-20 p-6 min-h-screen transition-all duration-300">
     <div class="max-w-6xl mx-auto">
         <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
@@ -29,6 +40,15 @@ require_once 'sidebar.php'; ?>
                 <p class="text-sm text-gray-500 font-bold uppercase mt-1">Manage global platform variables</p>
             </div>
             <?php if (get('msg')): ?><div class="px-6 py-3 bg-green-500 text-white rounded-xl font-bold animate-bounce">Operation successful</div><?php endif; ?>
+        </div>
+        <div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-200 dark:border-white/5 p-6 shadow-sm mb-8">
+            <h3 class="font-bold text-gray-900 dark:text-white mb-4">Website Logo</h3>
+            <form method="POST" enctype="multipart/form-data">
+                <div class="flex items-center gap-4">
+                    <input type="file" name="image" required class="border rounded-lg px-3 py-2">
+                    <button type="submit" name="update_logo" class="px-6 py-2 bg-primary-600 text-white rounded-xl font-bold">Update Logo</button>
+                </div>
+            </form>
         </div>
         <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
             <div class="xl:col-span-1">
