@@ -878,7 +878,7 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                     <input type="text" id="prod-title" required class="sh-input" placeholder="e.g. Premium Steam Key">
                 </div>
                 <div>
-                    <label class="sh-label">Price (GASHY)</label>
+                    <label class="sh-label">Price</label>
                     <input type="number" step="0.01" id="prod-price" required class="sh-input mono" placeholder="0.00">
                 </div>
             </div>
@@ -951,6 +951,13 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
             </div>
         </div>
         <div class="sh-card p-4 mb-5" style="border-radius:12px">
+            <div class="mb-4">
+                <label class="sh-label">Gift Card Option</label>
+                <div style="display:flex;gap:10px">
+                    <select id="inv-option" class="sh-input flex-1"></select>
+                    <button onclick="invAddOption()" class="btn-primary" style="padding:8px 14px;font-size:.7rem">+ Add</button>
+                </div>
+            </div>
             <p class="sh-label mb-3">Add Codes — one per line, optional PIN after pipe <span style="font-family:monospace">CODE|PIN</span></p>
             <textarea id="inv-codes-input" class="sh-input" rows="4" placeholder="XXXX-XXXX-XXXX&#10;YYYY-YYYY|1234&#10;..."></textarea>
             <button onclick="invAddCodes()" class="btn-primary" style="margin-top:12px;width:100%;justify-content:center">
@@ -1069,15 +1076,46 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
     let _invOptionId = null;
 
     async function openInvModal(productId, productTitle) {
-        _invProductId = productId;
-        _invProductTitle = productTitle;
-        _invOptionId = null;
-        document.getElementById('inv-modal-title').textContent = productTitle;
-        document.getElementById('inv-codes-input').value = '';
-        document.getElementById('inv-modal').classList.remove('hidden');
-        await loadInvCodes();
+        _invProductId = productId
+        _invProductTitle = productTitle
+        document.getElementById('inv-modal-title').textContent = productTitle
+        document.getElementById('inv-codes-input').value = ''
+        document.getElementById('inv-modal').classList.remove('hidden')
+        await loadInvOptions()
+        await loadInvCodes()
     }
-
+    async function invAddOption() {
+        const name = prompt('Option title (example: Steam $10)')
+        if (!name) return
+        try {
+            const res = await App.post('./api/seller/options.php', {
+                product_id: _invProductId,
+                action: 'add',
+                name: name
+            })
+            if (res.status) {
+                notyf.success('Option added')
+                loadInvOptions()
+            } else notyf.error(res.message)
+        } catch (e) {
+            notyf.error('Failed')
+        }
+    }
+    async function loadInvOptions() {
+        try {
+            const res = await App.post('./api/seller/options.php', {
+                product_id: _invProductId
+            })
+            if (!res.status) return
+            const sel = document.getElementById('inv-option')
+            sel.innerHTML = ''
+            if (!res.options || res.options.length === 0) {
+                sel.innerHTML = `<option value="0">Default</option>`
+                return
+            }
+            sel.innerHTML = res.options.map(o => `<option value="${o.id}">${o.name}</option>`).join('')
+        } catch (e) {}
+    }
     async function loadInvCodes() {
         document.getElementById('inv-codes-list').innerHTML = `<div style="padding:24px;text-align:center;color:var(--muted);font-size:.75rem">Loading...</div>`;
         try {
@@ -1143,25 +1181,27 @@ ${c.is_sold==0?`<button onclick="invDeleteCode(${c.id})" class="btn-icon del"><s
     }
 
     async function invAddCodes() {
-        const raw = document.getElementById('inv-codes-input').value.trim();
+        const raw = document.getElementById('inv-codes-input').value.trim()
         if (!raw) {
             notyf.error('Enter at least one code');
-            return;
+            return
         }
+        const opt = document.getElementById('inv-option')?.value || 0
         try {
             const res = await App.post('./api/seller/inventory.php', {
                 product_id: _invProductId,
-                option_id: _invOptionId,
                 action: 'add',
-                codes: raw
-            });
+                codes: raw,
+                option_id: opt
+            })
             if (res.status) {
-                notyf.success(res.message || 'Codes imported');
-                document.getElementById('inv-codes-input').value = '';
-                loadInvCodes();
-            } else notyf.error(res.message || 'Failed');
+                notyf.success(res.message || 'Codes imported')
+                document.getElementById('inv-codes-input').value = ''
+                loadHub()
+                loadInvCodes()
+            } else notyf.error(res.message || 'Failed')
         } catch (e) {
-            notyf.error('Import failed');
+            notyf.error('Import failed')
         }
     }
 
