@@ -12,7 +12,8 @@ $reward_balance = findQuery(" SELECT COALESCE(SUM(amount),0) t FROM transactions
 $failedbid = findQuery(" SELECT COALESCE(SUM(amount),0) t FROM transactions WHERE account_id=$uid AND status='failed' AND type='auction_bid' ")['t'] ?? 0;
 $fee_row = findQuery(" SELECT value FROM settings WHERE key_name='platform_fee' ");
 $fee_percent = (float)($fee_row['value'] ?? 5);
-$gross = findQuery(" SELECT COALESCE(SUM(oi.price_at_purchase*oi.quantity),0) t FROM order_items oi JOIN products p ON oi.product_id=p.id JOIN orders o ON oi.order_id=o.id WHERE p.seller_id=$uid AND o.status='completed' ")['t'] ?? 0;
+$gross_usd = findQuery(" SELECT COALESCE(SUM(oi.price_at_purchase*oi.quantity),0) t FROM order_items oi JOIN products p ON oi.product_id=p.id JOIN orders o ON oi.order_id=o.id WHERE p.seller_id=$uid AND o.status='completed' ")['t'] ?? 0;
+$gross = $rate > 0 ? ($gross_usd / $rate) : 0;
 $net_earnings = $gross * ((100 - $fee_percent) / 100);
 $withdrawn = findQuery(" SELECT COALESCE(SUM(amount),0) t FROM withdrawals WHERE account_id=$uid AND LOWER(status)='approved' ")['t'] ?? 0;
 $total_balance = $net_earnings + $reward_balance + $failedbid;

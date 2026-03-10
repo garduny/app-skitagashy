@@ -54,7 +54,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         font-family: 'Space Mono', monospace;
     }
 
-    /* ── Layout ─────────────────────────────── */
     .sh-wrap {
         background: var(--bg);
         min-height: 100vh;
@@ -62,7 +61,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         transition: background .3s, color .3s;
     }
 
-    /* ── Stat Cards ──────────────────────────── */
     .sh-card {
         background: var(--surface);
         border: 1px solid var(--border);
@@ -95,7 +93,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         opacity: 1;
     }
 
-    /* accent top bar variants */
     .sh-card.accent-green::before {
         background: linear-gradient(90deg, #00e5c3, #00bfa5);
         opacity: 1;
@@ -116,7 +113,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         opacity: 1;
     }
 
-    /* ── Stat number ─────────────────────────── */
     .stat-val {
         font-family: 'Space Mono', monospace;
         font-size: 2rem;
@@ -133,7 +129,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         color: var(--muted);
     }
 
-    /* ── Pill badge ──────────────────────────── */
     .sh-badge {
         display: inline-flex;
         align-items: center;
@@ -172,7 +167,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         background: rgba(255, 77, 106, .08);
     }
 
-    /* ── Buttons ─────────────────────────────── */
     .btn-primary {
         display: inline-flex;
         align-items: center;
@@ -263,7 +257,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         background: rgba(245, 166, 35, .12);
     }
 
-    /* ── Tab bar ─────────────────────────────── */
     .tab-bar {
         display: flex;
         gap: 4px;
@@ -297,7 +290,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         box-shadow: 0 2px 8px rgba(0, 0, 0, .3);
     }
 
-    /* ── Table ───────────────────────────────── */
     .sh-table {
         width: 100%;
         border-collapse: collapse;
@@ -339,7 +331,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         border-bottom: none;
     }
 
-    /* ── Product title cell ──────────────────── */
     .prod-img {
         width: 36px;
         height: 36px;
@@ -358,7 +349,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         max-width: 180px;
     }
 
-    /* ── Modal ───────────────────────────────── */
     .sh-modal-overlay {
         position: fixed;
         inset: 0;
@@ -399,7 +389,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         border-radius: 20px 20px 0 0;
     }
 
-    /* ── Inputs ──────────────────────────────── */
     .sh-label {
         display: block;
         font-size: .65rem;
@@ -444,7 +433,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         min-height: 90px;
     }
 
-    /* ── Section title ───────────────────────── */
     .section-title {
         font-size: .65rem;
         font-weight: 700;
@@ -465,7 +453,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         border-radius: 2px;
     }
 
-    /* ── Icon dot ────────────────────────────── */
     .icon-dot {
         width: 38px;
         height: 38px;
@@ -496,7 +483,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         color: #f5a623;
     }
 
-    /* ── Sale item ───────────────────────────── */
     .sale-item {
         display: flex;
         align-items: center;
@@ -513,7 +499,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         background: var(--glow);
     }
 
-    /* ── Scrollbar ───────────────────────────── */
     .sh-scroll::-webkit-scrollbar {
         width: 4px;
     }
@@ -527,7 +512,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         border-radius: 4px;
     }
 
-    /* ── Loader ──────────────────────────────── */
     .sh-loader {
         display: flex;
         flex-direction: column;
@@ -568,7 +552,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         color: var(--muted);
     }
 
-    /* ── Fade in ─────────────────────────────── */
     @keyframes fadeUp {
         from {
             opacity: 0;
@@ -601,12 +584,10 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         animation-delay: .2s;
     }
 
-    /* ── Wide modal variant ──────────────────── */
     .sh-modal.wide {
         max-width: 900px;
     }
 
-    /* ── Rarity badges ───────────────────────── */
     .rarity-common {
         color: #9ca3af;
         background: rgba(156, 163, 175, .1);
@@ -631,7 +612,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         border-color: #f5a623;
     }
 
-    /* ── Inventory stat mini cards ───────────── */
     .inv-stat {
         background: var(--surface2);
         border-radius: 10px;
@@ -656,7 +636,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         margin-top: 4px;
     }
 
-    /* ── Code row ────────────────────────────── */
     .code-row {
         display: flex;
         align-items: center;
@@ -674,7 +653,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         background: var(--glow);
     }
 
-    /* ── Loot table row ──────────────────────── */
     .loot-row {
         display: grid;
         grid-template-columns: 1fr auto auto auto auto;
@@ -693,7 +671,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         background: var(--glow);
     }
 
-    /* ── Probability bar ─────────────────────── */
     .prob-bar-wrap {
         background: var(--surface2);
         border-radius: 99px;
@@ -709,7 +686,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         transition: width .4s;
     }
 
-    /* ── Modal panel split ───────────────────── */
     .modal-split {
         display: grid;
         grid-template-columns: 1fr 320px;
@@ -722,7 +698,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         }
     }
 
-    /* ── Responsive ──────────────────────────── */
     @media (max-width: 640px) {
         .stat-val {
             font-size: 1.5rem;
@@ -737,7 +712,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         }
     }
 
-    /* ── Panel hidden fix ────────────────────── */
     .sh-modal-overlay.hidden {
         display: none !important;
     }
@@ -747,20 +721,13 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         display: none !important;
     }
 </style>
-
 <main class="sh-wrap pt-24 lg:pl-72 transition-all duration-300">
     <div class="max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
-        <!-- Loader -->
         <div id="hub-loader" class="sh-loader">
             <div class="sh-spinner"></div>
             <p class="sh-loader-text">Loading Seller Hub</p>
         </div>
-
-        <!-- Content -->
         <div id="hub-content" class="hidden space-y-8">
-
-            <!-- ── Header ── -->
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 fade-up">
                 <div>
                     <p class="section-title mb-2">Kitta Gashy — Seller Terminal</p>
@@ -775,11 +742,7 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                     New Product
                 </button>
             </div>
-
-            <!-- ── Stat Cards ── -->
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 stat-cards-grid fade-up fade-up-1">
-
-                <!-- Available Balance -->
                 <div class="sh-card accent-green p-6 flex flex-col gap-4">
                     <div class="flex items-start justify-between">
                         <div>
@@ -796,8 +759,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                         Withdraw
                     </button>
                 </div>
-
-                <!-- Lifetime Earnings -->
                 <div class="sh-card accent-blue p-6 flex flex-col gap-2">
                     <div class="flex items-start justify-between">
                         <div>
@@ -812,8 +773,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                     </div>
                     <p class="stat-label" id="stat-fee" style="margin-top:auto; padding-top:12px; border-top:1px solid var(--border);">After Platform Fee</p>
                 </div>
-
-                <!-- Units Sold -->
                 <div class="sh-card accent-pink p-6">
                     <div class="flex items-start justify-between">
                         <div>
@@ -827,8 +786,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                         </div>
                     </div>
                 </div>
-
-                <!-- Rating -->
                 <div class="sh-card accent-gold p-6">
                     <div class="flex items-start justify-between">
                         <div>
@@ -842,16 +799,9 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                         </div>
                     </div>
                 </div>
-
             </div>
-
-            <!-- ── Main Grid ── -->
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 fade-up fade-up-2">
-
-                <!-- Left: Inventory + Withdrawals -->
                 <div class="xl:col-span-2 sh-card overflow-hidden">
-
-                    <!-- Tab bar -->
                     <div class="flex items-center justify-between p-5 border-b" style="border-color:var(--border)">
                         <div class="tab-bar">
                             <button onclick="toggleTab('products')" id="tab-products" class="tab-pill active">
@@ -862,8 +812,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                             </button>
                         </div>
                     </div>
-
-                    <!-- Products table -->
                     <div id="view-products" class="overflow-x-auto">
                         <table class="sh-table">
                             <thead>
@@ -878,8 +826,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                             <tbody id="product-list"></tbody>
                         </table>
                     </div>
-
-                    <!-- Withdrawals table -->
                     <div id="view-withdrawals" class="overflow-x-auto hidden">
                         <table class="sh-table">
                             <thead>
@@ -893,10 +839,7 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                             <tbody id="withdrawal-list"></tbody>
                         </table>
                     </div>
-
                 </div>
-
-                <!-- Right: Recent Sales -->
                 <div class="xl:col-span-1 sh-card overflow-hidden">
                     <div class="flex items-center gap-2 p-5 border-b" style="border-color:var(--border)">
                         <div class="icon-dot green" style="width:28px;height:28px;border-radius:7px">
@@ -910,18 +853,12 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                         <div id="sales-list"></div>
                     </div>
                 </div>
-
             </div>
-        </div><!-- /hub-content -->
-
+        </div>
     </div>
 </main>
-
-<!-- ══════════════════ MODAL ══════════════════ -->
 <div id="product-modal" class="sh-modal-overlay hidden">
     <div class="sh-modal sh-scroll">
-
-        <!-- Header -->
         <div class="flex items-center justify-between mb-8">
             <div>
                 <p class="section-title mb-1">Seller Terminal</p>
@@ -933,11 +870,8 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                 </svg>
             </button>
         </div>
-
-        <!-- Form -->
         <form id="product-form" onsubmit="event.preventDefault(); saveProduct();">
             <input type="hidden" id="prod-id" value="0">
-
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
                 <div>
                     <label class="sh-label">Product Title</label>
@@ -948,7 +882,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                     <input type="number" step="0.01" id="prod-price" required class="sh-input mono" placeholder="0.00">
                 </div>
             </div>
-
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-5">
                 <div>
                     <label class="sh-label">Stock Qty</label>
@@ -973,17 +906,14 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                     </select>
                 </div>
             </div>
-
             <div class="mb-5">
                 <label class="sh-label">Description</label>
                 <textarea id="prod-desc" class="sh-input" placeholder="Describe your product..."></textarea>
             </div>
-
             <div class="mb-8">
                 <label class="sh-label">Product Image</label>
                 <input type="file" id="prod-image-file" accept="image/*" class="sh-input" style="padding:8px 14px; cursor:pointer;">
             </div>
-
             <button type="submit" class="btn-primary" style="width:100%; justify-content:center; padding:13px; font-size:.9rem;">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
@@ -991,14 +921,10 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                 Save Product
             </button>
         </form>
-
     </div>
 </div>
-
-<!-- ══════════════════ INVENTORY MODAL ══════════════════ -->
 <div id="inv-modal" class="sh-modal-overlay hidden">
     <div class="sh-modal wide sh-scroll" onclick="event.stopPropagation()">
-        <!-- Header -->
         <div class="flex items-center justify-between mb-6">
             <div>
                 <p class="section-title mb-1">Digital / Gift Card</p>
@@ -1010,8 +936,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                 </svg>
             </button>
         </div>
-
-        <!-- Mini stats -->
         <div style="display:flex;gap:12px;margin-bottom:20px" id="inv-stats">
             <div class="inv-stat">
                 <div class="inv-stat-val" id="inv-stat-total">—</div>
@@ -1026,8 +950,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                 <div class="inv-stat-label">Sold</div>
             </div>
         </div>
-
-        <!-- Add codes form -->
         <div class="sh-card p-4 mb-5" style="border-radius:12px">
             <p class="sh-label mb-3">Add Codes — one per line, optional PIN after pipe <span style="font-family:monospace">CODE|PIN</span></p>
             <textarea id="inv-codes-input" class="sh-input" rows="4" placeholder="XXXX-XXXX-XXXX&#10;YYYY-YYYY|1234&#10;..."></textarea>
@@ -1038,8 +960,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                 Import Codes
             </button>
         </div>
-
-        <!-- Codes list -->
         <div class="sh-card overflow-hidden" style="border-radius:12px">
             <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
                 <span style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Code List</span>
@@ -1049,11 +969,8 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         </div>
     </div>
 </div>
-
-<!-- ══════════════════ MYSTERY BOX MODAL ══════════════════ -->
 <div id="mystery-modal" class="sh-modal-overlay hidden">
     <div class="sh-modal wide sh-scroll" onclick="event.stopPropagation()">
-        <!-- Header -->
         <div class="flex items-center justify-between mb-6">
             <div>
                 <p class="section-title mb-1">Mystery Box</p>
@@ -1065,15 +982,12 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                 </svg>
             </button>
         </div>
-
         <div class="modal-split">
-            <!-- Left: loot list -->
             <div class="sh-card overflow-hidden" style="border-radius:12px">
                 <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
                     <span style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Loot Entries</span>
                     <span id="mystery-total-prob" style="font-size:.7rem;font-family:'Space Mono',monospace;color:var(--muted)"></span>
                 </div>
-                <!-- Table header -->
                 <div style="display:grid;grid-template-columns:1fr auto auto auto auto;gap:12px;padding:8px 16px;border-bottom:1px solid var(--border)">
                     <span style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Reward</span>
                     <span style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Amt</span>
@@ -1083,8 +997,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                 </div>
                 <div id="mystery-loot-list" class="sh-scroll" style="max-height:380px;overflow-y:auto"></div>
             </div>
-
-            <!-- Right: add form -->
             <div>
                 <div class="sh-card p-5" style="border-radius:12px">
                     <p class="sh-label mb-4">Add Loot Entry</p>
@@ -1124,7 +1036,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         </div>
     </div>
 </div>
-
 <script>
     function toggleTab(t) {
         ['products', 'withdrawals'].forEach(x => {
@@ -1135,7 +1046,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         document.getElementById('tab-' + t).classList.add('active');
     }
 
-    // ── overlay click to close ──
     ['product-modal', 'inv-modal', 'mystery-modal'].forEach(id => {
         document.getElementById(id).addEventListener('click', function(e) {
             if (e.target === this) this.classList.add('hidden');
@@ -1154,15 +1064,14 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         document.getElementById('mystery-modal').classList.add('hidden');
     }
 
-    /* ═══════════════════════════════════════════
-       INVENTORY MODAL
-    ═══════════════════════════════════════════ */
     let _invProductId = null;
     let _invProductTitle = '';
+    let _invOptionId = null;
 
     async function openInvModal(productId, productTitle) {
         _invProductId = productId;
         _invProductTitle = productTitle;
+        _invOptionId = null;
         document.getElementById('inv-modal-title').textContent = productTitle;
         document.getElementById('inv-codes-input').value = '';
         document.getElementById('inv-modal').classList.remove('hidden');
@@ -1174,35 +1083,60 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         try {
             const res = await App.post('./api/seller/inventory.php', {
                 product_id: _invProductId,
+                option_id: _invOptionId,
                 action: 'list'
             });
             if (!res.status) {
                 notyf.error(res.message || 'Failed to load');
                 return;
             }
+
             const codes = res.codes || [];
+            const options = res.options || [];
+            _invOptionId = res.selected_option || _invOptionId;
+
+            if (options.length) {
+                const selector = `
+<div style="margin-bottom:12px">
+<select id="inv-option-select" class="sh-input">
+${options.map(o=>`<option value="${o.id}" ${o.id==_invOptionId?'selected':''}>${o.name} ($${parseFloat(o.price_usd).toFixed(2)})</option>`).join('')}
+</select>
+</div>`;
+                if (!document.getElementById('inv-option-select')) {
+                    document.getElementById('inv-stats').insertAdjacentHTML('beforebegin', selector);
+                    document.getElementById('inv-option-select').addEventListener('change', e => {
+                        _invOptionId = e.target.value;
+                        loadInvCodes();
+                    });
+                }
+            }
+
             const total = codes.length;
             const sold = codes.filter(c => c.is_sold == 1).length;
+
             document.getElementById('inv-stat-total').textContent = total;
             document.getElementById('inv-stat-available').textContent = total - sold;
             document.getElementById('inv-stat-sold').textContent = sold;
             document.getElementById('inv-codes-count').textContent = total + ' entries';
+
             if (total === 0) {
                 document.getElementById('inv-codes-list').innerHTML = `<div style="padding:28px;text-align:center;color:var(--muted);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase">No codes yet</div>`;
                 return;
             }
+
             document.getElementById('inv-codes-list').innerHTML = codes.map(c => `
-                <div class="code-row">
-                    <div style="display:flex;align-items:center;gap:10px">
-                        <span style="font-family:'Space Mono',monospace;font-size:.75rem;color:var(--text)">****-****-${c.code_tail}</span>
-                        ${c.has_pin ? `<span class="sh-badge" style="color:var(--accent2);background:rgba(124,109,255,.08);border-color:var(--accent2)">PIN</span>` : ''}
-                    </div>
-                    <div style="display:flex;align-items:center;gap:10px">
-                        <span class="sh-badge ${c.is_sold == 1 ? 'inactive' : 'active'}">${c.is_sold == 1 ? 'Sold' : 'Available'}</span>
-                        ${c.is_sold == 0 ? `<button onclick="invDeleteCode(${c.id})" class="btn-icon del"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>` : `<span style="width:32px"></span>`}
-                    </div>
-                </div>
-            `).join('');
+<div class="code-row">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="font-family:'Space Mono',monospace;font-size:.75rem;color:var(--text)">****-****-${c.code_tail}</span>
+${c.has_pin?`<span class="sh-badge" style="color:var(--accent2);background:rgba(124,109,255,.08);border-color:var(--accent2)">PIN</span>`:''}
+</div>
+<div style="display:flex;align-items:center;gap:10px">
+<span class="sh-badge ${c.is_sold==1?'inactive':'active'}">${c.is_sold==1?'Sold':'Available'}</span>
+${c.is_sold==0?`<button onclick="invDeleteCode(${c.id})" class="btn-icon del"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7"/></svg></button>`:`<span style="width:32px"></span>`}
+</div>
+</div>
+`).join('');
+
         } catch (e) {
             notyf.error('Error loading codes');
         }
@@ -1217,13 +1151,13 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         try {
             const res = await App.post('./api/seller/inventory.php', {
                 product_id: _invProductId,
+                option_id: _invOptionId,
                 action: 'add',
                 codes: raw
             });
             if (res.status) {
                 notyf.success(res.message || 'Codes imported');
                 document.getElementById('inv-codes-input').value = '';
-                loadHub();
                 loadInvCodes();
             } else notyf.error(res.message || 'Failed');
         } catch (e) {
@@ -1236,12 +1170,12 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         try {
             const res = await App.post('./api/seller/inventory.php', {
                 product_id: _invProductId,
+                option_id: _invOptionId,
                 action: 'delete',
                 code_id: cid
             });
             if (res.status) {
                 notyf.success('Code removed');
-                loadHub();
                 loadInvCodes();
             } else notyf.error(res.message || 'Failed');
         } catch (e) {
@@ -1249,9 +1183,6 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         }
     }
 
-    /* ═══════════════════════════════════════════
-       MYSTERY BOX MODAL
-    ═══════════════════════════════════════════ */
     let _mysteryProductId = null;
     let _mysterySellerProds = [];
 
@@ -1274,11 +1205,9 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                 return;
             }
 
-            // Populate reward product dropdown
             _mysterySellerProds = res.products || [];
             const sel = document.getElementById('mystery-reward-product');
-            sel.innerHTML = `<option value="">Tokens (GASHY)</option>` +
-                _mysterySellerProds.map(p => `<option value="${p.id}">${p.title}</option>`).join('');
+            sel.innerHTML = `<option value="">Tokens (GASHY)</option>` + _mysterySellerProds.map(p => `<option value="${p.id}">${p.title}</option>`).join('');
 
             const loot = res.loot || [];
             const totalProb = loot.reduce((s, l) => s + parseFloat(l.probability), 0);
@@ -1295,18 +1224,20 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                 epic: 'rarity-epic',
                 legendary: 'rarity-legendary'
             };
+
             document.getElementById('mystery-loot-list').innerHTML = loot.map(l => `
-                <div class="loot-row">
-                    <span style="font-size:.8rem;font-weight:700;color:var(--text)">${l.reward_product_id ? '📦 ' + (l.title || 'Product') : '🪙 Tokens'}</span>
-                    <span style="font-family:'Space Mono',monospace;font-size:.75rem">${parseFloat(l.reward_amount).toFixed(3)}</span>
-                    <span class="sh-badge ${rarityColors[l.rarity] || ''}">${l.rarity}</span>
-                    <div>
-                        <div style="font-family:'Space Mono',monospace;font-size:.72rem;margin-bottom:4px">${l.probability}%</div>
-                        <div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:${Math.min(l.probability, 100)}%"></div></div>
-                    </div>
-                    <button onclick="mysteryDeleteLoot(${l.id})" class="btn-icon del"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
-                </div>
-            `).join('');
+<div class="loot-row">
+<span style="font-size:.8rem;font-weight:700;color:var(--text)">${l.reward_product_id?'📦 '+(l.title||'Product'):'🪙 Tokens'}</span>
+<span style="font-family:'Space Mono',monospace;font-size:.75rem">${parseFloat(l.reward_amount).toFixed(3)}</span>
+<span class="sh-badge ${rarityColors[l.rarity]||''}">${l.rarity}</span>
+<div>
+<div style="font-family:'Space Mono',monospace;font-size:.72rem;margin-bottom:4px">${l.probability}%</div>
+<div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:${Math.min(l.probability,100)}%"></div></div>
+</div>
+<button onclick="mysteryDeleteLoot(${l.id})" class="btn-icon del"></button>
+</div>
+`).join('');
+
         } catch (e) {
             notyf.error('Error loading loot');
         }

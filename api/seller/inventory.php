@@ -32,20 +32,25 @@ if (!$prod) {
     ob_clean();
     encode(['status' => false, 'message' => 'Product not found or not eligible']);
 }
+$options = getQuery(" SELECT id,name,price_usd FROM gift_card_options WHERE product_id=$pid ORDER BY id ASC ");
+$oid = (int)request('option_id');
+if (count($options) == 1) $oid = $options[0]['id'];
 $action = request('action');
 if ($action === 'list') {
-    $codes = getQuery(" SELECT id,code_enc,pin_enc,is_sold FROM gift_cards WHERE product_id=$pid ORDER BY is_sold ASC,id DESC ");
+    $q = " SELECT id,code_enc,pin_enc,is_sold FROM gift_cards WHERE product_id=$pid ";
+    if ($oid) $q .= " AND gift_card_option_id=$oid ";
+    $q .= " ORDER BY is_sold ASC,id DESC ";
+    $codes = getQuery($q);
     $result = [];
     foreach ($codes as $c) {
         $full = decryptCode($c['code_enc']);
         $result[] = ['id' => $c['id'], 'code_tail' => substr($full, -4), 'has_pin' => !empty($c['pin_enc']), 'is_sold' => (int)$c['is_sold']];
     }
     ob_clean();
-    encode(['status' => true, 'codes' => $result]);
+    encode(['status' => true, 'codes' => $result, 'options' => $options, 'selected_option' => $oid]);
 }
 if ($action === 'add') {
     $raw = request('codes');
-    $opt = (int)request('option_id');
     if (empty(trim($raw))) {
         ob_clean();
         encode(['status' => false, 'message' => 'No codes provided']);
@@ -59,7 +64,7 @@ if ($action === 'add') {
         $cEnc = encryptCode(trim($parts[0]));
         $pEnc = isset($parts[1]) && trim($parts[1]) !== '' ? encryptCode(trim($parts[1])) : null;
         $pVal = $pEnc ? "'$pEnc'" : 'NULL';
-        execute(" INSERT INTO gift_cards (product_id,gift_card_option_id,code_enc,pin_enc,is_sold) VALUES ($pid,$opt,'$cEnc',$pVal,0) ");
+        execute(" INSERT INTO gift_cards (product_id,gift_card_option_id,code_enc,pin_enc,is_sold) VALUES ($pid," . ($oid ? $oid : "NULL") . ",'$cEnc',$pVal,0) ");
         $cnt++;
     }
     if ($cnt > 0) execute(" UPDATE products SET stock=stock+$cnt WHERE id=$pid ");

@@ -468,6 +468,11 @@ function exist($table, $field, $value, $extraWhere = null, $fields = '*')
 //     return findQuery(" SELECT $fields FROM setting ");
 // }
 
+function settings($key)
+{
+    return findQuery(" SELECT value FROM settings WHERE key_name='{$key}' ")['value'];
+}
+
 function upload($name, $path, $validate = false)
 {
     global $config, $trans;
