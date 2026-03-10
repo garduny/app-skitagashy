@@ -15,11 +15,4 @@ $formatted_vol = '$0';
 if ($vol24h >= 1000000) $formatted_vol = '$' . number_format($vol24h / 1000000, 1) . 'M';
 elseif ($vol24h >= 1000) $formatted_vol = '$' . number_format($vol24h / 1000, 1) . 'K';
 else $formatted_vol = '$' . number_format($vol24h, 2);
-encode([
-    'status' => true,
-    'token' => 'GASHY',
-    'price_usd' => $price,
-    'change_24h' => round($change24h, 2),
-    'volume_formatted' => $formatted_vol,
-    'last_updated' => time()
-]);
+encode(['status' => true, 'token' => 'GASHY', 'price_usd' => $price, 'change_24h' => round($change24h, 2), 'volume_formatted' => $formatted_vol, 'last_updated' => time()]);

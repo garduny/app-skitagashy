@@ -1,9 +1,6 @@
 <?php
-if (file_exists('../../server/init.php')) {
-    require_once '../../server/init.php';
-} else {
-    exit;
-}
+if (file_exists('../../server/init.php')) require_once '../../server/init.php';
+else exit;
 $token = request('token') ?? str_replace('Bearer ', '', $_SERVER['HTTP_AUTHORIZATION'] ?? '');
 $session = findQuery(" SELECT account_id FROM account_sessions WHERE token='$token' AND expires_at>NOW() ");
 if (!$session) encode(['status' => false, 'message' => 'Unauthorized']);
@@ -23,9 +20,7 @@ if ($isSeller) {
 $withdrawn = findQuery(" SELECT COALESCE(SUM(amount),0) t FROM withdrawals WHERE account_id=$uid AND LOWER(status)='approved' ")['t'] ?? 0;
 $total_pool = $reward_balance + $failedbid + $seller_net;
 $withdrawable = max($total_pool - $withdrawn, 0);
-if ($amount > $withdrawable) {
-    encode(['status' => false, 'message' => 'Insufficient funds. Available: ' . number_format($withdrawable, 3)]);
-}
+if ($amount > $withdrawable) encode(['status' => false, 'message' => 'Insufficient funds. Available: ' . number_format($withdrawable, 3)]);
 execute(" INSERT INTO withdrawals (account_id,amount,status,created_at) VALUES ($uid,$amount,'pending',NOW()) ");
 $account = findQuery(" SELECT email,accountname FROM accounts WHERE id=$uid ");
 if ($account && function_exists('mailer')) {
