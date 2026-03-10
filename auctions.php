@@ -1,8 +1,6 @@
 <?php
 define('gashy_exec', true);
-if (file_exists('server/init.php')) {
-    require_once 'server/init.php';
-}
+if (file_exists('server/init.php')) require_once 'server/init.php';
 require_once 'header.php';
 require_once 'sidebar.php';
 ?>
@@ -198,8 +196,6 @@ require_once 'sidebar.php';
 
 <main class="min-h-screen pt-24 lg:pl-72 bg-gray-50 dark:bg-gradient-to-br dark:from-dark-900 dark:via-dark-800 dark:to-dark-900 text-gray-900 dark:text-white transition-colors duration-300 relative overflow-hidden">
     <div class="relative z-10 px-4 sm:px-6 lg:px-8 py-8 max-w-[1920px] mx-auto">
-
-        <!-- Header & Tabs -->
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-10">
             <div>
                 <div class="flex items-center gap-3 mb-3">
@@ -211,7 +207,6 @@ require_once 'sidebar.php';
                 </div>
                 <p class="text-gray-600 dark:text-gray-400 text-lg pl-7">Bid on exclusive items with <span class="font-bold text-red-500">$GASHY</span> tokens and win big!</p>
             </div>
-
             <div class="flex flex-wrap gap-3">
                 <button onclick="loadAuctions('ending_soon')" data-filter="ending_soon" class="filter-btn active px-5 py-3 rounded-xl text-sm font-bold bg-white dark:bg-dark-800 shadow-lg flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -230,17 +225,14 @@ require_once 'sidebar.php';
                 </button>
             </div>
         </div>
-
-        <!-- Content Grid (Filled by JS) -->
         <div id="auctions-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 lg:gap-8">
-            <!-- Loader -->
-            <div class="col-span-full py-32 flex justify-center"><svg class="w-12 h-12 text-red-500 animate-spin" fill="none" viewBox="0 0 24 24">
+            <div class="col-span-full py-32 flex justify-center">
+                <svg class="w-12 h-12 text-red-500 animate-spin" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg></div>
+                </svg>
+            </div>
         </div>
-
-        <!-- Empty State -->
         <div id="empty-state" class="hidden flex flex-col items-center justify-center py-32 rounded-3xl border-2 border-dashed border-gray-300 dark:border-white/10 relative overflow-hidden">
             <div class="relative z-10 text-center">
                 <div class="w-24 h-24 bg-gray-200 dark:bg-dark-800 rounded-full flex items-center justify-center mb-6 mx-auto shadow-2xl">
@@ -252,7 +244,6 @@ require_once 'sidebar.php';
                 <p class="text-gray-600 dark:text-gray-400 text-lg">Check back later or try a different filter.</p>
             </div>
         </div>
-
     </div>
 </main>
 <script src="./public/js/pages/auctions.js"></script>
