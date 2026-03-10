@@ -10,7 +10,7 @@ $data = getQuery($sql);
 $total = countQuery(" SELECT 1 FROM products WHERE type='mystery_box' AND status='active' AND stock>0 ");
 foreach ($data as &$box) {
     $box['price_gashy'] = $rate > 0 ? ($box['price_usd'] / $rate) : 0;
-    $bid = $box['id'];
-    $box['possible_rewards'] = getQuery(" SELECT l.probability,l.rarity,l.reward_amount,rp.title as product_name,rp.images as product_images FROM mystery_box_loot l LEFT JOIN products rp ON l.reward_product_id=rp.id WHERE l.box_product_id=$bid ORDER BY l.probability ASC ");
+    $bid = (int)$box['id'];
+    $box['possible_rewards'] = getQuery(" SELECT l.probability,l.rarity,l.reward_amount,rp.title product_name,rp.images product_images FROM mystery_box_loot l LEFT JOIN products rp ON l.reward_product_id=rp.id WHERE l.box_product_id=$bid ORDER BY l.probability ASC ");
 }
 encode(['status' => true, 'data' => $data, 'meta' => ['page' => $page, 'total' => $total]]);
