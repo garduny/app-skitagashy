@@ -1,11 +1,13 @@
 <?php
 define('gashy_exec', true);
-if (file_exists('server/init.php')) {
-    require_once 'server/init.php';
-}
+if (file_exists('server/init.php')) require_once 'server/init.php';
 require_once 'header.php';
 require_once 'sidebar.php';
-$boxes = getQuery(" SELECT p.id,p.title,p.price_gashy,p.images,p.description FROM products p WHERE p.type='mystery_box' AND p.status='active' AND p.stock>0 ORDER BY p.price_gashy ASC ");
+$rate = toGashy();
+$boxes = getQuery(" SELECT p.id,p.title,p.price_usd,p.images,p.description FROM products p WHERE p.type='mystery_box' AND p.status='active' AND p.stock>0 ORDER BY p.price_usd ASC ");
+for ($i = 0; $i < count($boxes); $i++) {
+    $boxes[$i]['price_gashy'] = $rate > 0 ? ($boxes[$i]['price_usd'] / $rate) : 0;
+}
 ?>
 <style>
     @keyframes float {
@@ -192,45 +194,13 @@ $boxes = getQuery(" SELECT p.id,p.title,p.price_gashy,p.images,p.description FRO
                         <div class="relative z-10 w-full">
                             <h3 class="text-3xl font-black bg-gradient-to-r from-gray-900 via-purple-600 to-gray-900 dark:from-white dark:via-purple-200 dark:to-white bg-clip-text text-transparent mb-3"><?= $b['title'] ?></h3>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mb-8 leading-relaxed"><?= $b['description'] ?></p>
-                            <div class="rarity-bar rounded-2xl p-5 mb-8">
-                                <div class="flex justify-between items-center mb-3">
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-2 h-2 rounded-full bg-yellow-400 shadow-lg shadow-yellow-400/50"></div>
-                                        <span class="text-yellow-500 dark:text-yellow-400 font-black text-xs uppercase tracking-wider">Legendary</span>
-                                    </div>
-                                    <span class="text-gray-500 dark:text-gray-400 font-bold text-xs">1%</span>
-                                </div>
-                                <div class="w-full h-2 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden mb-4 shadow-inner">
-                                    <div class="w-[1%] h-full bg-gradient-to-r from-yellow-400 to-yellow-500 shadow-lg shadow-yellow-400/50"></div>
-                                </div>
-                                <div class="flex justify-between items-center mb-3">
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-2 h-2 rounded-full bg-purple-400 shadow-lg shadow-purple-400/50"></div>
-                                        <span class="text-purple-500 dark:text-purple-400 font-black text-xs uppercase tracking-wider">Epic</span>
-                                    </div>
-                                    <span class="text-gray-500 dark:text-gray-400 font-bold text-xs">15%</span>
-                                </div>
-                                <div class="w-full h-2 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden mb-4 shadow-inner">
-                                    <div class="w-[15%] h-full bg-gradient-to-r from-purple-400 to-purple-500 shadow-lg shadow-purple-400/50"></div>
-                                </div>
-                                <div class="flex justify-between items-center mb-3">
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-2 h-2 rounded-full bg-blue-400 shadow-lg shadow-blue-400/50"></div>
-                                        <span class="text-blue-500 dark:text-blue-400 font-black text-xs uppercase tracking-wider">Rare</span>
-                                    </div>
-                                    <span class="text-gray-500 dark:text-gray-400 font-bold text-xs">30%</span>
-                                </div>
-                                <div class="w-full h-2 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden shadow-inner">
-                                    <div class="w-[30%] h-full bg-gradient-to-r from-blue-400 to-blue-500 shadow-lg shadow-blue-400/50"></div>
-                                </div>
-                            </div>
                             <button onclick="openBox(<?= $b['id'] ?>,<?= $b['price_gashy'] ?>)" class="open-btn w-full py-4 text-white font-black text-lg rounded-2xl shadow-2xl flex items-center justify-center gap-3 relative overflow-hidden group">
                                 <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                                 <svg class="w-6 h-6 transform group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                                 </svg>
                                 <span>Open for</span>
-                                <span class="font-mono"><?= number_format($b['price_gashy']) ?> $GASHY</span>
+                                <span class="font-mono"><?= number_format($b['price_gashy'], 2) ?> $GASHY</span>
                             </button>
                         </div>
                     </div>

@@ -9,27 +9,27 @@ echo "[" . date('Y-m-d H:i:s') . "] Cron Started: Oracle Update\n";
 $token_address = "DokPYQ33k3T9S7EEesvwvuuAtoQb4pY8NWszukKwXWjv";
 $cache_file = __DIR__ . '/../../server/.cache/price.json';
 $url = "https://api.dexscreener.com/latest/dex/tokens/$token_address";
-$curl = curl_init();
-curl_setopt_array($curl, [CURLOPT_URL => $url, CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 10, CURLOPT_CONNECTTIMEOUT => 5, CURLOPT_SSL_VERIFYPEER => false, CURLOPT_USERAGENT => "KITTA-GASHY-Oracle/1.0"]);
-$response = curl_exec($curl);
-$http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-$err = curl_error($curl);
-curl_close($curl);
+$ch = curl_init();
+curl_setopt_array($ch, [CURLOPT_URL => $url, CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 10, CURLOPT_CONNECTTIMEOUT => 5, CURLOPT_SSL_VERIFYPEER => false, CURLOPT_USERAGENT => "KITTA-GASHY-Oracle/1.0"]);
+$res = curl_exec($ch);
+$http = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+$err = curl_error($ch);
+curl_close($ch);
 $price = 0;
 $marketcap = 0;
 $volume24h = 0;
 $liquidity = 0;
 $change24h = 0;
 $source = 'Dexscreener';
-if ($response && $http_code === 200) {
-    $j = json_decode($response, true);
+if ($res && $http === 200) {
+    $j = json_decode($res, true);
     $best = null;
     $bestLiq = 0;
-    foreach (($j['pairs'] ?? []) as $pair) {
-        $liq = (float)($pair['liquidity']['usd'] ?? 0);
+    foreach (($j['pairs'] ?? []) as $p) {
+        $liq = (float)($p['liquidity']['usd'] ?? 0);
         if ($liq > $bestLiq) {
             $bestLiq = $liq;
-            $best = $pair;
+            $best = $p;
         }
     }
     if ($best) {
@@ -39,12 +39,8 @@ if ($response && $http_code === 200) {
         $liquidity = (float)($best['liquidity']['usd'] ?? 0);
         $change24h = (float)($best['priceChange']['h24'] ?? 0);
         if ($price <= 0) $source = 'Simulation (Pair invalid)';
-    } else {
-        $source = 'Simulation (No valid pair)';
-    }
-} else {
-    $source = 'Simulation (API Error: ' . ($err ?: $http_code) . ')';
-}
+    } else $source = 'Simulation (No valid pair)';
+} else $source = 'Simulation (API Error: ' . ($err ?: $http) . ')';
 if ($price <= 0) {
     $prev = 0.045;
     if (file_exists($cache_file)) {

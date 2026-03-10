@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/init.php';
-$expired = getQuery(" SELECT id,product_id,highest_bidder_id,current_bid_usd,reserve_price_usd FROM auctions WHERE status='active' AND end_time<=NOW() ");
+$expired = getQuery(" SELECT id,product_id,option_id,highest_bidder_id,current_bid_usd,reserve_price_usd FROM auctions WHERE status='active' AND end_time<=NOW() ");
 $rate = toGashy();
 foreach ($expired as $a) {
     $aid = (int)$a['id'];
@@ -14,6 +14,7 @@ foreach ($expired as $a) {
             continue;
         }
         $pid = (int)$a['product_id'];
+        $opt = (int)($a['option_id'] ?? 0);
         $winner_id = (int)$a['highest_bidder_id'];
         $amount_usd = (float)$a['current_bid_usd'];
         $reserve_usd = (float)($a['reserve_price_usd'] ?? 0);
@@ -23,13 +24,13 @@ foreach ($expired as $a) {
             if (!$prod) throw new Exception("Product missing");
             if ($prod['type'] === 'nft') execute(" UPDATE products SET seller_id=$winner_id,status='inactive' WHERE id=$pid ");
             $orderStatus = $prod['type'] === 'physical' ? 'processing' : 'completed';
-            $amount_gashy = $amount_usd / $rate;
+            $amount_gashy = $rate > 0 ? ($amount_usd / $rate) : 0;
             $txSig = 'AUC_WIN_' . $aid . '_' . microtime(true);
             execute(" INSERT INTO orders (account_id,total_gashy,tx_signature,status,created_at) VALUES ($winner_id,$amount_gashy,'$txSig','$orderStatus',NOW()) ");
             $oid = findQuery(" SELECT LAST_INSERT_ID() id ")['id'];
-            execute(" INSERT INTO order_items (order_id,product_id,quantity,price_at_purchase) VALUES ($oid,$pid,1,$amount_gashy) ");
+            execute(" INSERT INTO order_items (order_id,product_id,option_id,quantity,price_at_purchase) VALUES ($oid,$pid,$opt,1,$amount_gashy) ");
             if ($prod['type'] === 'gift_card' || $prod['type'] === 'digital') {
-                $cards = getQuery(" SELECT id FROM gift_cards WHERE product_id=$pid AND is_sold=0 ORDER BY id ASC LIMIT 1 ");
+                $cards = getQuery(" SELECT id FROM gift_cards WHERE product_id=$pid AND option_id=$opt AND is_sold=0 ORDER BY id ASC LIMIT 1 ");
                 if (!empty($cards)) {
                     $cid = (int)$cards[0]['id'];
                     execute(" UPDATE gift_cards SET is_sold=1,sold_to_order_id=$oid WHERE id=$cid ");

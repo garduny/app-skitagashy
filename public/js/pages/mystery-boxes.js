@@ -10,9 +10,9 @@ async function openBox(id, price) {
         const burnWallet = new solanaWeb3.PublicKey("1nc1nerator11111111111111111111111111111111");
         const mintInfo = await connection.getParsedAccountInfo(mint);
         const decimals = mintInfo.value?.data?.parsed?.info?.decimals || 9;
-        const nprice = Number(price);
-        if (!nprice || nprice <= 0) { notyf.error('Invalid price'); return; }
-        const rawAmount = BigInt(Math.round(nprice * Math.pow(10, decimals)));
+        const amount = parseFloat(price);
+        if (!amount || amount <= 0) { notyf.error('Invalid price'); return; }
+        const rawAmount = BigInt(Math.round(amount * Math.pow(10, decimals)));
         const buyerTokens = await connection.getParsedTokenAccountsByOwner(publicKey, { mint: mint });
         if (buyerTokens.value.length === 0) { notyf.error('No GASHY tokens found in your wallet!'); return; }
         const fromATA = buyerTokens.value[0].pubkey;
@@ -21,7 +21,7 @@ async function openBox(id, price) {
         let toATA;
         const tx = new solanaWeb3.Transaction();
         const burnTokens = await connection.getParsedTokenAccountsByOwner(burnWallet, { mint: mint });
-        if (burnTokens.value.length > 0) { toATA = burnTokens.value[0].pubkey; }
+        if (burnTokens.value.length > 0) toATA = burnTokens.value[0].pubkey;
         else {
             toATA = await splToken.getAssociatedTokenAddress(mint, burnWallet);
             tx.add(splToken.createAssociatedTokenAccountInstruction(publicKey, toATA, burnWallet, mint));
@@ -34,6 +34,9 @@ async function openBox(id, price) {
         await connection.confirmTransaction(signed.signature, "confirmed");
         notyf.success('Unlocking Box...');
         const res = await App.post('./api/mystery_box/open.php', { box_id: id, tx_signature: signed.signature });
-        if (res.status) { alert(`🎉 REWARD: ${res.reward.type.toUpperCase()}\nRarity: ${res.rarity}`); location.reload(); } else { notyf.error(res.message); }
+        if (res.status) {
+            alert(`🎉 REWARD: ${res.reward.type.toUpperCase()}\nRarity: ${res.rarity}`);
+            location.reload();
+        } else notyf.error(res.message);
     } catch (e) { console.error(e); notyf.error('Transaction Cancelled'); }
 }
