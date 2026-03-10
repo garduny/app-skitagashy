@@ -5,28 +5,28 @@ require_once 'sidebar.php';
 $gashyRate = (float)toGashy();
 $today = date('Y-m-d');
 $yesterday = date('Y-m-d', strtotime('-1 day'));
-$sales_today = (float)(findQuery(" SELECT SUM(total_usd) as t FROM orders WHERE status='completed' AND DATE(created_at)='$today' ")['t'] ?? 0);
-$sales_yesterday = (float)(findQuery(" SELECT SUM(total_usd) as t FROM orders WHERE status='completed' AND DATE(created_at)='$yesterday' ")['t'] ?? 0);
+$sales_today = (float)(findQuery(" SELECT COALESCE(SUM(total_usd),0) t FROM orders WHERE status='completed' AND DATE(created_at)='$today' ")['t'] ?? 0);
+$sales_yesterday = (float)(findQuery(" SELECT COALESCE(SUM(total_usd),0) t FROM orders WHERE status='completed' AND DATE(created_at)='$yesterday' ")['t'] ?? 0);
 $sales_growth = $sales_yesterday > 0 ? (($sales_today - $sales_yesterday) / $sales_yesterday) * 100 : 0;
 $orders_today = countQuery(" SELECT 1 FROM orders WHERE DATE(created_at)='$today' ");
 $orders_yesterday = countQuery(" SELECT 1 FROM orders WHERE DATE(created_at)='$yesterday' ");
 $orders_growth = $orders_yesterday > 0 ? (($orders_today - $orders_yesterday) / $orders_yesterday) * 100 : 0;
 $stats = [
     'users' => countQuery(" SELECT 1 FROM accounts "),
-    'sales_total' => (float)(findQuery(" SELECT SUM(total_usd) as t FROM orders WHERE status='completed' ")['t'] ?? 0),
+    'sales_total' => (float)(findQuery(" SELECT COALESCE(SUM(total_usd),0) t FROM orders WHERE status='completed' ")['t'] ?? 0),
     'sales_today' => $sales_today,
     'sales_growth' => round($sales_growth, 1),
     'orders_total' => countQuery(" SELECT 1 FROM orders "),
     'orders_today' => $orders_today,
     'orders_growth' => round($orders_growth, 1),
-    'avg_order' => (float)(findQuery(" SELECT AVG(total_usd) as t FROM orders WHERE status='completed' ")['t'] ?? 0),
-    'burned' => (float)(findQuery(" SELECT SUM(amount) as t FROM burn_log ")['t'] ?? 0),
+    'avg_order' => (float)(findQuery(" SELECT COALESCE(AVG(total_usd),0) t FROM orders WHERE status='completed' ")['t'] ?? 0),
+    'burned' => (float)(findQuery(" SELECT COALESCE(SUM(amount),0) t FROM burn_log ")['t'] ?? 0),
     'sellers' => countQuery(" SELECT 1 FROM sellers WHERE is_approved=1 ")
 ];
-$recent = getQuery(" SELECT o.id,o.total_usd,o.status,o.created_at,a.accountname FROM orders o JOIN accounts a ON o.account_id=a.id ORDER BY o.id DESC LIMIT 6 ");
-$top_products = getQuery(" SELECT p.title,SUM(oi.quantity) as sold,p.images,p.price_usd FROM order_items oi JOIN products p ON oi.product_id=p.id GROUP BY oi.product_id ORDER BY sold DESC LIMIT 5 ");
+$recent = getQuery(" SELECT o.id,o.total_usd,o.total_gashy,o.status,o.created_at,a.accountname FROM orders o JOIN accounts a ON o.account_id=a.id ORDER BY o.id DESC LIMIT 6 ");
+$top_products = getQuery(" SELECT p.title,SUM(oi.quantity) sold,p.images,p.price_usd FROM order_items oi JOIN products p ON oi.product_id=p.id GROUP BY oi.product_id ORDER BY sold DESC LIMIT 5 ");
 $top_sellers = getQuery(" SELECT store_name,total_sales,rating,account_id FROM sellers WHERE is_approved=1 ORDER BY total_sales DESC LIMIT 5 ");
-$chart_data = getQuery(" SELECT DATE(created_at) as d,SUM(total_usd) as t FROM orders WHERE status='completed' AND created_at>=DATE_SUB(NOW(), INTERVAL 7 DAY) GROUP BY DATE(created_at) ORDER BY d ASC ");
+$chart_data = getQuery(" SELECT DATE(created_at) d,COALESCE(SUM(total_usd),0) t FROM orders WHERE status='completed' AND created_at>=DATE_SUB(NOW(),INTERVAL 7 DAY) GROUP BY DATE(created_at) ORDER BY d ASC ");
 $dates = [];
 $vols = [];
 for ($i = 6; $i >= 0; $i--) {
@@ -42,7 +42,7 @@ for ($i = 6; $i >= 0; $i--) {
     }
     if (!$found) $vols[] = 0;
 }
-$cat_stats = getQuery(" SELECT c.name,COUNT(p.id) as count FROM categories c LEFT JOIN products p ON c.id=p.category_id GROUP BY c.id ");
+$cat_stats = getQuery(" SELECT c.name,COUNT(p.id) count FROM categories c LEFT JOIN products p ON c.id=p.category_id GROUP BY c.id ");
 $cat_labels = array_column($cat_stats, 'name');
 $cat_counts = array_column($cat_stats, 'count');
 ?>
