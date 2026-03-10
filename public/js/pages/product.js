@@ -7,9 +7,7 @@ async function buyNow(pid) {
     if (sellerId && me && sellerId === me) { notyf.error('You cannot buy your own product'); return; }
     if (!App.checkAuth()) return;
     if (!window.solana?.isPhantom) { notyf.error('Phantom wallet required'); return; }
-    if (!window.solana.isConnected) {
-        try { await window.solana.connect(); } catch (err) { notyf.error('Wallet connection rejected'); return; }
-    }
+    if (!window.solana.isConnected) { try { await window.solana.connect(); } catch (err) { notyf.error('Wallet connection rejected'); return; } }
     try {
         const qtyInput = document.getElementById('qty');
         let qty = parseInt(qtyInput ? qtyInput.value : 1, 10);
@@ -24,63 +22,37 @@ async function buyNow(pid) {
         const pricePerItem = Number(window.GASHY_PRICE || 0);
         const totalGashy = pricePerItem * qty;
         if (!totalGashy || totalGashy <= 0) { notyf.error('Invalid price'); return; }
-        const rawAmount = BigInt(Math.round(totalGashy * Math.pow(10, decimals)));
-        console.log(`Sending ${totalGashy} GASHY (${rawAmount})`);
+        const rawAmount = BigInt(Math.floor(totalGashy * Math.pow(10, decimals)));
         const buyerTokens = await connection.getParsedTokenAccountsByOwner(publicKey, { mint: mint });
-        if (buyerTokens.value.length === 0) {
-            notyf.error('No GASHY tokens found in your wallet!');
-            return;
+        if (buyerTokens.value.length === 0) { notyf.error('No GASHY tokens found in your wallet'); return; }
+        let fromATA = null;
+        for (const acc of buyerTokens.value) {
+            const bal = BigInt(acc.account.data.parsed.info.tokenAmount.amount);
+            if (bal >= rawAmount) { fromATA = acc.pubkey; break; }
         }
-        const fromATA = buyerTokens.value[0].pubkey;
-        const balanceVal = BigInt(buyerTokens.value[0].account.data.parsed.info.tokenAmount.amount);
-        if (balanceVal < rawAmount) {
-            notyf.error('Insufficient GASHY balance');
-            return;
-        }
+        if (!fromATA) { notyf.error('Insufficient GASHY balance'); return; }
         let toATA;
         const tx = new solanaWeb3.Transaction();
         const treasuryTokens = await connection.getParsedTokenAccountsByOwner(treasury, { mint: mint });
-        if (treasuryTokens.value.length > 0) {
-            console.log("Found existing Treasury token account.");
-            toATA = treasuryTokens.value[0].pubkey;
-        } else {
-            console.log("No Treasury account found. Creating new ATA...");
+        if (treasuryTokens.value.length > 0) { toATA = treasuryTokens.value[0].pubkey; }
+        else {
             toATA = await splToken.getAssociatedTokenAddress(mint, treasury);
-            tx.add(
-                splToken.createAssociatedTokenAccountInstruction(
-                    publicKey,
-                    toATA,
-                    treasury,
-                    mint
-                )
-            );
+            tx.add(splToken.createAssociatedTokenAccountInstruction(publicKey, toATA, treasury, mint));
         }
         tx.add(splToken.createTransferInstruction(fromATA, toATA, publicKey, rawAmount));
         tx.feePayer = publicKey;
         tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
         notyf.success('Approve in Phantom...');
         const signed = await window.solana.signAndSendTransaction(tx);
-        console.log("TX:", signed.signature);
         notyf.success('Processing...');
         await connection.confirmTransaction(signed.signature, "confirmed");
         notyf.success('Payment confirmed!');
-        const res = await App.post('./api/orders/create.php', {
-            items: [{ id: pid, qty: qty }],
-            total: totalGashy,
-            tx_signature: signed.signature
-        });
-        if (res && res.status) {
-            notyf.success('Order Successful!');
-            setTimeout(() => location.href = 'orders.php', 800);
-        } else {
-            notyf.error(res?.message || 'Order failed');
-        }
+        const res = await App.post('./api/orders/create.php', { items: [{ id: pid, qty: qty }], total: totalGashy, tx_signature: signed.signature });
+        if (res && res.status) { notyf.success('Order Successful!'); setTimeout(() => location.href = 'orders.php', 800); }
+        else { notyf.error(res?.message || 'Order failed'); }
     } catch (e) {
         console.error("Transaction Error:", e);
-        if (e.message && e.message.includes("0x1")) {
-            notyf.error('Insufficient SOL for gas fees');
-        } else {
-            notyf.error('Transaction failed');
-        }
+        if (e.message && e.message.includes("0x1")) notyf.error('Insufficient SOL for gas fees');
+        else notyf.error('Transaction failed');
     }
 }

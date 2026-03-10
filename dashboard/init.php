@@ -61,3 +61,8 @@ function destroyAuth()
         exit;
     }
 }
+
+function settings($key)
+{
+    return findQuery(" SELECT value FROM settings WHERE key_name='{$key}' ")['value'];
+}

@@ -18,6 +18,7 @@ try {
     $tier = $account['tier'] ?? 'bronze';
     $discount_map = ['bronze' => 0, 'silver' => 0.02, 'gold' => 0.05, 'platinum' => 0.10, 'diamond' => 0.15];
     $discount_rate = $discount_map[$tier] ?? 0;
+    $rate = toGashy();
     $subtotal = 0;
     $status = 'processing';
     $total_qty = 0;
@@ -26,11 +27,12 @@ try {
         $qty = (int)$i['qty'];
         if ($qty < 1) continue;
         $total_qty += $qty;
-        $p = findQuery(" SELECT price_gashy,stock,type,seller_id FROM products WHERE id=$pid ");
+        $p = findQuery(" SELECT price_usd,stock,type,seller_id FROM products WHERE id=$pid ");
         if (!$p) throw new Exception("Product #$pid Not Found");
         if ((int)$p['seller_id'] === (int)$uid) throw new Exception("You cannot buy your own product");
         if ($p['stock'] < $qty) throw new Exception("Product #$pid Out of Stock");
-        $subtotal += ($p['price_gashy'] * $qty);
+        $price_gashy = $rate > 0 ? $p['price_usd'] / $rate : 0;
+        $subtotal += ($price_gashy * $qty);
         if ($p['type'] === 'physical') $status = 'processing';
         else $status = 'completed';
     }
@@ -43,10 +45,11 @@ try {
         $pid = (int)$i['id'];
         $qty = (int)$i['qty'];
         if ($qty < 1) continue;
-        $prod = findQuery(" SELECT title,price_gashy,type,seller_id FROM products WHERE id=$pid ");
+        $prod = findQuery(" SELECT title,price_usd,type,seller_id FROM products WHERE id=$pid ");
         if (!$prod) throw new Exception("Product #$pid Not Found");
         if ((int)$prod['seller_id'] === (int)$uid) throw new Exception("You cannot buy your own product");
-        execute(" INSERT INTO order_items (order_id,product_id,quantity,price_at_purchase) VALUES ($oid,$pid,$qty,{$prod['price_gashy']}) ");
+        $price_gashy = $rate > 0 ? $prod['price_usd'] / $rate : 0;
+        execute(" INSERT INTO order_items (order_id,product_id,quantity,price_at_purchase) VALUES ($oid,$pid,$qty,$price_gashy) ");
         execute(" UPDATE products SET stock=stock-$qty WHERE id=$pid ");
         $email_items_html .= "<li>{$prod['title']} (x$qty)</li>";
         if ($prod['type'] === 'gift_card' || $prod['type'] === 'digital') {
@@ -64,9 +67,7 @@ try {
         $comm = $final_total * 0.05;
         if ($comm > 0) execute(" INSERT INTO transactions (account_id,type,amount,reference_id,status,created_at) VALUES ($ref_id,'reward',$comm,$oid,'confirmed',NOW()) ");
     }
-    if (function_exists('updateQuestProgress')) {
-        updateQuestProgress($uid, 'buy', $final_total);
-    }
+    if (function_exists('updateQuestProgress')) updateQuestProgress($uid, 'buy', $final_total);
     if (($account['email'] ?? '') && function_exists('mailer')) {
         $subject = "Order #$oid Confirmed";
         $body = "<div style='font-family: Arial, sans-serif; color: #333; padding: 20px;'><h2 style='color: #00d48f;'>Order Confirmed!</h2><p>Hi {$account['accountname']},</p><p>Your order has been successfully placed.</p><p><strong>Order ID:</strong> #$oid<br><strong>Status:</strong> " . strtoupper($status) . "<br><strong>Total:</strong> " . number_format($final_total, 2) . " GASHY</p><hr style='border: 0; border-top: 1px solid #eee;'><h3>Items:</h3><ul>$email_items_html</ul><p style='margin-top: 20px;'><a href='https://gashybazaar.com/orders.php' style='background: #00d48f; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>View Order & Reveal Codes</a></p></div>";

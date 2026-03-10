@@ -5,24 +5,23 @@ if (file_exists('server/init.php')) {
 }
 require_once 'header.php';
 require_once 'sidebar.php';
-$cat    = request('category', 'get');
+$cat = request('category', 'get');
 $search = request('search', 'get');
-$sort   = request('sort', 'get') ?? 'newest';
-$min    = request('min', 'get');
-$max    = request('max', 'get');
-$where  = "WHERE p.status='active' AND p.stock>0";
-if ($cat)    $where .= " AND c.slug='$cat' ";
+$sort = request('sort', 'get') ?? 'newest';
+$min = request('min', 'get');
+$max = request('max', 'get');
+$where = " WHERE p.status='active' AND p.stock>0 ";
+if ($cat) $where .= " AND c.slug='$cat' ";
 if ($search) $where .= " AND (p.title LIKE '%$search%' OR p.description LIKE '%$search%') ";
-if ($min)    $where .= " AND p.price_gashy >= $min ";
-if ($max)    $where .= " AND p.price_gashy <= $max ";
-$order = "ORDER BY p.id DESC";
-if ($sort === 'price_asc')  $order = "ORDER BY p.price_gashy ASC";
-if ($sort === 'price_desc') $order = "ORDER BY p.price_gashy DESC";
-if ($sort === 'popular')    $order = "ORDER BY p.views DESC";
-$products = getQuery(" SELECT p.id,p.title,p.slug,p.price_gashy,p.images,p.type,p.stock,c.name as cat_name,s.store_name,s.is_approved FROM products p JOIN categories c ON p.category_id=c.id JOIN sellers s ON p.seller_id=s.account_id $where $order LIMIT 50");
-$cats     = getQuery(" SELECT name,slug,icon,(SELECT COUNT(*) FROM products WHERE category_id=categories.id AND status='active') as count FROM categories WHERE is_active=1");
-$oracle=json_decode(@file_get_contents('server/.cache/price.json'),true)?:[];
-$gashyUsd=(float)($oracle['price']??0.045);
+if ($min) $where .= " AND p.price_usd>=$min ";
+if ($max) $where .= " AND p.price_usd<=$max ";
+$order = " ORDER BY p.id DESC ";
+if ($sort === 'price_asc') $order = " ORDER BY p.price_usd ASC ";
+if ($sort === 'price_desc') $order = " ORDER BY p.price_usd DESC ";
+if ($sort === 'popular') $order = " ORDER BY p.views DESC ";
+$products = getQuery(" SELECT p.id,p.title,p.slug,p.price_usd,p.images,p.type,p.stock,c.name as cat_name,s.store_name,s.is_approved FROM products p JOIN categories c ON p.category_id=c.id JOIN sellers s ON p.seller_id=s.account_id $where $order LIMIT 50 ");
+$cats = getQuery(" SELECT name,slug,icon,( SELECT COUNT(*) FROM products WHERE category_id=categories.id AND status='active' ) as count FROM categories WHERE is_active=1 ");
+$rate = toGashy();
 ?>
 <style>
     /* ── CSS VARIABLES ── */
@@ -1055,6 +1054,7 @@ $gashyUsd=(float)($oracle['price']??0.045);
         background: linear-gradient(90deg, transparent, rgba(0, 163, 114, 0.06), transparent);
     }
 </style>
+
 <main class="market-wrap">
     <div class="market-bg"></div>
     <div class="market-orb-1"></div>
@@ -1065,29 +1065,20 @@ $gashyUsd=(float)($oracle['price']??0.045);
                 <div class="filter-panel">
                     <div class="filter-panel-inner">
                         <div class="flex items-center gap-3 mb-6">
-                            <div class="filter-icon-wrap">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                                </svg>
-                            </div>
-                            <h3 class="text-lg font-black bg-gradient-to-r from-white to-primary-500 dark:from-white dark:to-primary-500 bg-clip-text text-transparent" style="background-image:linear-gradient(135deg,#fff,#00ffaa)">Filters</h3>
+                            <div class="filter-icon-wrap"></div>
+                            <h3 class="text-lg font-black">Filters</h3>
                         </div>
                         <div class="space-y-1 mb-7">
                             <div class="filter-title">Categories</div>
                             <a href="market.php" class="cat-item <?= !$cat ? 'active' : '' ?>">
-                                <span class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                                    </svg>
-                                    All Items
-                                </span>
+                                <span>All Items</span>
                                 <span class="cat-count"><?= array_sum(array_column($cats, 'count')) ?></span>
                             </a>
                             <?php foreach ($cats as $c): ?>
                                 <a href="market.php?category=<?= htmlspecialchars($c['slug']) ?>" class="cat-item <?= $cat === $c['slug'] ? 'active' : '' ?>">
-                                    <span class="flex items-center gap-2">
+                                    <span>
                                         <?php if ($c['icon']): ?>
-                                        <img width="20px" src="./<?= htmlspecialchars($c['icon']) ?>" alt="<?= htmlspecialchars($c['icon']) ?>" loading="lazy">    
+                                            <img width="20px" src="./<?= htmlspecialchars($c['icon']) ?>" loading="lazy">
                                         <?php endif; ?>
                                         <?= htmlspecialchars($c['name']) ?>
                                     </span>
@@ -1097,15 +1088,15 @@ $gashyUsd=(float)($oracle['price']??0.045);
                         </div>
                         <form action="market.php" method="GET" class="space-y-4">
                             <?php if ($cat): ?><input type="hidden" name="category" value="<?= htmlspecialchars($cat) ?>"><?php endif; ?>
-                            <div class="filter-title" style="margin-bottom:0.75rem">Price Range</div>
+                            <div class="filter-title">Price Range</div>
                             <div class="flex gap-2">
                                 <div class="flex-1 relative">
                                     <input type="number" name="min" value="<?= htmlspecialchars((string)$min) ?>" placeholder="Min" class="mkt-input pr-14">
-                                    <span class="input-unit">GASHY</span>
+                                    <span class="input-unit">USD</span>
                                 </div>
                                 <div class="flex-1 relative">
                                     <input type="number" name="max" value="<?= htmlspecialchars((string)$max) ?>" placeholder="Max" class="mkt-input pr-14">
-                                    <span class="input-unit">GASHY</span>
+                                    <span class="input-unit">USD</span>
                                 </div>
                             </div>
                             <button type="submit" class="apply-btn">Apply Filters</button>
@@ -1119,46 +1110,29 @@ $gashyUsd=(float)($oracle['price']??0.045);
                         <div class="mkt-title-bar"></div>
                         <div>
                             <div class="mkt-title">Marketplace</div>
-                            <div class="mkt-count">
-                                Showing <span class="mkt-count-badge"><?= count($products) ?></span> premium items
-                            </div>
+                            <div class="mkt-count">Showing <span class="mkt-count-badge"><?= count($products) ?></span> premium items</div>
                         </div>
                     </div>
                     <div class="sort-wrap">
-                        <svg class="sort-icon-l w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-                        </svg>
                         <select class="sort-select" onchange="window.location.href='market.php?sort='+this.value+'<?= $cat ? '&category=' . htmlspecialchars($cat) : '' ?>'">
-                            <option value="newest" <?= $sort === 'newest'     ? 'selected' : '' ?>>Newest First</option>
-                            <option value="popular" <?= $sort === 'popular'    ? 'selected' : '' ?>>Most Popular</option>
-                            <option value="price_asc" <?= $sort === 'price_asc'  ? 'selected' : '' ?>>Price: Low → High</option>
+                            <option value="newest" <?= $sort === 'newest' ? 'selected' : '' ?>>Newest First</option>
+                            <option value="popular" <?= $sort === 'popular' ? 'selected' : '' ?>>Most Popular</option>
+                            <option value="price_asc" <?= $sort === 'price_asc' ? 'selected' : '' ?>>Price: Low → High</option>
                             <option value="price_desc" <?= $sort === 'price_desc' ? 'selected' : '' ?>>Price: High → Low</option>
                         </select>
-                        <svg class="sort-icon-r w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
                     </div>
                 </div>
                 <?php if (empty($products)): ?>
                     <div class="empty-state">
-                        <div class="empty-icon">
-                            <svg class="w-10 h-10 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                        </div>
                         <h3 class="empty-title">No Items Found</h3>
-                        <p class="empty-desc">We couldn't find any products matching your criteria. Try adjusting your filters or search terms.</p>
-                        <a href="market.php" class="empty-btn">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                            </svg>
-                            Clear All Filters
-                        </a>
+                        <p class="empty-desc">Try adjusting filters.</p>
+                        <a href="market.php" class="empty-btn">Clear Filters</a>
                     </div>
                 <?php else: ?>
                     <div class="products-grid">
                         <?php foreach ($products as $p):
                             $img = json_decode($p['images'])[0] ?? 'assets/placeholder.png';
+                            $g = $rate > 0 ? $p['price_usd'] / $rate : 0;
                         ?>
                             <div class="pcard">
                                 <div class="pcard-img">
@@ -1168,35 +1142,21 @@ $gashyUsd=(float)($oracle['price']??0.045);
                                     <div class="pcard-badges">
                                         <span class="badge-type"><?= htmlspecialchars($p['type']) ?></span>
                                         <?php if ($p['is_approved']): ?>
-                                            <span class="badge-verified">
-                                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                                </svg>
-                                                VERIFIED
-                                            </span>
+                                            <span class="badge-verified">VERIFIED</span>
                                         <?php endif; ?>
                                     </div>
                                 </div>
                                 <div class="pcard-body">
-                                    <div class="pcard-cat">
-                                        <span class="pcard-cat-dot"></span>
-                                        <?= htmlspecialchars($p['cat_name']) ?>
-                                    </div>
+                                    <div class="pcard-cat"><?= htmlspecialchars($p['cat_name']) ?></div>
                                     <a href="product.php?slug=<?= htmlspecialchars($p['slug']) ?>" class="pcard-title"><?= htmlspecialchars($p['title']) ?></a>
-                                    <div class="pcard-seller">
-                                        <svg class="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                                        </svg>
-                                        <span>by</span>
-                                        <span class="pcard-seller-name"><?= htmlspecialchars($p['store_name']) ?></span>
-                                    </div>
+                                    <div class="pcard-seller"><span class="pcard-seller-name"><?= htmlspecialchars($p['store_name']) ?></span></div>
                                     <div class="pcard-footer">
                                         <div>
                                             <div class="price-tag">
-                                                <span class="price-val"><?= number_format($p['price_gashy'], 2) ?></span>
+                                                <span class="price-val"><?= number_format($g, 2) ?></span>
                                                 <span class="price-unit">$GASHY</span>
                                             </div>
-                                            <div class="price-usd">≈ $<?= number_format($p['price_gashy'] * $gashyUsd, 7) ?> USD</div>
+                                            <div class="price-usd">≈ $<?= number_format($p['price_usd'], 7) ?> USD</div>
                                         </div>
                                         <?php if ($p['stock'] < 5): ?>
                                             <span class="stock-badge">LOW STOCK</span>
@@ -1206,18 +1166,9 @@ $gashyUsd=(float)($oracle['price']??0.045);
                             </div>
                         <?php endforeach; ?>
                     </div>
-                    <div class="load-more-wrap">
-                        <button class="load-more-btn">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                            </svg>
-                            Load More Products
-                        </button>
-                    </div>
                 <?php endif; ?>
             </div>
         </div>
     </div>
 </main>
-<script src="./public/js/pages/market.js"></script>
 <?php require_once 'footer.php'; ?>

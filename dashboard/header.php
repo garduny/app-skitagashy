@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <link rel="shortcut icon" href="<?= '../' . $settings['site_logo'] ?? 'https://ui-avatars.com/api/?name=GB&background=00ffaa&color=000' ?>" type="image/x-icon">
+    <link rel="shortcut icon" href="<?= '../' . settings('site_logo') ?? 'https://ui-avatars.com/api/?name=GB&background=00ffaa&color=000' ?>" type="image/x-icon">
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -167,7 +167,7 @@
             </button>
             <div class="flex items-center gap-3">
                 <div class="logo-glow w-10 h-10 rounded-xl bg-gradient-to-br from-[#00ffaa] to-[#00d48f] flex items-center justify-center shadow-lg shadow-[#00ffaa]/30">
-                    <img src="<?= '..' . $settings['site_logo'] ?? 'https://ui-avatars.com/api/?name=GB&background=00ffaa&color=000' ?>" alt="GASHY LOGO" class="w-full h-full rounded-xl">
+                    <img src="<?= '../' . settings('site_logo') ?? 'https://ui-avatars.com/api/?name=GB&background=00ffaa&color=000' ?>" alt="GASHY LOGO" class="w-full h-full rounded-xl">
                 </div>
 
                 <div>
@@ -178,6 +178,7 @@
                 </div>
             </div>
         </div>
+
         <div class="flex items-center gap-4">
             <button onclick="toggleTheme()" class="theme-toggle w-11 h-11 rounded-xl flex items-center justify-center shadow-lg">
                 <i class="fa-solid fa-sun hidden dark:block text-[#00ffaa]"></i>
