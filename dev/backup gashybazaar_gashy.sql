@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Mar 12, 2026 at 07:33 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: localhost:3306
+-- Generation Time: Mar 12, 2026 at 04:24 AM
+-- Server version: 11.4.10-MariaDB-cll-lve-log
+-- PHP Version: 8.3.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `app_skitagashy`
+-- Database: `gashybazaar_gashy`
 --
 
 -- --------------------------------------------------------
@@ -47,9 +47,8 @@ CREATE TABLE `accounts` (
 --
 
 INSERT INTO `accounts` (`id`, `wallet_address`, `accountname`, `email`, `role`, `tier`, `nonce`, `is_verified`, `created_at`, `updated_at`, `is_banned`, `my_referral_code`) VALUES
-(1, '6dygwo6jHPrExGKrohykhYoC1DkAA6CyPp9qDbhMe1JT', 'gardunydev', 'gardunydeveloper@gmail.com', 'seller', 'gold', 'bd45660a3cd2a193c8f2578d9ff80752', 0, '2026-01-16 04:03:30', '2026-03-10 07:21:24', 0, 'c6a0bad7'),
-(2, 'Di6...TEST_WALLET_2', 'CryptoKing', 'seller2@test.com', 'account', 'bronze', NULL, 0, '2026-02-02 02:50:08', '2026-03-10 07:21:27', 0, NULL),
-(3, 'Hmdv1Asp6uhvG9SCX64fdCX7wVkYZ792v5uavjEjACXb', 'gardunyguard', 'gardunyguard@gmail.com', 'account', 'bronze', 'b46799ba324cc88d29b1432bd1fabfdb', 0, '2026-02-26 22:23:11', '2026-03-10 08:45:10', 0, 'be443d4c');
+(1, 'B6Tt8GhqJhgzJUU6qnLGGA2goRtM1a2GUjwiggrYJthE', 'Gashy Power', 'info@gashycoin.com', 'account', 'bronze', '7d5cd082c28b9037f77eaf126d767755', 0, '2026-03-02 04:44:52', '2026-03-02 13:43:11', 0, '7cea660e'),
+(2, 'GS4tXdRS7CQ5PgePt795fK2oJe5q34XBhEugNNn5AVPb', NULL, NULL, 'account', 'bronze', 'bfb1a90bb209a6e839a8e00d83334b0d', 0, '2026-03-02 12:14:31', '2026-03-02 12:14:31', 0, '0af3b983');
 
 -- --------------------------------------------------------
 
@@ -100,13 +99,14 @@ CREATE TABLE `account_sessions` (
 --
 
 INSERT INTO `account_sessions` (`id`, `account_id`, `token`, `ip_address`, `account_agent`, `expires_at`, `created_at`) VALUES
-(1, 1, 'f3282e9cb1919ea8ca31415fd48f4ddb38d2087fc7b66fd2f41844c6f60d3b6c', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-17 09:13:51', '2026-03-10 06:13:51'),
-(2, 3, '8d84968c696e6cb019d0ef557e01f08b8841382fd27dff8a8a2f940f3cac13e3', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-17 09:14:42', '2026-03-10 06:14:42'),
-(3, 3, '5eb9edadecd5faebe24fca191bcd63003f64eac2e0b63ec71052023e35ba8bda', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-17 09:59:08', '2026-03-10 06:59:08'),
-(4, 1, '0a3344506f99f50110c667f93bb53f6b2c25b9faeead5fd49cdc7b07e81be7b0', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-17 10:20:40', '2026-03-10 07:20:40'),
-(5, 3, '8f331fb0b66fb96d0339e6ca65f6419643213ad13e1f95659a97a53eddcd1334', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-17 10:23:28', '2026-03-10 07:23:28'),
-(6, 3, '79619f1c6c5d592906058e25356cbd34bc895dbc38c35f6d0cf397670e5e587f', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-17 10:43:28', '2026-03-10 07:43:28'),
-(7, 3, 'a80884b8fffef51f20dd6aa117be620f5cf8bad096ec06c894b67e57f571b5f7', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-17 10:43:38', '2026-03-10 07:43:38');
+(1, 1, '85a6cdd47627d733a8092b56ce0f9d03c36a66ff9687cf960e4f1193629efa51', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-09 07:44:52', '2026-03-02 04:44:52'),
+(2, 1, 'ecb1b66073d307d3c5e9a54a943dbbf29eb3e0afe7f0d682acf59a7fcef4d515', '185.181.108.64', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-09 08:10:56', '2026-03-02 05:10:56'),
+(3, 2, 'e480120a0037347da416ed85fd6e95e7e3e6db927f1995852a9945defef5f075', '185.244.152.150', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', '2026-03-09 15:14:31', '2026-03-02 12:14:31'),
+(4, 2, '988b4966aabfc5f1a68d65c108644aa9f17364d2b8d55faa0dab9e0b7dc36862', '185.244.152.150', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', '2026-03-09 15:14:33', '2026-03-02 12:14:33'),
+(5, 2, 'aa445c006fae37cfb52a2c1dbd426e225cf35827044b0cae4817a9a087c10d72', '185.244.152.150', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', '2026-03-09 16:33:07', '2026-03-02 13:33:07'),
+(6, 2, 'd977b10fae5630d3cf43828728d132268b49ffb26c578dc667d69bcec46c561c', '185.244.152.150', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', '2026-03-09 16:35:15', '2026-03-02 13:35:15'),
+(7, 1, 'e1fbe66916e16c94a9a428919eda5fa447787423c6446865f828df7b9c067b22', '185.244.152.150', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', '2026-03-09 16:42:13', '2026-03-02 13:42:13'),
+(8, 2, '6fc8fbfaef0f4d36e810591ef054c7a27055787331d0c953b664ff0a2b6bcaa9', '185.244.152.150', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', '2026-03-09 16:48:13', '2026-03-02 13:48:13');
 
 -- --------------------------------------------------------
 
@@ -133,15 +133,21 @@ CREATE TABLE `activity_log` (
 CREATE TABLE `auctions` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `product_id` bigint(20) UNSIGNED NOT NULL,
-  `option_id` int(11) DEFAULT NULL,
   `start_time` datetime NOT NULL,
   `end_time` datetime NOT NULL,
-  `start_price_usd` decimal(20,8) NOT NULL DEFAULT 0.00000000,
-  `reserve_price_usd` decimal(20,8) NOT NULL DEFAULT 0.00000000,
-  `current_bid_usd` decimal(20,8) NOT NULL DEFAULT 0.00000000,
+  `start_price` decimal(20,9) NOT NULL,
+  `reserve_price` decimal(20,9) DEFAULT NULL,
+  `current_bid` decimal(20,9) DEFAULT 0.000000000,
   `highest_bidder_id` bigint(20) UNSIGNED DEFAULT NULL,
   `status` enum('pending','active','ended','cancelled') DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `auctions`
+--
+
+INSERT INTO `auctions` (`id`, `product_id`, `start_time`, `end_time`, `start_price`, `reserve_price`, `current_bid`, `highest_bidder_id`, `status`) VALUES
+(1, 11, '2026-03-02 16:31:00', '2026-03-10 02:00:00', 250000.000000000, 15000000.000000000, 270000.000000000, 2, 'active');
 
 -- --------------------------------------------------------
 
@@ -182,6 +188,13 @@ CREATE TABLE `burn_log` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `burn_log`
+--
+
+INSERT INTO `burn_log` (`id`, `account_id`, `amount`, `purpose`, `tx_signature`, `usd_value_at_burn`, `created_at`) VALUES
+(1, 2, 100.000000000, 'lottery_entry', '4NE8iWWx5UhVTmU9zvaiK49D449wKnHS7zdwof3nTpHoDqG5rooQrX88p8RwQ87DaiBtt29D8nAD4komoi34Hku1', 0.00, '2026-03-02 13:34:56');
+
 -- --------------------------------------------------------
 
 --
@@ -218,48 +231,12 @@ INSERT INTO `categories` (`id`, `parent_id`, `name`, `slug`, `icon`, `is_active`
 CREATE TABLE `gift_cards` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `product_id` bigint(20) UNSIGNED NOT NULL,
-  `option_id` int(11) DEFAULT NULL,
-  `gift_card_option_id` bigint(20) UNSIGNED DEFAULT NULL,
   `code_enc` text NOT NULL,
   `pin_enc` text DEFAULT NULL,
   `expiry_date` date DEFAULT NULL,
   `is_sold` tinyint(1) DEFAULT 0,
-  `sold_to_order_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `sold_at` datetime DEFAULT NULL
+  `sold_to_order_id` bigint(20) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `gift_cards`
---
-
-INSERT INTO `gift_cards` (`id`, `product_id`, `option_id`, `gift_card_option_id`, `code_enc`, `pin_enc`, `expiry_date`, `is_sold`, `sold_to_order_id`, `sold_at`) VALUES
-(1, 21, NULL, NULL, 'WGErb1JMbzdJWmg1YzZqTDlJOHlYZz09OjqyugtjYzC6z7XCZFb/7fKc', NULL, NULL, 0, NULL, NULL),
-(2, 21, NULL, NULL, 'dTNCNUtuRy9ndlVFUUVKMDhEVmFOQT09Ojqe+gw0EZL20SA5gaQCtdbC', NULL, NULL, 0, NULL, NULL),
-(3, 21, NULL, 1, 'dWNxeURpTVNYdkQ5djZOVFFBYVN0QT09Ojr3szUKRJ+abn3X7tLD4Mzx', NULL, NULL, 0, NULL, NULL),
-(4, 21, NULL, 1, 'NXhySHMxKzhUVFgrbzJibEVDWktTZz09OjoueRv2m6WDu7H7ibH6TLh2', NULL, NULL, 0, NULL, NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `gift_card_options`
---
-
-CREATE TABLE `gift_card_options` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `product_id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `price_usd` decimal(12,2) NOT NULL,
-  `stock` int(11) DEFAULT 0,
-  `is_active` tinyint(1) DEFAULT 1,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `gift_card_options`
---
-
-INSERT INTO `gift_card_options` (`id`, `product_id`, `name`, `price_usd`, `stock`, `is_active`, `created_at`) VALUES
-(1, 21, 'gift-one-$1', 0.00, 0, 1, '2026-03-10 09:11:54');
 
 -- --------------------------------------------------------
 
@@ -274,6 +251,13 @@ CREATE TABLE `lottery_entries` (
   `burn_tx` varchar(88) NOT NULL,
   `ticket_count` int(10) UNSIGNED DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `lottery_entries`
+--
+
+INSERT INTO `lottery_entries` (`id`, `round_id`, `account_id`, `burn_tx`, `ticket_count`) VALUES
+(1, 1, 2, '4NE8iWWx5UhVTmU9zvaiK49D449wKnHS7zdwof3nTpHoDqG5rooQrX88p8RwQ87DaiBtt29D8nAD4komoi34Hku1', 10);
 
 -- --------------------------------------------------------
 
@@ -290,6 +274,13 @@ CREATE TABLE `lottery_rounds` (
   `winning_numbers` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`winning_numbers`))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `lottery_rounds`
+--
+
+INSERT INTO `lottery_rounds` (`id`, `round_number`, `prize_pool`, `draw_time`, `status`, `winning_numbers`) VALUES
+(1, 1, 100.000000000, '2026-03-02 13:34:56', 'open', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -300,11 +291,23 @@ CREATE TABLE `mystery_box_loot` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `box_product_id` bigint(20) UNSIGNED NOT NULL,
   `reward_product_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `reward_option_id` int(11) DEFAULT NULL,
   `reward_amount` decimal(20,9) DEFAULT 0.000000000,
+  `reward_gashy_amount` decimal(20,9) DEFAULT 0.000000000,
   `probability` decimal(5,2) NOT NULL,
   `rarity` enum('common','rare','epic','legendary') DEFAULT 'common'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `mystery_box_loot`
+--
+
+INSERT INTO `mystery_box_loot` (`id`, `box_product_id`, `reward_product_id`, `reward_amount`, `reward_gashy_amount`, `probability`, `rarity`) VALUES
+(1, 6, NULL, 100.000000000, 0.000000000, 40.00, 'legendary'),
+(2, 8, NULL, 10.000000000, 0.000000000, 80.00, 'common'),
+(3, 8, NULL, 10.000000000, 0.000000000, 80.00, 'common'),
+(4, 6, 12, 0.000000000, 0.000000000, 99.00, 'common'),
+(5, 20, NULL, 60.000000000, 0.000000000, 80.00, 'common'),
+(6, 20, NULL, 150.000000000, 0.000000000, 30.00, 'legendary');
 
 -- --------------------------------------------------------
 
@@ -399,19 +402,11 @@ CREATE TABLE `nft_mints` (
 CREATE TABLE `orders` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `account_id` bigint(20) UNSIGNED NOT NULL,
-  `total_usd` decimal(12,2) DEFAULT NULL,
   `total_gashy` decimal(20,9) NOT NULL,
   `tx_signature` varchar(88) NOT NULL,
   `status` enum('pending','processing','shipped','delivered','completed','refunded','failed') DEFAULT 'pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `orders`
---
-
-INSERT INTO `orders` (`id`, `account_id`, `total_usd`, `total_gashy`, `tx_signature`, `status`, `created_at`) VALUES
-(1, 1, 0.10, 7368.421052632, '2wMpugtjNCbBRypYbMTyp7H6Pq3zLft1PeRVuuQqMUsMxgDCk9VCNjh6FMpLJJxEoV9rqL6BkPEqzU4VGQnnusMg', 'completed', '2026-03-10 06:47:51');
 
 -- --------------------------------------------------------
 
@@ -423,20 +418,10 @@ CREATE TABLE `order_items` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `order_id` bigint(20) UNSIGNED NOT NULL,
   `product_id` bigint(20) UNSIGNED NOT NULL,
-  `option_id` int(11) DEFAULT NULL,
-  `gift_card_option_id` bigint(20) UNSIGNED DEFAULT NULL,
   `quantity` int(10) UNSIGNED NOT NULL,
-  `price_usd_at_purchase` decimal(12,2) DEFAULT NULL,
   `price_at_purchase` decimal(20,9) NOT NULL,
   `meta_data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`meta_data`))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `order_items`
---
-
-INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `option_id`, `gift_card_option_id`, `quantity`, `price_usd_at_purchase`, `price_at_purchase`, `meta_data`) VALUES
-(1, 1, 20, NULL, NULL, 1, NULL, 0.100000000, NULL);
 
 -- --------------------------------------------------------
 
@@ -484,10 +469,9 @@ CREATE TABLE `products` (
   `slug` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
   `price_gashy` decimal(20,9) NOT NULL,
-  `price_usd` decimal(12,2) DEFAULT NULL,
+  `price_usd_peg` decimal(10,2) DEFAULT NULL,
   `stock` int(10) UNSIGNED DEFAULT 0,
   `type` enum('gift_card','digital','nft','physical','mystery_box') NOT NULL,
-  `has_options` tinyint(1) NOT NULL DEFAULT 0,
   `images` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`images`)),
   `attributes` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`attributes`)),
   `status` enum('active','inactive','banned') DEFAULT 'active',
@@ -499,28 +483,39 @@ CREATE TABLE `products` (
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`id`, `seller_id`, `category_id`, `title`, `slug`, `description`, `price_gashy`, `price_usd`, `stock`, `type`, `has_options`, `images`, `attributes`, `status`, `views`, `created_at`) VALUES
-(1, 2, 1, 'Amazon $50 Gift Card (US)', 'amazon-50-gift-card-us-', 'Valid for US accounts only. Code delivered instantly via email and order dashboard upon blockchain confirmation.', 1.000000000, 0.10, 2, 'gift_card', 0, '[\"/server/uploads/products/6998ffe2ee3ab4.45018495.jpg\"]', NULL, 'active', 479, '2026-01-16 08:40:08'),
-(2, 1, 1, 'Steam Wallet $20 Global', 'steam-wallet-20-global', 'Add funds to your Steam Wallet. Works globally. Instant delivery.', 40.000000000, 0.10, 50, 'gift_card', 0, '[\"/server/uploads/products/6998ffddd54654.89335006.jpg\"]', NULL, 'active', 902, '2026-01-16 08:40:08'),
-(3, 1, 1, 'PUBG Mobile 660 UC', 'pubg-mobile-660-uc', 'pubg pubg pubg pubg pubg pubg pubg pubg pubg pubg pubg pubg', 30.000000000, 0.10, 200, 'digital', 0, '[\"/server/uploads/products/6998ffd7dfa877.05088825.jfif\"]', NULL, 'active', 129, '2026-01-16 08:40:08'),
-(4, 1, 3, 'Windows 11 Pro License', 'windows-11-pro-license', 'Lifetime retail key for Windows 11 Pro. Supports multi-language installation.', 6.000000000, 0.10, 17, 'digital', 0, '[\"/server/uploads/products/6998fa5e48ed03.37830430.webp\"]', NULL, 'active', 71, '2026-01-16 08:40:08'),
-(5, 1, 4, 'CyberPunk Samurai #042', 'cyberpunk-samurai-042', 'Rare NFT from the CyberPunk collection. Verified ownership on Solana.', 15.000000000, 0.10, 0, 'nft', 0, '[\"/server/uploads/products/6998f9e1b69b83.11482242.jfif\"]', NULL, 'active', 1211, '2026-01-16 08:40:08'),
-(6, 1, 5, 'Legendary Mystery Box', 'legendary-mystery-box', 'Contains a chance to win 50,000 GASHY or a Rare NFT. High risk, high reward.', 50.000000000, 0.10, 0, 'mystery_box', 0, '[\"/server/uploads/products/6998fa3a558396.36014683.webp\"]', NULL, 'banned', 3021, '2026-01-16 08:40:08'),
-(7, 1, 4, 'Bored Ape #9999 (Test)', 'bored-ape-9999-test-', 'Original BAYC NFT. Verified on Ethereum.', 10.000000000, 0.10, 1, 'nft', 0, '[\"/server/uploads/products/6998fa590ac966.04235643.jpg\"]', NULL, 'active', 6, '2026-01-17 12:23:19'),
-(8, 1, 5, 'Starter Mystery Box', 'starter-mystery-box', 'jhfgdjfhdgfjdhf', 10.000000000, 0.10, 493, 'mystery_box', 0, '[\"/server/uploads/products/6998fa4b9e5517.58520314.webp\"]', NULL, 'active', 12, '2026-01-17 12:23:19'),
-(9, 1, 1, 'GTA-6', 'gta-6', 'undefined', 10.000000000, 0.10, 4, 'digital', 0, '[\"/server/uploads/products/6998fa1e769023.06569469.jpg\"]', NULL, 'active', 19, '2026-01-29 01:53:02'),
-(10, 1, 4, 'nft test', 'nft-test', 'test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product test product', 1.000000000, 0.10, 1, 'nft', 0, '[\"/server/uploads/products/6998fa76d88368.86052092.jfif\"]', NULL, 'active', 7, '2026-01-29 01:53:43'),
-(11, 1, 1, 'Gifts', 'gifts', '....', 1.000000000, 0.10, 2, 'gift_card', 0, '[\"/server/uploads/products/6998fbbba44ac0.24472211.webp\"]', NULL, 'active', 12, '2026-02-02 01:11:44'),
-(12, 2, 2, 'Valorant 1000 Points', 'valorant-1000-points', 'Instant delivery code.', 25.000000000, 0.10, 0, 'digital', 0, '[\"/server/uploads/products/6998f945730096.26491339.jpg\"]', NULL, 'active', 34, '2026-02-02 02:50:08'),
-(13, 1, 5, 'first mystery', 'first-mystery', 'first mystery  detail', 10.000000000, 0.10, 1, 'digital', 0, '[\"/server/uploads/products/6998fbb4c5f740.95288782.jfif\"]', NULL, 'active', 2, '2026-02-07 10:27:45'),
-(14, 1, 1, 'loxera software 1YEAR', 'sdsd-482', 'loxera software license key 1 year', 1.000000000, 0.10, 8, 'digital', 0, '[\"/server/uploads/products/699fd5ea7639d0.75533383.png\"]', NULL, 'active', 50, '2026-02-26 05:10:37'),
-(15, 2, 6, 'test gashy', 'test-gashy', 'ddsdsdsdsd', 100.000000000, 0.10, 4, 'physical', 0, '[\"/server/uploads/products/69a0d1969cbd83.73127799.png\"]', NULL, 'active', 40, '2026-02-26 23:04:54'),
-(16, 2, 6, 'test test', 'test-test', 'dghjsdgsdjs', 10.000000000, 0.10, 8, 'physical', 0, '[\"/server/uploads/products/69a1b695d2de12.26621603.jpg\"]', NULL, 'active', 7, '2026-02-27 15:21:57'),
-(17, 2, 3, 'test test 2', 'test-test-2', 'cmxcdxjhdgdsj', 15.000000000, 0.10, 2, 'digital', 0, '[\"/server/uploads/products/69a1b745a98b80.34502289.jpg\"]', NULL, 'active', 5, '2026-02-27 15:24:53'),
-(18, 3, 6, 'seller-2 product-1', 'seller-2-product-1-894', 'fhdjkfhdfdf', 40.000000000, 0.10, 2, 'physical', 0, '[\"/server/uploads/products/69a1ba14963073.51894396.jpg\"]', NULL, 'active', 7, '2026-02-27 15:36:52'),
-(19, 2, 5, 'mystery-1', 'mystery-1', 'djhsdjhgsjhdasgds', 50.000000000, 0.10, 1, 'mystery_box', 0, '[\"/server/uploads/products/69a1bc68603ce7.93450568.png\"]', NULL, 'active', 0, '2026-02-27 15:46:48'),
-(20, 3, 6, 'aaaa', 'aaaa', 'aaaa aaaa', 0.000000000, 0.10, 4, 'physical', 0, '[\"/server/uploads/products/69af912e5a7408.34868520.png\"]', NULL, 'active', 9, '2026-03-10 03:34:06'),
-(21, 1, 1, 'new gift', 'new-gift-672', 'new gift new gift new gift', 0.000000000, 0.00, 4, 'gift_card', 0, '[\"/server/uploads/products/69afde0779cba1.51023345.png\"]', NULL, 'active', 4, '2026-03-10 09:01:59');
+INSERT INTO `products` (`id`, `seller_id`, `category_id`, `title`, `slug`, `description`, `price_gashy`, `price_usd_peg`, `stock`, `type`, `images`, `attributes`, `status`, `views`, `created_at`) VALUES
+(1, 1, 1, 'Apple Gift Card (US) – Instant Digital Delivery', 'apple-gift-card-us-instant-digital-delivery', 'Buy Apple Gift Card (US Region) with instant digital delivery.\r\nRedeem on App Store, iTunes, Apple Music, iCloud, and all Apple services.\r\n\r\n✔ Valid for US accounts only\r\n✔ Instant code delivery\r\n✔ Secure checkout\r\n✔ 100% digital product\r\n\r\nPerfect for apps, games, subscriptions, and gifting.', 5000000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a5855c6cd1a5.64859327.png\"]', NULL, 'active', 18, '2026-03-02 12:41:00'),
+(2, 1, 1, 'PUBG Mobile UC – Instant Top Up', 'pubg-mobile-uc-instant-top-up', 'Top up your PUBG Mobile account instantly with UC credits.\r\n\r\n✔ Fast digital delivery\r\n✔ Works globally\r\n✔ Safe and secure\r\n✔ No waiting\r\n\r\nUpgrade skins, royale pass, and exclusive items instantly.', 3000000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a585f48b5666.51709512.png\"]', NULL, 'active', 10, '2026-03-02 12:43:32'),
+(3, 1, 1, 'PlayStation Network (US)', 'playstation-network-us-', 'PlayStation Network Card (US) – Instant Code\r\n\r\nDescription:\r\n\r\nPurchase PSN US card for PlayStation Store credit.\r\n\r\n✔ Valid for US accounts\r\n✔ Instant digital code\r\n✔ Safe payment\r\n✔ Works on PS4 &amp;amp; PS5\r\n\r\nBuy games, subscriptions, DLC instantly.', 5000000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a58655494ed6.92950653.png\"]', NULL, 'active', 11, '2026-03-02 12:45:09'),
+(4, 1, 1, 'Xbox Gift Card (US) – Instant Digital Code', 'xbox-gift-card-us-instant-digital-code', 'Buy Xbox US digital card instantly.\r\n\r\n✔ US region\r\n✔ Fast delivery\r\n✔ Redeem on Xbox &amp;amp; Microsoft Store\r\n✔ Secure checkout\r\n\r\nPerfect for games and subscriptions.', 5000000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a586c37780c2.59477988.png\"]', NULL, 'active', 14, '2026-03-02 12:46:59'),
+(5, 1, 1, 'Fortnite V-Bucks Card (US) – Instant Delivery', 'fortnite-v-bucks-card-us-instant-delivery', 'Recharge your Fortnite account instantly.\r\n\r\n✔ US region\r\n✔ Digital code delivery\r\n✔ Safe &amp;amp; secure\r\n✔ Instant activation\r\n\r\nBuy skins, battle pass, and upgrades.', 5000000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a58717c899b2.87738555.png\"]', NULL, 'active', 12, '2026-03-02 12:48:23'),
+(6, 1, 1, 'Free Fire Diamonds – Instant Top Up', 'free-fire-diamonds-instant-top-up', 'Buy Free Fire Diamonds instantly.\r\n\r\n✔ Fast delivery\r\n✔ Secure checkout\r\n✔ Global support\r\n\r\nUpgrade characters and skins instantly.', 5000000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a58785c7aea6.76989112.png\"]', NULL, 'active', 7, '2026-03-02 12:50:13'),
+(7, 1, 1, 'Amazon Gift Card – Instant Code', 'amazon-gift-card-instant-code', 'Buy Amazon digital gift card instantly.\r\n\r\n✔ Digital delivery\r\n✔ Safe &amp;amp; secure\r\n✔ Use for millions of products\r\n\r\nPerfect for online shopping and gifting.', 5000000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a587d35f3c76.54561429.png\"]', NULL, 'active', 9, '2026-03-02 12:51:31'),
+(8, 1, 1, 'Nintendo eShop Card (US) – Instant Delivery', 'nintendo-eshop-card-us-instant-delivery', 'Top up your Nintendo account instantly.\r\n\r\n✔ US region\r\n✔ Digital code\r\n✔ Fast activation\r\n\r\nBuy games and DLC easily.', 6500000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a588428700f9.57994480.png\"]', NULL, 'active', 11, '2026-03-02 12:53:22'),
+(9, 1, 1, 'Minecraft Gift Code – Instant Delivery', 'minecraft-gift-code-instant-delivery', 'Purchase Minecraft digital code instantly.\r\n\r\n✔ Instant code\r\n✔ Safe payment\r\n✔ Works on supported platforms\r\n\r\nStart building today.', 7500000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a588a0a01e87.17403561.png\"]', NULL, 'active', 13, '2026-03-02 12:54:56'),
+(10, 1, 1, 'Spotify Premium Gift Card (US)', 'spotify-premium-gift-card-us-', 'Activate Spotify Premium instantly.\r\n\r\n✔ US region\r\n✔ Instant digital code\r\n✔ Safe &amp;amp; secure\r\n\r\nEnjoy ad-free music.', 5000000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a588f83fa656.82082568.png\"]', NULL, 'active', 7, '2026-03-02 12:56:24'),
+(11, 1, 1, 'eBay Gift Card – Instant Digital Code', 'ebay-gift-card-instant-digital-code', 'Shop on eBay using digital gift card.\r\n\r\n✔ Instant delivery\r\n✔ Secure checkout\r\n✔ Easy redemption\r\n\r\nPerfect for online shopping.', 5000000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a58937bc2b56.17375323.png\"]', NULL, 'active', 7, '2026-03-02 12:57:27'),
+(12, 1, 3, 'McAfee Antivirus Digital Key – Instant Activation', 'mcafee-antivirus-digital-key-instant-activation', 'Protect your devices with McAfee.\r\n\r\n✔ Instant license key\r\n✔ Secure delivery\r\n✔ Digital activation\r\n\r\nReliable cybersecurity protection.', 100000000.000000000, NULL, 10, 'digital', '[\"/server/uploads/products/69a58a348bc994.26823379.png\"]', NULL, 'active', 6, '2026-03-02 13:01:40'),
+(13, 1, 1, 'Likee Recharge – Instant Top Up', 'likee-recharge-instant-top-up', 'Recharge your Likee account instantly.\r\n\r\n✔ Fast digital delivery\r\n✔ Secure checkout\r\n✔ Instant activation\r\n\r\nBoost your presence.', 9750000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a58ab7b18058.07603675.png\"]', NULL, 'active', 8, '2026-03-02 13:03:51'),
+(14, 1, 1, 'Bigo Live Diamonds – Instant Recharge', 'bigo-live-diamonds-instant-recharge', 'Recharge Bigo Live diamonds instantly.\r\n\r\n✔ Instant delivery\r\n✔ Secure payment\r\n✔ Safe checkout\r\n\r\nSupport your favorite creators.', 3750000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a58b599b2794.46398536.png\"]', NULL, 'active', 7, '2026-03-02 13:06:33'),
+(15, 1, 1, 'GameStop Gift Card – Instant Digital Code', 'gamestop-gift-card-instant-digital-code', 'Purchase GameStop digital gift card instantly.\r\n\r\n✔ Instant email delivery\r\n✔ Secure checkout\r\n✔ Valid for online purchases\r\n✔ Perfect for gamers\r\n\r\nShop consoles, games, and accessories easily.', 8000000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a58b9654b0b3.65303702.png\"]', NULL, 'active', 11, '2026-03-02 13:07:34'),
+(16, 1, 1, 'Twitch Gift Card (US) – Instant Code', 'twitch-gift-card-us-instant-code', 'Support your favorite streamers instantly.\r\n\r\n✔ US region\r\n✔ Instant digital delivery\r\n✔ Secure payment\r\n✔ Easy redemption\r\n\r\nBuy subscriptions and bits easily.', 6500000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a58bdf621e85.53753458.png\"]', NULL, 'active', 11, '2026-03-02 13:08:47'),
+(17, 1, 1, 'Viber Out Credit – Instant Recharge', 'viber-out-credit-instant-recharge', 'Recharge your Viber account instantly.\r\n\r\n✔ Instant digital delivery\r\n✔ Secure checkout\r\n✔ Works for international calls\r\n\r\nStay connected worldwide.', 3500000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a58c1bd07f69.27198719.png\"]', NULL, 'active', 9, '2026-03-02 13:09:47'),
+(18, 1, 1, 'Hulu Gift Card – Instant Activation', 'hulu-gift-card-instant-activation', 'Subscribe to Hulu instantly.\r\n\r\n✔ Digital delivery\r\n✔ Secure checkout\r\n✔ Fast activation\r\n\r\nStream your favorite shows.', 9500000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a58ca31398a7.97119963.png\"]', NULL, 'active', 7, '2026-03-02 13:12:03'),
+(19, 1, 1, 'Apex Legends Coins – Instant Top Up', 'apex-legends-coins-instant-top-up', 'Recharge Apex Legends instantly.\r\n\r\n✔ Instant digital code\r\n✔ Secure checkout\r\n✔ Fast delivery\r\n\r\nUpgrade your battle pass and skins.', 10000000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a58cd6eb8206.23041110.png\"]', NULL, 'active', 11, '2026-03-02 13:12:54'),
+(20, 1, 1, 'Kaspersky Antivirus Key – Instant Digital License', 'kaspersky-antivirus-key-instant-digital-license', 'Protect your devices with Kaspersky.\r\n\r\n✔ Instant license key\r\n✔ Digital delivery\r\n✔ Secure activation\r\n\r\nReliable cybersecurity protection.', 8000000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a58d0c7c7271.67805686.png\"]', NULL, 'active', 8, '2026-03-02 13:13:48'),
+(21, 1, 1, 'Discord Nitro – Instant Activation', 'discord-nitro-instant-activation', 'Upgrade your Discord experience instantly.\r\n\r\n✔ Instant digital delivery\r\n✔ Secure checkout\r\n✔ Fast activation\r\n\r\nUnlock premium features.', 9500000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a58d50686747.69078619.png\"]', NULL, 'active', 14, '2026-03-02 13:14:56'),
+(22, 1, 1, 'EA Play Membership – Instant Code', 'ea-play-membership-instant-code', 'Access premium EA games instantly.\r\n\r\n✔ Digital code delivery\r\n✔ Secure checkout\r\n✔ Fast activation\r\n\r\nPlay more, pay less.', 6750000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a58dd32dcce6.47397092.png\"]', NULL, 'active', 9, '2026-03-02 13:17:07'),
+(23, 1, 1, 'Genshin Impact Genesis Crystals – Instant Top Up', 'genshin-impact-genesis-crystals-instant-top-up', 'Recharge your Genshin Impact account instantly.\r\n\r\n✔ Fast digital delivery\r\n✔ Secure checkout\r\n✔ Global support\r\n\r\nUnlock characters and weapons instantly.', 9500000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a58e677091c4.75512206.png\"]', NULL, 'active', 8, '2026-03-02 13:19:35'),
+(24, 1, 1, 'Honor of Kings Tokens – Instant Top Up', 'honor-of-kings-tokens-instant-top-up', 'Recharge Honor of Kings instantly.\r\n\r\n✔ Digital delivery\r\n✔ Secure checkout\r\n✔ Fast activation\r\n\r\nUpgrade heroes and skins.', 11000000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a58ece44fc49.84632161.png\"]', NULL, 'active', 9, '2026-03-02 13:21:18'),
+(25, 1, 1, 'Black Clover Mobile Diamonds – Instant Recharge', 'black-clover-mobile-diamonds-instant-recharge', 'Top up your Black Clover account instantly.\r\n\r\n✔ Instant digital delivery\r\n✔ Secure checkout\r\n✔ Fast activation\r\n\r\nUpgrade your magic squad.', 9000000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a58f1da24059.67091492.png\"]', NULL, 'active', 18, '2026-03-02 13:22:37'),
+(26, 1, 1, 'Blizzard Gift Card (USA) – Instant Code', 'blizzard-gift-card-usa-instant-code', 'Recharge Blizzard balance instantly.\r\n\r\n✔ US region\r\n✔ Instant delivery\r\n✔ Secure checkout\r\n\r\nBuy games and in-game items easily.', 9000000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a58f6f94b0b9.42744468.png\"]', NULL, 'active', 19, '2026-03-02 13:23:59'),
+(27, 1, 1, 'Roblox Gift Card (Region) – Instant Delivery', 'roblox-gift-card-region-instant-delivery', 'Recharge your Roblox account instantly.\r\n\r\n✔ Region-specific\r\n✔ Instant digital code\r\n✔ Secure checkout\r\n\r\nBuy Robux safely and quickly.', 9000000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a58fad188364.10679348.png\"]', NULL, 'active', 20, '2026-03-02 13:25:01'),
+(28, 1, 1, 'Netflix Gift Card (US) – Instant Activation', 'netflix-gift-card-us-instant-activation', 'Subscribe to Netflix instantly.\r\n\r\n✔ US region\r\n✔ Digital delivery\r\n✔ Secure checkout\r\n\r\nStream movies and shows easily.', 150000000.000000000, NULL, 1, 'gift_card', '[\"/server/uploads/products/69a58fed6e2358.87588839.png\"]', NULL, 'active', 21, '2026-03-02 13:26:05'),
+(29, 1, 1, 'Steam Gift Card (EUR) – Instant Code', 'steam-gift-card-eur-instant-code', 'Top up your Steam wallet instantly.\r\n\r\n✔ Europe region\r\n✔ Instant digital code\r\n✔ Secure checkout\r\n\r\nBuy games easily.', 5000000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a5902bc94e29.95996885.png\"]', NULL, 'active', 21, '2026-03-02 13:27:07'),
+(30, 1, 1, 'Call of Duty Points (Xbox) – Instant Top Up', 'call-of-duty-points-xbox-instant-top-up', 'Recharge your Call of Duty account instantly.\r\n\r\n✔ Xbox compatible\r\n✔ Instant delivery\r\n✔ Secure checkout\r\n\r\nUnlock skins and battle pass.', 9000000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a590610b87c9.21373443.png\"]', NULL, 'active', 20, '2026-03-02 13:28:01'),
+(31, 1, 1, 'Airbnb Gift Card – Instant Digital Code', 'airbnb-gift-card-instant-digital-code', 'Book your next stay instantly.\r\n\r\n✔ Digital delivery\r\n✔ Secure checkout\r\n✔ Easy redemption\r\n\r\nPerfect for travel.', 9500000.000000000, NULL, 10, 'gift_card', '[\"/server/uploads/products/69a590954edb26.77306889.png\"]', NULL, 'active', 19, '2026-03-02 13:28:53'),
+(32, 1, 5, 'Gashy Mystery Box – Digital Surprise Drop', 'gashy-mystery-box-digital-surprise-drop', 'Unlock a surprise digital reward instantly.\r\n\r\nInside every Gashy Mystery Box, you receive one random digital product from our premium collection.\r\n\r\n✔ Instant digital delivery\r\n✔ Guaranteed value\r\n✔ Gaming, streaming, or shopping cards\r\n✔ Secure &amp;amp; fair system\r\n\r\nPossible rewards include:\r\n\r\n• Gaming credits (PUBG, Roblox, Steam, etc.)\r\n• Gift cards (Amazon, PlayStation, Xbox, etc.)\r\n• Streaming subscriptions\r\n• Premium digital services\r\n\r\nEach box contains equal or higher value than purchase price.\r\n\r\nBuy, open, and discover your reward instantly.', 15000000.000000000, NULL, 10, 'mystery_box', '[\"/server/uploads/products/69a591090f5012.54013300.png\"]', NULL, 'active', 24, '2026-03-02 13:30:49');
 
 -- --------------------------------------------------------
 
@@ -580,9 +575,7 @@ CREATE TABLE `sellers` (
 --
 
 INSERT INTO `sellers` (`account_id`, `store_name`, `store_slug`, `commission_rate`, `rating`, `total_sales`, `is_approved`) VALUES
-(1, 'Garduny One', 'gashy-official', 5.00, 5.00, 0, 1),
-(2, 'CryptoKing Store', 'crypto-king', 5.00, 4.80, 0, 1),
-(3, 'Garduny Two', 'devseller', 5.00, 0.00, 0, 1);
+(1, 'Gashy Official Store', 'gashy-official', 5.00, 5.00, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -607,9 +600,9 @@ INSERT INTO `settings` (`id`, `key_name`, `value`) VALUES
 (4, 'maintenance_mode', '0'),
 (5, 'burn_address', '1nc1nerator11111111111111111111111111111111'),
 (6, 'email', 'darinkrd2020@gmail.com'),
-(7, 'token_address', 'DokPYQ33k3T9S7EEesvwvuuAtoQb4pY8NWszukKwXWjv'),
-(8, 'heluis', '1fca693b-e96d-42f8-94b7-ab1c5bb0c9ed'),
-(9, 'site_logo', '/server/uploads/setting/69ad29574a8441.54000284.png');
+(7, 'logo', 'https://api.phantom.app/image-proxy/?image=https%3A%2F%2Fcoin-images.coingecko.com%2Fcoins%2Fimages%2F69906%2Flarge%2FUntitled_design_%25282%2529.png%3F1767493770&amp;anim=false&amp;fit=cover&amp;width=128&amp;height=128'),
+(8, 'token_address', 'DokPYQ33k3T9S7EEesvwvuuAtoQb4pY8NWszukKwXWjv'),
+(9, 'heluis', '1fca693b-e96d-42f8-94b7-ab1c5bb0c9ed');
 
 -- --------------------------------------------------------
 
@@ -629,7 +622,16 @@ CREATE TABLE `system_rate_limits` (
 --
 
 INSERT INTO `system_rate_limits` (`ip_address`, `endpoint`, `requests`, `reset_time`) VALUES
-('::1', 'global_api', 9, 1773340422);
+('102.90.102.12', 'global_api', 3, 1773182398),
+('104.197.69.115', 'global_api', 1, 1773267834),
+('154.47.30.41', 'global_api', 1, 1773296949),
+('181.41.202.167', 'global_api', 1, 1773297204),
+('202.8.41.33', 'global_api', 1, 1773194041),
+('205.169.39.200', 'global_api', 1, 1773238526),
+('34.118.122.200', 'global_api', 1, 1773181489),
+('34.123.170.104', 'global_api', 2, 1773181377),
+('54.39.89.118', 'auth_attempt', 1, 1773278830),
+('66.249.70.36', 'global_api', 1, 1773218559);
 
 -- --------------------------------------------------------
 
@@ -676,7 +678,8 @@ CREATE TABLE `transactions` (
 --
 
 INSERT INTO `transactions` (`id`, `account_id`, `type`, `amount`, `tx_signature`, `reference_id`, `status`, `created_at`) VALUES
-(1, 1, 'purchase', -7368.421052632, '2wMpugtjNCbBRypYbMTyp7H6Pq3zLft1PeRVuuQqMUsMxgDCk9VCNjh6FMpLJJxEoV9rqL6BkPEqzU4VGQnnusMg', 1, 'confirmed', '2026-03-10 06:47:51');
+(1, 2, 'auction_bid', 270000.000000000, 'BID_1772458415_2', 1, 'pending', '2026-03-02 13:33:35'),
+(2, 2, 'lottery_ticket', -100.000000000, '4NE8iWWx5UhVTmU9zvaiK49D449wKnHS7zdwof3nTpHoDqG5rooQrX88p8RwQ87DaiBtt29D8nAD4komoi34Hku1', 1, 'confirmed', '2026-03-02 13:34:56');
 
 -- --------------------------------------------------------
 
@@ -703,8 +706,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `role_id`, `username`, `email`, `password`, `avatar`, `is_active`, `created_at`, `updated_at`, `otp_code`, `otp_expires`) VALUES
-(1, 1, 'garduny', 'gardunydeveloper@gmail.com', '$2y$10$4OZPo3/fyf/Im87BpGzKTe4IKeJi1eKn.AnyjScOl0uHKZxDCjGZu', '/server/uploads/users/69ad29109201b6.23697789.png', 1, '2026-01-23 15:28:44', '2026-03-12 17:44:41', NULL, NULL),
-(2, 1, 'shalaw', 'darinkrd2020@gmail.com', '$2y$10$TVnDIUB2wBP8RGmLr5Ze2O1O4C5i5.6YuXCVV5.3bGnGmeK.QnyvC', NULL, 1, '2026-01-23 16:21:13', '2026-01-31 00:54:32', NULL, NULL);
+(1, 1, 'garduny', 'gardunydeveloper@gmail.com', '$2y$10$4OZPo3/fyf/Im87BpGzKTe4IKeJi1eKn.AnyjScOl0uHKZxDCjGZu', 'https://api.phantom.app/image-proxy/?image=https%3A%2F%2Fcoin-images.coingecko.com%2Fcoins%2Fimages%2F69906%2Flarge%2FUntitled_design_%25282%2529.png%3F1767493770&amp;anim=false&amp;fit=cover&amp;width=128&amp;height=128', 1, '2026-01-23 15:28:44', '2026-02-27 15:20:55', NULL, NULL),
+(2, 1, 'Gashy', 'darinkrd2020@gmail.com', '$2y$10$TVnDIUB2wBP8RGmLr5Ze2O1O4C5i5.6YuXCVV5.3bGnGmeK.QnyvC', 'https://gashycoin.com/img/logo.png', 1, '2026-01-23 16:21:13', '2026-03-02 13:41:16', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -741,7 +744,7 @@ CREATE TABLE `user_sessions` (
 --
 
 INSERT INTO `user_sessions` (`id`, `user_id`, `token`, `ip_address`, `user_agent`, `expires_at`, `created_at`) VALUES
-(1, 1, '77f193c0a1e2b67b784c21506cef9a73ba78aee448170a0c5da84d5f15191fa4', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36', '2026-04-11 20:44:41', '2026-03-12 17:44:41');
+(1, 2, 'a51626da44ae00bd3085381b47fb5218d2b25628abb4b7e794f28ab7c95b4fe0', '185.244.152.150', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0', '2026-04-01 15:13:44', '2026-03-02 12:13:44');
 
 -- --------------------------------------------------------
 
@@ -752,7 +755,7 @@ INSERT INTO `user_sessions` (`id`, `user_id`, `token`, `ip_address`, `user_agent
 CREATE TABLE `view_auctions_live` (
 `id` bigint(20) unsigned
 ,`end_time` datetime
-,`current_bid_usd` decimal(20,8)
+,`current_bid` decimal(20,9)
 ,`status` enum('pending','active','ended','cancelled')
 ,`title` varchar(255)
 ,`images` longtext
@@ -770,7 +773,6 @@ CREATE TABLE `view_products_marketplace` (
 ,`title` varchar(255)
 ,`slug` varchar(255)
 ,`price_gashy` decimal(20,9)
-,`price_usd` decimal(12,2)
 ,`type` enum('gift_card','digital','nft','physical','mystery_box')
 ,`images` longtext
 ,`stock` int(10) unsigned
@@ -795,32 +797,6 @@ CREATE TABLE `withdrawals` (
   `tx_signature` varchar(88) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `withdrawals`
---
-
-INSERT INTO `withdrawals` (`id`, `account_id`, `amount`, `status`, `tx_signature`, `created_at`) VALUES
-(1, 3, 1.000000000, 'pending', NULL, '2026-03-10 07:22:21'),
-(2, 3, 7100.000000000, 'pending', NULL, '2026-03-10 07:42:51');
-
--- --------------------------------------------------------
-
---
--- Structure for view `view_auctions_live`
---
-DROP TABLE IF EXISTS `view_auctions_live`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_auctions_live`  AS SELECT `a`.`id` AS `id`, `a`.`end_time` AS `end_time`, `a`.`current_bid_usd` AS `current_bid_usd`, `a`.`status` AS `status`, `p`.`title` AS `title`, `p`.`images` AS `images`, `p`.`slug` AS `product_slug` FROM (`auctions` `a` join `products` `p` on(`a`.`product_id` = `p`.`id`)) WHERE `a`.`status` = 'active' AND `a`.`end_time` > current_timestamp() ;
-
--- --------------------------------------------------------
-
---
--- Structure for view `view_products_marketplace`
---
-DROP TABLE IF EXISTS `view_products_marketplace`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_products_marketplace`  AS SELECT `p`.`id` AS `id`, `p`.`title` AS `title`, `p`.`slug` AS `slug`, `p`.`price_gashy` AS `price_gashy`, `p`.`price_usd` AS `price_usd`, `p`.`type` AS `type`, `p`.`images` AS `images`, `p`.`stock` AS `stock`, `c`.`name` AS `category_name`, `c`.`slug` AS `category_slug`, `s`.`store_name` AS `store_name`, `s`.`rating` AS `seller_rating`, `s`.`is_approved` AS `is_approved` FROM ((`products` `p` join `categories` `c` on(`p`.`category_id` = `c`.`id`)) join `sellers` `s` on(`p`.`seller_id` = `s`.`account_id`)) WHERE `p`.`status` = 'active' AND `p`.`stock` > 0 AND `s`.`is_approved` = 1 ;
 
 --
 -- Indexes for dumped tables
@@ -900,15 +876,6 @@ ALTER TABLE `categories`
 --
 ALTER TABLE `gift_cards`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `product_id` (`product_id`),
-  ADD KEY `gift_card_option_id` (`gift_card_option_id`),
-  ADD KEY `idx_gift_cards_option` (`gift_card_option_id`,`is_sold`);
-
---
--- Indexes for table `gift_card_options`
---
-ALTER TABLE `gift_card_options`
-  ADD PRIMARY KEY (`id`),
   ADD KEY `product_id` (`product_id`);
 
 --
@@ -984,8 +951,7 @@ ALTER TABLE `orders`
 ALTER TABLE `order_items`
   ADD PRIMARY KEY (`id`),
   ADD KEY `order_id` (`order_id`),
-  ADD KEY `product_id` (`product_id`),
-  ADD KEY `gift_card_option_id` (`gift_card_option_id`);
+  ADD KEY `product_id` (`product_id`);
 
 --
 -- Indexes for table `permissions`
@@ -1098,7 +1064,7 @@ ALTER TABLE `withdrawals`
 -- AUTO_INCREMENT for table `accounts`
 --
 ALTER TABLE `accounts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `account_quests`
@@ -1116,7 +1082,7 @@ ALTER TABLE `account_referrals`
 -- AUTO_INCREMENT for table `account_sessions`
 --
 ALTER TABLE `account_sessions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `activity_log`
@@ -1128,7 +1094,7 @@ ALTER TABLE `activity_log`
 -- AUTO_INCREMENT for table `auctions`
 --
 ALTER TABLE `auctions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `banners`
@@ -1140,7 +1106,7 @@ ALTER TABLE `banners`
 -- AUTO_INCREMENT for table `burn_log`
 --
 ALTER TABLE `burn_log`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -1152,31 +1118,25 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `gift_cards`
 --
 ALTER TABLE `gift_cards`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `gift_card_options`
---
-ALTER TABLE `gift_card_options`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `lottery_entries`
 --
 ALTER TABLE `lottery_entries`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `lottery_rounds`
 --
 ALTER TABLE `lottery_rounds`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `mystery_box_loot`
 --
 ALTER TABLE `mystery_box_loot`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `nft_burns`
@@ -1212,13 +1172,13 @@ ALTER TABLE `nft_mints`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `permissions`
@@ -1230,7 +1190,7 @@ ALTER TABLE `permissions`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `quests`
@@ -1254,7 +1214,7 @@ ALTER TABLE `settings`
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -1278,7 +1238,25 @@ ALTER TABLE `user_sessions`
 -- AUTO_INCREMENT for table `withdrawals`
 --
 ALTER TABLE `withdrawals`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `view_auctions_live`
+--
+DROP TABLE IF EXISTS `view_auctions_live`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`gashybazaar`@`localhost` SQL SECURITY DEFINER VIEW `view_auctions_live`  AS SELECT `a`.`id` AS `id`, `a`.`end_time` AS `end_time`, `a`.`current_bid` AS `current_bid`, `a`.`status` AS `status`, `p`.`title` AS `title`, `p`.`images` AS `images`, `p`.`slug` AS `product_slug` FROM (`auctions` `a` join `products` `p` on(`a`.`product_id` = `p`.`id`)) WHERE `a`.`status` = 'active' AND `a`.`end_time` > current_timestamp() ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `view_products_marketplace`
+--
+DROP TABLE IF EXISTS `view_products_marketplace`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`gashybazaar`@`localhost` SQL SECURITY DEFINER VIEW `view_products_marketplace`  AS SELECT `p`.`id` AS `id`, `p`.`title` AS `title`, `p`.`slug` AS `slug`, `p`.`price_gashy` AS `price_gashy`, `p`.`type` AS `type`, `p`.`images` AS `images`, `p`.`stock` AS `stock`, `c`.`name` AS `category_name`, `c`.`slug` AS `category_slug`, `s`.`store_name` AS `store_name`, `s`.`rating` AS `seller_rating`, `s`.`is_approved` AS `is_approved` FROM ((`products` `p` join `categories` `c` on(`p`.`category_id` = `c`.`id`)) join `sellers` `s` on(`p`.`seller_id` = `s`.`account_id`)) WHERE `p`.`status` = 'active' AND `p`.`stock` > 0 AND `s`.`is_approved` = 1 ;
 
 --
 -- Constraints for dumped tables

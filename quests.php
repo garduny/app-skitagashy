@@ -189,10 +189,12 @@ require_once 'sidebar.php';
 </main>
 <script>
     document.addEventListener('DOMContentLoaded', async () => {
-        if (!App.state.token) {
-            window.location.href = 'app.php';
-            return;
-        }
+        setTimeout(() => {
+            if (!App.state.token) {
+                window.location.href = 'app.php';
+                return;
+            }
+        }, 2000);
         updateBalanceDisplay();
         await loadQuests();
     });

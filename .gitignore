@@ -5,3 +5,6 @@
 /.cache/*
 !/.cache/.htaccess
 !/.cache/queries/
+
+/server/uploads/products/*
+!/server/uploads/products/.gitkeep

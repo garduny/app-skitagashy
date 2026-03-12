@@ -2,18 +2,17 @@
 if (file_exists('../../server/init.php')) require_once '../../server/init.php';
 else exit;
 $token = request('token', 'post') ?? str_replace('Bearer ', '', $_SERVER['HTTP_AUTHORIZATION'] ?? '');
-$session = findQuery(" SELECT account_id FROM account_sessions WHERE token='$token' AND expires_at>NOW()");
+$session = findQuery(" SELECT account_id FROM account_sessions WHERE token='$token' AND expires_at>NOW() ");
 if (!$session) {
     ob_clean();
     encode(['status' => false, 'message' => 'Unauthorized']);
 }
 $uid = $session['account_id'];
-$seller = findQuery(" SELECT account_id FROM sellers WHERE account_id=$uid AND is_approved=1");
+$seller = findQuery(" SELECT account_id FROM sellers WHERE account_id=$uid AND is_approved=1 ");
 if (!$seller) {
     ob_clean();
     encode(['status' => false, 'message' => 'Seller permission denied']);
 }
-$rate = toGashy();
 $action = request('action', 'post');
 if ($action === 'delete') {
     $pid = (int)request('id', 'post');
@@ -25,8 +24,7 @@ if ($action === 'save') {
     $id = (int)request('id', 'post');
     $title = secure(request('title', 'post'));
     $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $title))) . '-' . rand(100, 999);
-    $price_gashy = (float)request('price', 'post');
-    $price_usd = $price_gashy * $rate;
+    $price_usd = (float)request('price', 'post');
     $stock = (int)request('stock', 'post');
     $type = secure(request('type', 'post'));
     $cat = (int)request('category_id', 'post');

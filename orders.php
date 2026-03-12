@@ -33,10 +33,6 @@ require_once 'sidebar.php';
         --glow: rgba(0, 229, 195, 0.06)
     }
 
-    * {
-        font-family: 'Syne', sans-serif
-    }
-
     .mono {
         font-family: 'Space Mono', monospace
     }

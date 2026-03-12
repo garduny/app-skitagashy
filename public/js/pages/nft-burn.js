@@ -2,10 +2,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const checkAuth = setInterval(async () => {
         if (App.state.token && !App.state.account) return;
         clearInterval(checkAuth);
-        if (!App.state.token) {
-            window.location.href = 'app.php';
-            return;
-        }
+        setTimeout(() => {
+            if (!App.state.token) {
+                window.location.href = 'app.php';
+                return;
+            }
+        }, 2000);
         loadOwnedNFTs();
     }, 100);
 });
