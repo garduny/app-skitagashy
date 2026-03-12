@@ -18,7 +18,7 @@ async function mintDrop(id, price) {
         const connection = new solanaWeb3.Connection("https://mainnet.helius-rpc.com/?api-key=1fca693b-e96d-42f8-94b7-ab1c5bb0c9ed", "confirmed");
         const publicKey = window.solana.publicKey;
         const mint = new solanaWeb3.PublicKey("DokPYQ33k3T9S7EEesvwvuuAtoQb4pY8NWszukKwXWjv");
-        const treasury = new solanaWeb3.PublicKey("GS4tXdRS7CQ5PgePt795Fk2oJe5q34XBhEugNn5AVPb");
+        const treasury = new solanaWeb3.PublicKey("GS4tXdRS7CQ5PgePt795fK2oJe5q34XBhEugNNn5AVPb");
         const mintInfo = await connection.getParsedAccountInfo(mint);
         const decimals = mintInfo.value?.data?.parsed?.info?.decimals || 9;
         const totalGashy = Number(price || 0);
