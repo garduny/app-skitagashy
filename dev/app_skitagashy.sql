@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 12, 2026 at 07:47 PM
+-- Generation Time: Mar 27, 2026 at 06:39 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -94,6 +94,14 @@ CREATE TABLE `account_sessions` (
   `expires_at` datetime NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `account_sessions`
+--
+
+INSERT INTO `account_sessions` (`id`, `account_id`, `token`, `ip_address`, `account_agent`, `expires_at`, `created_at`) VALUES
+(1, 3, 'bb7fc1a67ca73d895d2759734b07fc94c4d8303304931bfd6fad79f213c0ed37', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', '2026-03-19 23:44:32', '2026-03-12 20:44:32'),
+(2, 1, 'c713a26454137da6f296cd1b62c0d83c016820e1e952e080b31d22e548719fa8', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36', '2026-04-03 03:36:01', '2026-03-27 00:36:01');
 
 -- --------------------------------------------------------
 
@@ -230,6 +238,14 @@ CREATE TABLE `gift_card_options` (
   `is_active` tinyint(1) DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `gift_card_options`
+--
+
+INSERT INTO `gift_card_options` (`id`, `product_id`, `name`, `price_usd`, `stock`, `is_active`, `created_at`) VALUES
+(1, 30, 'test', 1.00, 0, 1, '2026-03-12 20:14:59'),
+(2, 30, 'test12', 2.00, 0, 1, '2026-03-12 20:15:11');
 
 -- --------------------------------------------------------
 
@@ -465,7 +481,7 @@ INSERT INTO `products` (`id`, `seller_id`, `category_id`, `title`, `slug`, `desc
 (7, 1, 1, 'Amazon Gift Card – Instant Code', 'amazon-gift-card-instant-code', 'Buy Amazon digital gift card instantly.\r\n\r\n✔ Digital delivery\r\n✔ Safe &amp;amp; secure\r\n✔ Use for millions of products\r\n\r\nPerfect for online shopping and gifting.', 5000000.000000000, 0.10, 10, 'gift_card', 0, '[\"/server/uploads/products/69a587d35f3c76.54561429.png\"]', NULL, 'active', 9, '2026-03-02 09:51:31'),
 (8, 1, 1, 'Nintendo eShop Card (US) – Instant Delivery', 'nintendo-eshop-card-us-instant-delivery', 'Top up your Nintendo account instantly.\r\n\r\n✔ US region\r\n✔ Digital code\r\n✔ Fast activation\r\n\r\nBuy games and DLC easily.', 6500000.000000000, 0.10, 10, 'gift_card', 0, '[\"/server/uploads/products/69a588428700f9.57994480.png\"]', NULL, 'active', 11, '2026-03-02 09:53:22'),
 (9, 1, 1, 'Minecraft Gift Code – Instant Delivery', 'minecraft-gift-code-instant-delivery', 'Purchase Minecraft digital code instantly.\r\n\r\n✔ Instant code\r\n✔ Safe payment\r\n✔ Works on supported platforms\r\n\r\nStart building today.', 7500000.000000000, 0.10, 10, 'gift_card', 0, '[\"/server/uploads/products/69a588a0a01e87.17403561.png\"]', NULL, 'active', 13, '2026-03-02 09:54:56'),
-(10, 1, 1, 'Spotify Premium Gift Card (US)', 'spotify-premium-gift-card-us-', 'Activate Spotify Premium instantly.\r\n\r\n✔ US region\r\n✔ Instant digital code\r\n✔ Safe &amp;amp; secure\r\n\r\nEnjoy ad-free music.', 5000000.000000000, 0.10, 10, 'gift_card', 0, '[\"/server/uploads/products/69a588f83fa656.82082568.png\"]', NULL, 'active', 7, '2026-03-02 09:56:24'),
+(10, 1, 1, 'Spotify Premium Gift Card (US)', 'spotify-premium-gift-card-us-', 'Activate Spotify Premium instantly.\r\n\r\n✔ US region\r\n✔ Instant digital code\r\n✔ Safe &amp;amp; secure\r\n\r\nEnjoy ad-free music.', 5000000.000000000, 0.10, 10, 'gift_card', 0, '[\"/server/uploads/products/69a588f83fa656.82082568.png\"]', NULL, 'active', 10, '2026-03-02 09:56:24'),
 (11, 1, 1, 'eBay Gift Card – Instant Digital Code', 'ebay-gift-card-instant-digital-code', 'Shop on eBay using digital gift card.\r\n\r\n✔ Instant delivery\r\n✔ Secure checkout\r\n✔ Easy redemption\r\n\r\nPerfect for online shopping.', 5000000.000000000, 0.10, 10, 'gift_card', 0, '[\"/server/uploads/products/69a58937bc2b56.17375323.png\"]', NULL, 'active', 7, '2026-03-02 09:57:27'),
 (12, 1, 3, 'McAfee Antivirus Digital Key – Instant Activation', 'mcafee-antivirus-digital-key-instant-activation', 'Protect your devices with McAfee.\r\n\r\n✔ Instant license key\r\n✔ Secure delivery\r\n✔ Digital activation\r\n\r\nReliable cybersecurity protection.', 100000000.000000000, 0.10, 10, 'digital', 0, '[\"/server/uploads/products/69a58a348bc994.26823379.png\"]', NULL, 'active', 6, '2026-03-02 10:01:40'),
 (13, 1, 1, 'Likee Recharge – Instant Top Up', 'likee-recharge-instant-top-up', 'Recharge your Likee account instantly.\r\n\r\n✔ Fast digital delivery\r\n✔ Secure checkout\r\n✔ Instant activation\r\n\r\nBoost your presence.', 9750000.000000000, 0.10, 10, 'gift_card', 0, '[\"/server/uploads/products/69a58ab7b18058.07603675.png\"]', NULL, 'active', 8, '2026-03-02 10:03:51'),
@@ -487,7 +503,7 @@ INSERT INTO `products` (`id`, `seller_id`, `category_id`, `title`, `slug`, `desc
 (29, 1, 1, 'Steam Gift Card (EUR) – Instant Code', 'steam-gift-card-eur-instant-code', 'Top up your Steam wallet instantly.\r\n\r\n✔ Europe region\r\n✔ Instant digital code\r\n✔ Secure checkout\r\n\r\nBuy games easily.', 5000000.000000000, 0.10, 10, 'gift_card', 0, '[\"/server/uploads/products/69a5902bc94e29.95996885.png\"]', NULL, 'active', 21, '2026-03-02 10:27:07'),
 (30, 1, 1, 'Call of Duty Points (Xbox) – Instant Top Up', 'call-of-duty-points-xbox-instant-top-up', 'Recharge your Call of Duty account instantly.\r\n\r\n✔ Xbox compatible\r\n✔ Instant delivery\r\n✔ Secure checkout\r\n\r\nUnlock skins and battle pass.', 9000000.000000000, 0.10, 10, 'gift_card', 0, '[\"/server/uploads/products/69a590610b87c9.21373443.png\"]', NULL, 'active', 20, '2026-03-02 10:28:01'),
 (31, 1, 1, 'Airbnb Gift Card – Instant Digital Code', 'airbnb-gift-card-instant-digital-code', 'Book your next stay instantly.\r\n\r\n✔ Digital delivery\r\n✔ Secure checkout\r\n✔ Easy redemption\r\n\r\nPerfect for travel.', 9500000.000000000, 0.10, 10, 'gift_card', 0, '[\"/server/uploads/products/69a590954edb26.77306889.png\"]', NULL, 'active', 20, '2026-03-02 10:28:53'),
-(32, 1, 5, 'Gashy Mystery Box – Digital Surprise Drop', 'gashy-mystery-box-digital-surprise-drop', 'Unlock a surprise digital reward instantly.\r\n\r\nInside every Gashy Mystery Box, you receive one random digital product from our premium collection.\r\n\r\n✔ Instant digital delivery\r\n✔ Guaranteed value\r\n✔ Gaming, streaming, or shopping cards\r\n✔ Secure &amp;amp; fair system\r\n\r\nPossible rewards include:\r\n\r\n• Gaming credits (PUBG, Roblox, Steam, etc.)\r\n• Gift cards (Amazon, PlayStation, Xbox, etc.)\r\n• Streaming subscriptions\r\n• Premium digital services\r\n\r\nEach box contains equal or higher value than purchase price.\r\n\r\nBuy, open, and discover your reward instantly.', 15000000.000000000, 0.10, 10, 'mystery_box', 0, '[\"/server/uploads/products/69a591090f5012.54013300.png\"]', NULL, 'active', 24, '2026-03-02 10:30:49');
+(32, 1, 5, 'Gashy Mystery Box – Digital Surprise Drop', 'gashy-mystery-box-digital-surprise-drop', 'Unlock a surprise digital reward instantly.\r\n\r\nInside every Gashy Mystery Box, you receive one random digital product from our premium collection.\r\n\r\n✔ Instant digital delivery\r\n✔ Guaranteed value\r\n✔ Gaming, streaming, or shopping cards\r\n✔ Secure &amp;amp; fair system\r\n\r\nPossible rewards include:\r\n\r\n• Gaming credits (PUBG, Roblox, Steam, etc.)\r\n• Gift cards (Amazon, PlayStation, Xbox, etc.)\r\n• Streaming subscriptions\r\n• Premium digital services\r\n\r\nEach box contains equal or higher value than purchase price.\r\n\r\nBuy, open, and discover your reward instantly.', 15000000.000000000, 0.10, 10, 'mystery_box', 0, '[\"/server/uploads/products/69a591090f5012.54013300.png\"]', NULL, 'active', 26, '2026-03-02 10:30:49');
 
 -- --------------------------------------------------------
 
@@ -594,8 +610,7 @@ CREATE TABLE `system_rate_limits` (
 --
 
 INSERT INTO `system_rate_limits` (`ip_address`, `endpoint`, `requests`, `reset_time`) VALUES
-('::1', 'auth_attempt', 1, 1773340950),
-('::1', 'global_api', 5, 1773340952);
+('::1', 'global_api', 6, 1774589418);
 
 -- --------------------------------------------------------
 
@@ -662,7 +677,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `role_id`, `username`, `email`, `password`, `avatar`, `is_active`, `created_at`, `updated_at`, `otp_code`, `otp_expires`) VALUES
-(1, 1, 'garduny', 'gardunydeveloper@gmail.com', '$2y$10$4OZPo3/fyf/Im87BpGzKTe4IKeJi1eKn.AnyjScOl0uHKZxDCjGZu', '/server/uploads/users/69ad29109201b6.23697789.png', 1, '2026-01-23 15:28:44', '2026-03-12 17:44:41', NULL, NULL),
+(1, 1, 'garduny', 'gardunydeveloper@gmail.com', '$2y$10$4OZPo3/fyf/Im87BpGzKTe4IKeJi1eKn.AnyjScOl0uHKZxDCjGZu', '/server/uploads/users/69ad29109201b6.23697789.png', 1, '2026-01-23 15:28:44', '2026-03-20 16:18:23', '649028', '2026-03-20 20:18:23'),
 (2, 1, 'shalaw', 'darinkrd2020@gmail.com', '$2y$10$TVnDIUB2wBP8RGmLr5Ze2O1O4C5i5.6YuXCVV5.3bGnGmeK.QnyvC', NULL, 1, '2026-01-23 16:21:13', '2026-01-31 00:54:32', NULL, NULL);
 
 -- --------------------------------------------------------
@@ -694,6 +709,13 @@ CREATE TABLE `user_sessions` (
   `expires_at` datetime NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user_sessions`
+--
+
+INSERT INTO `user_sessions` (`id`, `user_id`, `token`, `ip_address`, `user_agent`, `expires_at`, `created_at`) VALUES
+(1, 1, '7c945bfae5a6400992fd42f69c1b14b4224885828a03eaca2183053613ba2684', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36', '2026-04-11 23:13:57', '2026-03-12 20:13:57');
 
 -- --------------------------------------------------------
 
@@ -1068,7 +1090,7 @@ ALTER TABLE `account_referrals`
 -- AUTO_INCREMENT for table `account_sessions`
 --
 ALTER TABLE `account_sessions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `activity_log`
@@ -1110,7 +1132,7 @@ ALTER TABLE `gift_cards`
 -- AUTO_INCREMENT for table `gift_card_options`
 --
 ALTER TABLE `gift_card_options`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `lottery_entries`
@@ -1224,7 +1246,7 @@ ALTER TABLE `users_forget`
 -- AUTO_INCREMENT for table `user_sessions`
 --
 ALTER TABLE `user_sessions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `withdrawals`
