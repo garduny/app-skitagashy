@@ -728,26 +728,32 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
             <p class="sh-loader-text">Loading Seller Hub</p>
         </div>
         <div id="hub-content" class="hidden space-y-8">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 fade-up">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 fade-up">
                 <div>
                     <p class="section-title mb-2">Kitta Gashy — Seller Terminal</p>
-                    <h1 style="font-family:'Space Mono',monospace; font-size:1.9rem; font-weight:700; line-height:1; color:var(--text);">
-                        Seller Hub
-                    </h1>
+                    <h1 style="font-family:'Space Mono',monospace;font-size:1.9rem;font-weight:700;line-height:1;color:var(--text)">Seller Hub</h1>
                 </div>
-                <button onclick="openProductModal()" class="btn-primary">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14" />
-                    </svg>
-                    New Product
-                </button>
+                <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+                    <button onclick="loadHub()" class="btn-ghost">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m14.836 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-14.837-2m14.837 2H15" />
+                        </svg>
+                        Refresh
+                    </button>
+                    <button onclick="openProductModal()" class="btn-primary">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14" />
+                        </svg>
+                        New Product
+                    </button>
+                </div>
             </div>
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 stat-cards-grid fade-up fade-up-1">
                 <div class="sh-card accent-green p-6 flex flex-col gap-4">
                     <div class="flex items-start justify-between">
                         <div>
                             <p class="stat-label mb-3">Available</p>
-                            <p class="stat-val" style="color:#00e5c3"><span id="stat-available">0.00</span><span style="font-size:.8rem; opacity:.5; margin-left:4px;">G</span></p>
+                            <p class="stat-val" style="color:#00e5c3"><span id="stat-available">0.00</span><span style="font-size:.8rem;opacity:.5;margin-left:4px;">G</span></p>
                         </div>
                         <div class="icon-dot green">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -755,15 +761,13 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                             </svg>
                         </div>
                     </div>
-                    <button onclick="requestWithdraw()" class="btn-ghost" style="width:100%; justify-content:center; font-size:.7rem;">
-                        Withdraw
-                    </button>
+                    <button onclick="requestWithdraw()" class="btn-ghost" style="width:100%;justify-content:center;font-size:.7rem;">Withdraw</button>
                 </div>
                 <div class="sh-card accent-blue p-6 flex flex-col gap-2">
                     <div class="flex items-start justify-between">
                         <div>
                             <p class="stat-label mb-3">Lifetime Earnings</p>
-                            <p class="stat-val" style="color:var(--text)"><span id="stat-earnings">0.00</span><span style="font-size:.8rem; opacity:.5; margin-left:4px;">G</span></p>
+                            <p class="stat-val" style="color:var(--text)"><span id="stat-earnings">0.00</span><span style="font-size:.8rem;opacity:.5;margin-left:4px;">G</span></p>
                         </div>
                         <div class="icon-dot blue">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -771,7 +775,7 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                             </svg>
                         </div>
                     </div>
-                    <p class="stat-label" id="stat-fee" style="margin-top:auto; padding-top:12px; border-top:1px solid var(--border);">After Platform Fee</p>
+                    <p class="stat-label" id="stat-fee" style="margin-top:auto;padding-top:12px;border-top:1px solid var(--border);">After Platform Fee</p>
                 </div>
                 <div class="sh-card accent-pink p-6">
                     <div class="flex items-start justify-between">
@@ -802,14 +806,18 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
             </div>
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 fade-up fade-up-2">
                 <div class="xl:col-span-2 sh-card overflow-hidden">
-                    <div class="flex items-center justify-between p-5 border-b" style="border-color:var(--border)">
+                    <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 p-5 border-b" style="border-color:var(--border)">
                         <div class="tab-bar">
-                            <button onclick="toggleTab('products')" id="tab-products" class="tab-pill active">
-                                Inventory&nbsp;<span id="stat-products" style="opacity:.6">0</span>
-                            </button>
-                            <button onclick="toggleTab('withdrawals')" id="tab-withdrawals" class="tab-pill">
-                                Withdrawals
-                            </button>
+                            <button onclick="toggleTab('products')" id="tab-products" class="tab-pill active">Inventory&nbsp;<span id="stat-products" style="opacity:.6">0</span></button>
+                            <button onclick="toggleTab('withdrawals')" id="tab-withdrawals" class="tab-pill">Withdrawals</button>
+                        </div>
+                        <div class="w-full lg:w-[360px]">
+                            <div class="relative">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted)">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z" />
+                                </svg>
+                                <input id="product-search" type="text" class="sh-input" placeholder="Search products..." style="padding-left:40px">
+                            </div>
                         </div>
                     </div>
                     <div id="view-products" class="overflow-x-auto">
@@ -847,7 +855,7 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                             </svg>
                         </div>
-                        <span style="font-size:.75rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--text)">Recent Sales</span>
+                        <span style="font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text)">Recent Sales</span>
                     </div>
                     <div class="overflow-y-auto sh-scroll" style="max-height:420px">
                         <div id="sales-list"></div>
@@ -862,7 +870,7 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         <div class="flex items-center justify-between mb-8">
             <div>
                 <p class="section-title mb-1">Seller Terminal</p>
-                <h2 id="modal-title" style="font-family:'Space Mono',monospace; font-size:1.25rem; font-weight:700; color:var(--text)">Add Product</h2>
+                <h2 id="modal-title" style="font-family:'Space Mono',monospace;font-size:1.25rem;font-weight:700;color:var(--text)">Add Product</h2>
             </div>
             <button onclick="closeProductModal()" class="btn-icon" style="width:36px;height:36px;border:1.5px solid var(--border);border-radius:9px;color:var(--muted)">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -912,9 +920,9 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
             </div>
             <div class="mb-8">
                 <label class="sh-label">Product Image</label>
-                <input type="file" id="prod-image-file" accept="image/*" class="sh-input" style="padding:8px 14px; cursor:pointer;">
+                <input type="file" id="prod-image-file" accept="image/*" class="sh-input" style="padding:8px 14px;cursor:pointer;">
             </div>
-            <button type="submit" class="btn-primary" style="width:100%; justify-content:center; padding:13px; font-size:.9rem;">
+            <button type="submit" class="btn-primary" style="width:100%;justify-content:center;padding:13px;font-size:.9rem;">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
@@ -950,29 +958,40 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                 <div class="inv-stat-label">Sold</div>
             </div>
         </div>
-        <div class="sh-card p-4 mb-5" style="border-radius:12px">
-            <div class="mb-4">
-                <label class="sh-label">Gift Card Option</label>
-                <div style="display:flex;gap:10px">
-                    <select id="inv-option" class="sh-input flex-1"></select>
-                    <button onclick="invAddOption()" class="btn-primary" style="padding:8px 14px;font-size:.7rem">+ Add</button>
+        <div class="grid grid-cols-1 xl:grid-cols-[1.1fr_.9fr] gap-5">
+            <div class="space-y-5">
+                <div class="sh-card p-4" style="border-radius:12px">
+                    <div class="mb-4">
+                        <label class="sh-label">Gift Card Option</label>
+                        <div style="display:flex;gap:10px">
+                            <select id="inv-option" class="sh-input flex-1"></select>
+                            <button onclick="invAddOptionModal()" class="btn-primary" style="padding:8px 14px;font-size:.7rem">+ Add</button>
+                        </div>
+                    </div>
+                    <p class="sh-label mb-3">Add Codes — one per line, optional PIN after pipe <span style="font-family:monospace">CODE|PIN</span></p>
+                    <textarea id="inv-codes-input" class="sh-input" rows="4" placeholder="XXXX-XXXX-XXXX&#10;YYYY-YYYY|1234&#10;..."></textarea>
+                    <button onclick="invAddCodes()" class="btn-primary" style="margin-top:12px;width:100%;justify-content:center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14" />
+                        </svg>
+                        Import Codes
+                    </button>
+                </div>
+                <div class="sh-card overflow-hidden" style="border-radius:12px">
+                    <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+                        <span style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Code List</span>
+                        <span style="font-size:.7rem;color:var(--muted)" id="inv-codes-count"></span>
+                    </div>
+                    <div id="inv-codes-list" class="sh-scroll" style="max-height:360px;overflow-y:auto"></div>
                 </div>
             </div>
-            <p class="sh-label mb-3">Add Codes — one per line, optional PIN after pipe <span style="font-family:monospace">CODE|PIN</span></p>
-            <textarea id="inv-codes-input" class="sh-input" rows="4" placeholder="XXXX-XXXX-XXXX&#10;YYYY-YYYY|1234&#10;..."></textarea>
-            <button onclick="invAddCodes()" class="btn-primary" style="margin-top:12px;width:100%;justify-content:center">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14" />
-                </svg>
-                Import Codes
-            </button>
-        </div>
-        <div class="sh-card overflow-hidden" style="border-radius:12px">
-            <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
-                <span style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Code List</span>
-                <span style="font-size:.7rem;color:var(--muted)" id="inv-codes-count"></span>
+            <div class="sh-card overflow-hidden" style="border-radius:12px">
+                <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+                    <span style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Options Grid</span>
+                    <span style="font-size:.7rem;color:var(--muted)">USD / GASHY</span>
+                </div>
+                <div id="inv-options-grid" class="sh-scroll" style="max-height:520px;overflow-y:auto;padding:14px"></div>
             </div>
-            <div id="inv-codes-list" class="sh-scroll" style="max-height:280px;overflow-y:auto"></div>
         </div>
     </div>
 </div>
@@ -1043,5 +1062,31 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
         </div>
     </div>
 </div>
-<script src="./public/js/pages/seller-hub.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const search = document.getElementById('product-search')
+        if (!search) return
+        search.addEventListener('input', function() {
+            if (typeof myProducts === 'undefined') return
+            const q = (this.value || '').toLowerCase().trim()
+            const rows = document.querySelectorAll('#product-list tr[data-title]')
+            rows.forEach(row => {
+                row.style.display = !q || row.dataset.title.indexOf(q) !== -1 ? '' : 'none'
+            })
+        })
+        const hubList = document.getElementById('product-list')
+        if (hubList) {
+            const observer = new MutationObserver(() => {
+                const q = (search.value || '').toLowerCase().trim()
+                if (!q) return
+                document.querySelectorAll('#product-list tr[data-title]').forEach(row => {
+                    row.style.display = row.dataset.title.indexOf(q) !== -1 ? '' : 'none'
+                })
+            })
+            observer.observe(hubList, {
+                childList: true
+            })
+        }
+    })
+</script>
 <?php require_once 'footer.php'; ?>

@@ -10,21 +10,46 @@ if (!$round) {
     execute(" INSERT INTO lottery_rounds (round_number,prize_pool,draw_time,status) VALUES (1,0,'$nextDraw','open') ");
     $round = findQuery(" SELECT * FROM lottery_rounds WHERE status='open' ORDER BY id DESC LIMIT 1 ");
 }
-$rid = $round['id'];
-$entries = countQuery(" SELECT SUM(ticket_count) FROM lottery_entries WHERE round_id=$rid ");
+$rid = (int)$round['id'];
+$entriesRow = findQuery(" SELECT COALESCE(SUM(ticket_count),0) as total FROM lottery_entries WHERE round_id=$rid ");
+$entries = (int)($entriesRow['total'] ?? 0);
 $lastRound = findQuery(" SELECT * FROM lottery_rounds WHERE status='closed' ORDER BY id DESC LIMIT 1 ");
 $lastWinners = [];
 if ($lastRound) {
-    $lrid = $lastRound['id'];
-    $lastWinners = getQuery(" SELECT u.accountname,u.wallet_address,le.ticket_count FROM lottery_entries le JOIN accounts u ON le.account_id=u.id WHERE le.round_id=$lrid AND le.is_winner=1 ");
+    $lrid = (int)$lastRound['id'];
+    $col = findQuery(" SHOW COLUMNS FROM lottery_entries LIKE 'is_winner' ");
+    if ($col) {
+        $lastWinners = getQuery("
+            SELECT 
+                u.accountname,
+                u.wallet_address,
+                le.ticket_count
+            FROM lottery_entries le
+            JOIN accounts u ON le.account_id=u.id
+            WHERE le.round_id=$lrid AND le.is_winner='yes'
+        ");
+    }
+    if (!$lastWinners || count($lastWinners) === 0) {
+        $lastWinners = getQuery("
+            SELECT 
+                u.accountname,
+                u.wallet_address,
+                le.ticket_count
+            FROM lottery_entries le
+            JOIN accounts u ON le.account_id=u.id
+            WHERE le.round_id=$lrid
+            ORDER BY le.ticket_count DESC
+            LIMIT 3
+        ");
+    }
 }
 $accountEntries = 0;
 $token = request('token') ?? str_replace('Bearer ', '', $_SERVER['HTTP_AUTHORIZATION'] ?? '');
 $account_session = findQuery(" SELECT account_id FROM account_sessions WHERE token='$token' AND expires_at>NOW() ");
 if ($account_session) {
-    $uid = $account_session['account_id'];
-    $ue = findQuery(" SELECT SUM(ticket_count) as total FROM lottery_entries WHERE round_id=$rid AND account_id=$uid ");
-    $accountEntries = $ue['total'] ?? 0;
+    $uid = (int)$account_session['account_id'];
+    $ue = findQuery(" SELECT COALESCE(SUM(ticket_count),0) as total FROM lottery_entries WHERE round_id=$rid AND account_id=$uid ");
+    $accountEntries = (int)($ue['total'] ?? 0);
 }
 encode([
     'status' => true,

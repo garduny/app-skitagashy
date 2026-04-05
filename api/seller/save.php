@@ -7,7 +7,7 @@ if (!$session) {
     ob_clean();
     encode(['status' => false, 'message' => 'Unauthorized']);
 }
-$uid = $session['account_id'];
+$uid = (int)$session['account_id'];
 $seller = findQuery(" SELECT account_id FROM sellers WHERE account_id=$uid AND is_approved=1 ");
 if (!$seller) {
     ob_clean();
@@ -16,25 +16,54 @@ if (!$seller) {
 $action = request('action', 'post');
 if ($action === 'delete') {
     $pid = (int)request('id', 'post');
+    $prod = findQuery(" SELECT id FROM products WHERE id=$pid AND seller_id=$uid AND status!='deleted' ");
+    if (!$prod) {
+        ob_clean();
+        encode(['status' => false, 'message' => 'Product not found']);
+    }
     execute(" UPDATE products SET status='inactive' WHERE id=$pid AND seller_id=$uid ");
     ob_clean();
     encode(['status' => true, 'message' => 'Product removed']);
 }
 if ($action === 'save') {
     $id = (int)request('id', 'post');
-    $title = secure(request('title', 'post'));
-    $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $title))) . '-' . rand(100, 999);
+    $title = secure(trim((string)request('title', 'post')));
     $price_usd = (float)request('price', 'post');
     $stock = (int)request('stock', 'post');
-    $type = secure(request('type', 'post'));
+    $type = secure(trim((string)request('type', 'post')));
     $cat = (int)request('category_id', 'post');
-    $desc = secure(request('description', 'post'));
+    $desc = secure(trim((string)request('description', 'post')));
+    if ($title === '') {
+        ob_clean();
+        encode(['status' => false, 'message' => 'Title is required']);
+    }
+    if ($price_usd < 0) {
+        ob_clean();
+        encode(['status' => false, 'message' => 'Invalid price']);
+    }
+    if ($stock < 0) {
+        ob_clean();
+        encode(['status' => false, 'message' => 'Invalid stock']);
+    }
+    if (!in_array($type, ['digital', 'gift_card', 'mystery_box', 'nft', 'physical'])) {
+        ob_clean();
+        encode(['status' => false, 'message' => 'Invalid product type']);
+    }
+    $catRow = findQuery(" SELECT id FROM categories WHERE id=$cat ");
+    if (!$catRow) {
+        ob_clean();
+        encode(['status' => false, 'message' => 'Invalid category']);
+    }
     $uploadPath = '../../server/uploads/products/';
     $dbPath = '/server/uploads/products/';
     $newImage = upload('image', $uploadPath);
     $oldImg = '';
     if ($id > 0) {
         $old = findQuery(" SELECT images FROM products WHERE id=$id AND seller_id=$uid ");
+        if (!$old) {
+            ob_clean();
+            encode(['status' => false, 'message' => 'Product not found']);
+        }
         if (!empty($old['images'])) {
             $tmp = json_decode($old['images'], true);
             $oldImg = $tmp[0] ?? '';
@@ -50,11 +79,13 @@ if ($action === 'save') {
         execute(" UPDATE products SET title='$title',price_usd=$price_usd,stock=$stock,type='$type',category_id=$cat,description='$desc',images='$imgs' WHERE id=$id AND seller_id=$uid ");
         ob_clean();
         encode(['status' => true, 'message' => 'Product updated']);
-    } else {
-        execute(" INSERT INTO products (seller_id,category_id,title,slug,description,price_usd,stock,type,images,status) VALUES ($uid,$cat,'$title','$slug','$desc',$price_usd,$stock,'$type','$imgs','active') ");
-        ob_clean();
-        encode(['status' => true, 'message' => 'Product created']);
     }
+    $slugBase = trim(strtolower(preg_replace('/[^a-zA-Z0-9]+/', '-', $title)), '-');
+    if ($slugBase === '') $slugBase = 'product';
+    $slug = $slugBase . '-' . rand(100, 999);
+    execute(" INSERT INTO products (seller_id,category_id,title,slug,description,price_usd,stock,type,images,status) VALUES ($uid,$cat,'$title','$slug','$desc',$price_usd,$stock,'$type','$imgs','active') ");
+    ob_clean();
+    encode(['status' => true, 'message' => 'Product created']);
 }
 ob_clean();
 encode(['status' => false, 'message' => 'Invalid action']);

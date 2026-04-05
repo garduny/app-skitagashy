@@ -5,16 +5,23 @@ if (file_exists('server/init.php')) {
 }
 require_once 'header.php';
 require_once 'sidebar.php';
+$ticketPrice = 10;
 $round = findQuery(" SELECT * FROM lottery_rounds WHERE status='open' ORDER BY id DESC LIMIT 1 ");
 $pool = $round['prize_pool'] ?? 0;
-$rid = $round['id'] ?? 0;
+$rid = (int)($round['id'] ?? 0);
+$timeLeft = $round ? max(0, strtotime($round['draw_time']) - time()) : 0;
+$total_tickets = 0;
+if ($rid) {
+    $total_query = findQuery(" SELECT COALESCE(SUM(ticket_count),0) as total FROM lottery_entries WHERE round_id=$rid ");
+    $total_tickets = (int)($total_query['total'] ?? 0);
+}
 $my_tickets = 0;
 $token = request('token') ?? str_replace('Bearer ', '', $_SERVER['HTTP_AUTHORIZATION'] ?? '');
 $session = findQuery(" SELECT account_id FROM account_sessions WHERE token='$token' AND expires_at>NOW() ");
 if ($session && $rid) {
     $uid = $session['account_id'];
-    $ticket_query = findQuery(" SELECT SUM(ticket_count) as total FROM lottery_entries WHERE round_id=$rid AND account_id=$uid ");
-    $my_tickets = $ticket_query['total'] ?? 0;
+    $ticket_query = findQuery(" SELECT COALESCE(SUM(ticket_count),0) as total FROM lottery_entries WHERE round_id=$rid AND account_id=$uid ");
+    $my_tickets = (int)($ticket_query['total'] ?? 0);
 }
 $closed_rounds = getQuery(" SELECT winning_numbers, draw_time FROM lottery_rounds WHERE status='closed' AND winning_numbers IS NOT NULL ORDER BY id DESC LIMIT 3 ");
 $real_winners = [];
@@ -224,12 +231,12 @@ foreach ($closed_rounds as $cr) {
                         <div class="w-2 h-2 rounded-full bg-green-500 animate-ping absolute"></div>
                         <div class="w-2 h-2 rounded-full bg-green-500"></div>
                     </div>
-                    Round #<?= $round['round_number'] ?? 1 ?> Live
+                    Round #<span id="roundNumber"><?= $round['round_number'] ?? 1 ?></span> Live
                 </div>
                 <div class="mb-6 relative inline-block">
                     <div class="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-500 blur-3xl opacity-30 animate-pulse"></div>
                     <h1 class="relative text-6xl md:text-8xl font-black tracking-tighter mb-2" style="animation:number-glow 2s ease-in-out infinite">
-                        <span class="bg-gradient-to-r from-green-400 via-emerald-400 to-green-400 bg-clip-text text-transparent dark:from-green-400 dark:via-emerald-400 dark:to-green-400 from-green-600 via-emerald-600 to-green-600" style="background-size:200% auto"><?= number_format($pool) ?></span>
+                        <span id="prizePool" class="bg-gradient-to-r from-green-400 via-emerald-400 to-green-400 bg-clip-text text-transparent dark:from-green-400 dark:via-emerald-400 dark:to-green-400 from-green-600 via-emerald-600 to-green-600" style="background-size:200% auto"><?= number_format($pool) ?></span>
                     </h1>
                     <div class="flex items-center justify-center gap-2">
                         <svg class="w-8 h-8 text-green-500 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
@@ -244,37 +251,54 @@ foreach ($closed_rounds as $cr) {
                     <div class="flex items-center justify-between mb-6 pb-6 border-b-2 border-gray-200 dark:border-white/10">
                         <div class="text-left">
                             <span class="block text-xs text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider mb-1">Ticket Price</span>
-                            <span class="text-2xl font-black bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">10 GASHY</span>
+                            <span class="text-2xl font-black bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent"><?= number_format($ticketPrice) ?> GASHY</span>
+                        </div>
+                        <div class="text-center">
+                            <span class="block text-xs text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider mb-1">Total Tickets</span>
+                            <span id="totalTicketsVisible" class="text-2xl font-black text-gray-900 dark:text-white"><?= $total_tickets ?></span>
                         </div>
                         <div class="text-right">
                             <span class="block text-xs text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider mb-1">Your Tickets</span>
-                            <span class="text-2xl font-black text-gray-900 dark:text-white"><?= $my_tickets ?></span>
+                            <span id="myTickets" class="text-2xl font-black text-gray-900 dark:text-white"><?= $my_tickets ?></span>
                         </div>
                     </div>
                     <div class="flex gap-3">
                         <div class="relative">
                             <input type="number" id="ticket-qty" value="1" min="1" class="ticket-input w-24 rounded-xl text-center text-xl font-black text-gray-900 dark:text-white focus:outline-none py-4">
                             <div class="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col gap-1">
-                                <button onclick="document.getElementById('ticket-qty').stepUp()" class="w-5 h-5 flex items-center justify-center rounded bg-green-500/20 hover:bg-green-500/30 text-green-600 transition-colors">
+                                <button type="button" onclick="document.getElementById('ticket-qty').stepUp()" class="w-5 h-5 flex items-center justify-center rounded bg-green-500/20 hover:bg-green-500/30 text-green-600 transition-colors">
                                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 15l7-7 7 7" />
                                     </svg>
                                 </button>
-                                <button onclick="document.getElementById('ticket-qty').stepDown()" class="w-5 h-5 flex items-center justify-center rounded bg-green-500/20 hover:bg-green-500/30 text-green-600 transition-colors">
+                                <button type="button" onclick="document.getElementById('ticket-qty').stepDown()" class="w-5 h-5 flex items-center justify-center rounded bg-green-500/20 hover:bg-green-500/30 text-green-600 transition-colors">
                                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
                                     </svg>
                                 </button>
                             </div>
                         </div>
-                        <button onclick="buyTickets(<?= $rid ?>)" class="buy-btn flex-1 text-white font-black text-lg rounded-xl py-4 flex items-center justify-center gap-2 relative overflow-hidden group">
-                            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                            <svg class="w-6 h-6 transform group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
-                            </svg>
-                            Buy Tickets
-                        </button>
+                        <?php if (!$rid): ?>
+                            <button id="buy-btn" disabled class="buy-btn flex-1 text-white font-black text-lg rounded-xl py-4 flex items-center justify-center gap-2 relative overflow-hidden opacity-50 cursor-not-allowed">
+                                No Active Round
+                            </button>
+                        <?php else: ?>
+                            <button id="buy-btn" <?= $timeLeft <= 10 ? 'disabled' : '' ?> onclick="buyTickets(<?= $rid ?>)" class="buy-btn flex-1 text-white font-black text-lg rounded-xl py-4 flex items-center justify-center gap-2 relative overflow-hidden group <?= $timeLeft <= 10 ? 'opacity-50 cursor-not-allowed' : '' ?>">
+                                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                                <svg class="w-6 h-6 transform group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+                                </svg>
+                                <span id="buy-btn-text"><?= $timeLeft <= 10 ? 'Closing Soon' : 'Buy Tickets' ?></span>
+                            </button>
+                        <?php endif; ?>
                     </div>
+                    <div class="mt-4 flex items-center justify-between text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                        <span>Draw Time: <?= !empty($round['draw_time']) ? date('M d, Y H:i', strtotime($round['draw_time'])) : 'TBA' ?></span>
+                        <span>Time Left: <span id="timeLeftReadable"><?= gmdate('d\D H\H i\M s\S', $timeLeft) ?></span></span>
+                    </div>
+                    <span id="totalTickets" class="hidden"><?= $total_tickets ?></span>
+                    <span id="timeLeft" class="hidden"><?= $timeLeft ?></span>
+                    <div id="lastWinners" class="hidden"></div>
                 </div>
             </div>
         </div>
@@ -354,7 +378,6 @@ foreach ($closed_rounds as $cr) {
     </div>
 </main>
 <script>
-    window.GASHY_TICKET_PRICE = 10;
+    window.GASHY_TICKET_PRICE = <?= (float)$ticketPrice ?>;
 </script>
-<script src="./public/js/pages/lottery.js"></script>
 <?php require_once 'footer.php'; ?>
