@@ -59,3 +59,4 @@ if ($is_maintenance) {
         exit;
     }
 }
+execute(" SET time_zone = '+03:00' ");

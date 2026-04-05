@@ -4,7 +4,7 @@ if (file_exists('../../server/init.php')) {
 } else {
     exit;
 }
-
+execute(" SET time_zone = '+03:00' ");
 $token = request('token') ?? str_replace('Bearer ', '', $_SERVER['HTTP_AUTHORIZATION'] ?? '');
 $session = findQuery(" SELECT account_id FROM account_sessions WHERE token='$token' AND expires_at>NOW() ");
 if (!$session) encode(['status' => false, 'message' => 'Unauthorized']);
