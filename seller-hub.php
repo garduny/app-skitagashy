@@ -1,903 +1,823 @@
 <?php
 define('gashy_exec', true);
-if (file_exists('server/init.php')) {
-    require_once 'server/init.php';
-}
+if (file_exists('server/init.php')) require_once 'server/init.php';
 require_once 'header.php';
 require_once 'sidebar.php';
 $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC ");
 ?>
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap');
 
     :root {
         --accent: #00e5c3;
         --accent2: #7c6dff;
         --danger: #ff4d6a;
         --warn: #f5a623;
-        --bg: #f4f5f7;
+        --ok: #22c55e;
+        --bg: #f4f6f8;
         --surface: #ffffff;
-        --surface2: #f0f1f4;
-        --border: rgba(0, 0, 0, 0.07);
-        --text: #0d0f1a;
+        --surface2: #eef1f5;
+        --surface3: #e7ebf0;
+        --text: #0f172a;
         --muted: #6b7280;
-        --card-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
-        --glow: rgba(0, 229, 195, 0.15);
+        --line: rgba(15, 23, 42, .08);
+        --shadow: 0 12px 34px rgba(15, 23, 42, .08);
+        --glow: 0 0 0 1px rgba(0, 229, 195, .12), 0 16px 40px rgba(0, 229, 195, .08);
     }
 
     html.dark {
-        --bg: #080b12;
-        --surface: #0e1320;
-        --surface2: #131929;
-        --border: rgba(255, 255, 255, 0.06);
-        --text: #e8ecf4;
-        --muted: #5a6478;
-        --card-shadow: 0 2px 24px rgba(0, 0, 0, 0.4);
-        --glow: rgba(0, 229, 195, 0.08);
+        --bg: #070b12;
+        --surface: #0e1420;
+        --surface2: #131b29;
+        --surface3: #1a2434;
+        --text: #eef2ff;
+        --muted: #8a94a7;
+        --line: rgba(255, 255, 255, .06);
+        --shadow: 0 18px 44px rgba(0, 0, 0, .45);
+        --glow: 0 0 0 1px rgba(0, 229, 195, .08), 0 18px 40px rgba(0, 229, 195, .05);
     }
 
-    #hub-content,
-    #hub-content * {
-        font-family: 'Syne', sans-serif;
-    }
-
-    #hub-content .mono {
-        font-family: 'Space Mono', monospace;
-    }
-
-    #product-modal,
-    #product-modal * {
-        font-family: 'Syne', sans-serif;
-    }
-
-    #product-modal .mono {
-        font-family: 'Space Mono', monospace;
+    .mono {
+        font-family: 'Space Mono', monospace
     }
 
     .sh-wrap {
-        background: var(--bg);
         min-height: 100vh;
+        background:
+            radial-gradient(circle at top right, rgba(124, 109, 255, .08), transparent 28%),
+            radial-gradient(circle at top left, rgba(0, 229, 195, .08), transparent 24%),
+            var(--bg);
         color: var(--text);
-        transition: background .3s, color .3s;
+    }
+
+    .sh-shell {
+        max-width: 1700px;
+        margin: auto;
+        padding: 32px 18px
     }
 
     .sh-card {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        box-shadow: var(--card-shadow);
-        transition: transform .2s, box-shadow .2s, border-color .2s;
+        background: linear-gradient(180deg, var(--surface), var(--surface));
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
         position: relative;
         overflow: hidden;
+        transition: .2s ease;
     }
 
     .sh-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 32px rgba(0, 229, 195, .12);
-        border-color: rgba(0, 229, 195, .25);
+        transform: translateY(-2px);
+        box-shadow: var(--glow)
     }
 
-    .sh-card::before {
+    .sh-card:before {
         content: '';
         position: absolute;
-        top: 0;
         left: 0;
         right: 0;
+        top: 0;
         height: 2px;
         background: linear-gradient(90deg, var(--accent), var(--accent2));
-        opacity: 0;
-        transition: opacity .25s;
+        opacity: .9;
     }
 
-    .sh-card:hover::before {
-        opacity: 1;
+    .sh-soft {
+        background: var(--surface2)
     }
 
-    .sh-card.accent-green::before {
-        background: linear-gradient(90deg, #00e5c3, #00bfa5);
-        opacity: 1;
-    }
-
-    .sh-card.accent-blue::before {
-        background: linear-gradient(90deg, #7c6dff, #5b8af5);
-        opacity: 1;
-    }
-
-    .sh-card.accent-pink::before {
-        background: linear-gradient(90deg, #ff4d6a, #ff8c42);
-        opacity: 1;
-    }
-
-    .sh-card.accent-gold::before {
-        background: linear-gradient(90deg, #f5a623, #f7d060);
-        opacity: 1;
-    }
-
-    .stat-val {
-        font-family: 'Space Mono', monospace;
+    .sh-title {
         font-size: 2rem;
-        font-weight: 700;
+        font-weight: 800;
         line-height: 1;
-        letter-spacing: -.02em;
+        letter-spacing: -.03em;
     }
 
-    .stat-label {
-        font-size: .65rem;
-        font-weight: 700;
-        letter-spacing: .12em;
+    .sh-sub {
+        font-size: .72rem;
+        font-weight: 800;
+        letter-spacing: .18em;
         text-transform: uppercase;
         color: var(--muted);
     }
 
-    .sh-badge {
+    .stat-num {
+        font-size: 2rem;
+        font-weight: 800;
+        line-height: 1;
+        letter-spacing: -.04em;
+    }
+
+    .stat-num.sm {
+        font-size: 1.55rem
+    }
+
+    .badge {
         display: inline-flex;
         align-items: center;
-        gap: 5px;
-        font-size: .6rem;
-        font-weight: 700;
-        letter-spacing: .1em;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: .62rem;
+        font-weight: 800;
+        letter-spacing: .12em;
         text-transform: uppercase;
-        padding: 3px 9px;
-        border-radius: 99px;
         border: 1px solid currentColor;
     }
 
-    .sh-badge.active {
-        color: #00e5c3;
-        background: rgba(0, 229, 195, .08);
+    .badge.active {
+        color: var(--ok);
+        background: rgba(34, 197, 94, .08)
     }
 
-    .sh-badge.inactive {
+    .badge.inactive {
         color: var(--danger);
-        background: rgba(255, 77, 106, .08);
+        background: rgba(255, 77, 106, .08)
     }
 
-    .sh-badge.pending {
+    .badge.pending {
         color: var(--warn);
-        background: rgba(245, 166, 35, .08);
+        background: rgba(245, 166, 35, .08)
     }
 
-    .sh-badge.approved {
-        color: #00e5c3;
-        background: rgba(0, 229, 195, .08);
+    .badge.approved {
+        color: var(--ok);
+        background: rgba(34, 197, 94, .08)
     }
 
-    .sh-badge.rejected {
+    .badge.rejected {
         color: var(--danger);
-        background: rgba(255, 77, 106, .08);
+        background: rgba(255, 77, 106, .08)
     }
 
-    .btn-primary {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: var(--accent);
-        color: #080b12;
-        font-weight: 700;
-        font-size: .85rem;
-        letter-spacing: .04em;
-        padding: 10px 22px;
-        border-radius: 10px;
-        border: none;
-        cursor: pointer;
-        transition: all .2s;
-        box-shadow: 0 4px 18px rgba(0, 229, 195, .25);
+    .badge.digital {
+        color: #3b82f6;
+        background: rgba(59, 130, 246, .08)
     }
 
-    .btn-primary:hover {
-        background: #00ffd5;
-        box-shadow: 0 6px 28px rgba(0, 229, 195, .4);
-        transform: translateY(-1px);
+    .badge.gift {
+        color: #8b5cf6;
+        background: rgba(139, 92, 246, .08)
     }
 
-    .btn-ghost {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: transparent;
-        color: var(--accent);
-        font-weight: 700;
-        font-size: .8rem;
-        letter-spacing: .05em;
-        padding: 9px 20px;
-        border-radius: 10px;
-        border: 1.5px solid rgba(0, 229, 195, .35);
-        cursor: pointer;
-        transition: all .2s;
+    .badge.mystery {
+        color: #f59e0b;
+        background: rgba(245, 158, 11, .08)
     }
 
-    .btn-ghost:hover {
-        background: rgba(0, 229, 195, .08);
-        border-color: var(--accent);
-        box-shadow: 0 4px 18px rgba(0, 229, 195, .15);
+    .badge.physical {
+        color: #14b8a6;
+        background: rgba(20, 184, 166, .08)
     }
 
-    .btn-icon {
+    .btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
+        gap: 8px;
         border: none;
         cursor: pointer;
-        transition: all .15s;
-        background: transparent;
+        transition: .2s;
+        font-weight: 800;
+        letter-spacing: .04em;
+        border-radius: 12px;
+        padding: 11px 18px;
+        font-size: .82rem;
     }
 
-    .btn-icon.edit {
-        color: var(--accent2);
+    .btn:disabled {
+        opacity: .55;
+        cursor: not-allowed
     }
 
-    .btn-icon.edit:hover {
-        background: rgba(124, 109, 255, .12);
+    .btn-main {
+        background: var(--accent);
+        color: #041012;
+        box-shadow: 0 12px 24px rgba(0, 229, 195, .22)
     }
 
-    .btn-icon.del {
-        color: var(--danger);
+    .btn-main:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.04)
     }
 
-    .btn-icon.del:hover {
-        background: rgba(255, 77, 106, .12);
-    }
-
-    .btn-icon.inv {
-        color: var(--accent);
-    }
-
-    .btn-icon.inv:hover {
-        background: rgba(0, 229, 195, .12);
-    }
-
-    .btn-icon.mystery {
-        color: var(--warn);
-    }
-
-    .btn-icon.mystery:hover {
-        background: rgba(245, 166, 35, .12);
-    }
-
-    .tab-bar {
-        display: flex;
-        gap: 4px;
-        padding: 4px;
+    .btn-alt {
         background: var(--surface2);
-        border-radius: 10px;
-        width: fit-content;
+        color: var(--text);
+        border: 1px solid var(--line)
     }
 
-    .tab-pill {
-        padding: 7px 18px;
-        border-radius: 7px;
-        font-size: .75rem;
-        font-weight: 700;
-        letter-spacing: .07em;
-        text-transform: uppercase;
-        cursor: pointer;
+    .btn-alt:hover {
+        background: var(--surface3)
+    }
+
+    .btn-red {
+        background: rgba(255, 77, 106, .12);
+        color: var(--danger)
+    }
+
+    .btn-red:hover {
+        background: rgba(255, 77, 106, .18)
+    }
+
+    .icon-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
         border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         background: transparent;
         color: var(--muted);
-        transition: all .2s;
+        transition: .15s;
     }
 
-    .tab-pill.active {
+    .icon-btn:hover {
+        background: var(--surface2);
+        color: var(--text)
+    }
+
+    .icon-btn.red:hover {
+        background: rgba(255, 77, 106, .12);
+        color: var(--danger)
+    }
+
+    .icon-btn.green:hover {
+        background: rgba(0, 229, 195, .12);
+        color: var(--accent)
+    }
+
+    .icon-btn.purple:hover {
+        background: rgba(124, 109, 255, .12);
+        color: var(--accent2)
+    }
+
+    .icon-btn.gold:hover {
+        background: rgba(245, 166, 35, .12);
+        color: var(--warn)
+    }
+
+    .toolbar {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center
+    }
+
+    .input,
+    .select,
+    .textarea {
+        width: 100%;
+        background: var(--surface2);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 11px 14px;
+        color: var(--text);
+        outline: none;
+        font-size: .88rem;
+    }
+
+    .input:focus,
+    .select:focus,
+    .textarea:focus {
+        border-color: rgba(0, 229, 195, .45);
+        box-shadow: 0 0 0 3px rgba(0, 229, 195, .08);
+        background: var(--surface);
+    }
+
+    .textarea {
+        resize: vertical;
+        min-height: 110px
+    }
+
+    .label {
+        display: block;
+        font-size: .66rem;
+        font-weight: 800;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 8px;
+    }
+
+    .tabbar {
+        display: flex;
+        gap: 6px;
+        padding: 5px;
+        background: var(--surface2);
+        border-radius: 14px;
+        width: max-content;
+        max-width: 100%;
+        overflow: auto;
+    }
+
+    .tabbtn {
+        border: none;
+        background: transparent;
+        padding: 9px 16px;
+        border-radius: 10px;
+        font-size: .74rem;
+        font-weight: 800;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    .tabbtn.active {
         background: var(--surface);
         color: var(--text);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, .08);
     }
 
-    html.dark .tab-pill.active {
-        box-shadow: 0 2px 8px rgba(0, 0, 0, .3);
+    .table-wrap {
+        overflow: auto
     }
 
-    .sh-table {
+    .table {
         width: 100%;
-        border-collapse: collapse;
-        font-size: .82rem;
+        border-collapse: collapse
     }
 
-    .sh-table th {
-        font-size: .6rem;
-        font-weight: 700;
-        letter-spacing: .12em;
+    .table th {
+        padding: 12px 14px;
+        font-size: .63rem;
+        letter-spacing: .14em;
         text-transform: uppercase;
         color: var(--muted);
-        padding: 10px 16px;
-        border-bottom: 1px solid var(--border);
         text-align: left;
+        border-bottom: 1px solid var(--line);
         white-space: nowrap;
     }
 
-    .sh-table th:last-child {
-        text-align: right;
-    }
-
-    .sh-table td {
-        padding: 12px 16px;
-        border-bottom: 1px solid var(--border);
-        color: var(--text);
+    .table td {
+        padding: 13px 14px;
+        border-bottom: 1px solid var(--line);
         vertical-align: middle;
+        font-size: .84rem;
     }
 
-    .sh-table tbody tr {
-        transition: background .15s;
+    .table tr:hover td {
+        background: rgba(0, 229, 195, .03)
     }
 
-    .sh-table tbody tr:hover {
-        background: var(--glow);
+    .prod {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        min-width: 220px
     }
 
-    .sh-table tbody tr:last-child td {
-        border-bottom: none;
+    .thumb {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        object-fit: cover;
+        flex: none;
+        background: var(--surface2);
+        border: 1px solid var(--line)
     }
 
-    .prod-img {
-        width: 36px;
-        height: 36px;
-        border-radius: 8px;
+    .thumb-lg {
+        width: 100%;
+        height: 180px;
+        border-radius: 16px;
         object-fit: cover;
         background: var(--surface2);
-        flex-shrink: 0;
+        border: 1px solid var(--line)
     }
 
-    .prod-title {
-        font-weight: 700;
-        font-size: .82rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 180px;
+    .empty {
+        padding: 42px 18px;
+        text-align: center;
+        color: var(--muted)
     }
 
-    .sh-modal-overlay {
+    .empty b {
+        display: block;
+        color: var(--text);
+        font-size: .95rem;
+        margin-bottom: 6px
+    }
+
+    .modal-backdrop {
         position: fixed;
         inset: 0;
-        z-index: 70;
-        background: rgba(0, 0, 0, .7);
+        z-index: 80;
+        background: rgba(0, 0, 0, .72);
         backdrop-filter: blur(8px);
+        padding: 16px;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 16px;
     }
 
-    .sh-modal-overlay.hidden {
-        display: none !important;
+    .modal-backdrop.hidden {
+        display: none !important
     }
 
     .sh-modal {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 20px;
         width: 100%;
-        max-width: 680px;
-        max-height: 90vh;
-        overflow-y: auto;
-        box-shadow: 0 24px 80px rgba(0, 0, 0, .35);
-        padding: 32px;
+        max-width: 760px;
+        max-height: 92vh;
+        overflow: auto;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        padding: 26px;
         position: relative;
-    }
-
-    .sh-modal::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: linear-gradient(90deg, var(--accent), var(--accent2));
-        border-radius: 20px 20px 0 0;
-    }
-
-    .sh-label {
-        display: block;
-        font-size: .65rem;
-        font-weight: 700;
-        letter-spacing: .12em;
-        text-transform: uppercase;
-        color: var(--muted);
-        margin-bottom: 7px;
-    }
-
-    .sh-input {
-        width: 100%;
-        box-sizing: border-box;
-        background: var(--surface2);
-        border: 1.5px solid var(--border);
-        border-radius: 10px;
-        padding: 11px 14px;
-        font-size: .85rem;
-        color: var(--text);
-        font-family: 'Syne', sans-serif;
-        transition: border-color .2s, box-shadow .2s;
-        outline: none;
-    }
-
-    .sh-input:focus {
-        border-color: var(--accent);
-        box-shadow: 0 0 0 3px rgba(0, 229, 195, .12);
-        background: var(--surface);
-    }
-
-    .sh-input::placeholder {
-        color: var(--muted);
-    }
-
-    select.sh-input {
-        appearance: none;
-        cursor: pointer;
-    }
-
-    textarea.sh-input {
-        resize: vertical;
-        min-height: 90px;
-    }
-
-    .section-title {
-        font-size: .65rem;
-        font-weight: 700;
-        letter-spacing: .15em;
-        text-transform: uppercase;
-        color: var(--muted);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .section-title::before {
-        content: '';
-        display: block;
-        width: 12px;
-        height: 2px;
-        background: var(--accent);
-        border-radius: 2px;
-    }
-
-    .icon-dot {
-        width: 38px;
-        height: 38px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-
-    .icon-dot.green {
-        background: rgba(0, 229, 195, .1);
-        color: #00e5c3;
-    }
-
-    .icon-dot.blue {
-        background: rgba(124, 109, 255, .1);
-        color: #7c6dff;
-    }
-
-    .icon-dot.pink {
-        background: rgba(255, 77, 106, .1);
-        color: #ff4d6a;
-    }
-
-    .icon-dot.gold {
-        background: rgba(245, 166, 35, .1);
-        color: #f5a623;
-    }
-
-    .sale-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 12px 16px;
-        border-bottom: 1px solid var(--border);
-    }
-
-    .sale-item:last-child {
-        border-bottom: none;
-    }
-
-    .sale-item:hover {
-        background: var(--glow);
-    }
-
-    .sh-scroll::-webkit-scrollbar {
-        width: 4px;
-    }
-
-    .sh-scroll::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    .sh-scroll::-webkit-scrollbar-thumb {
-        background: var(--border);
-        border-radius: 4px;
-    }
-
-    .sh-loader {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 60vh;
-        gap: 16px;
-    }
-
-    .sh-spinner {
-        width: 44px;
-        height: 44px;
-        border: 2px solid var(--border);
-        border-top-color: var(--accent);
-        border-radius: 50%;
-        animation: spin .7s linear infinite;
-    }
-
-    @keyframes spin {
-        to {
-            transform: rotate(360deg);
-        }
-    }
-
-    #hub-loader.hidden {
-        display: none !important;
-    }
-
-    #hub-content.hidden {
-        display: none !important;
-    }
-
-    .sh-loader-text {
-        font-size: .65rem;
-        font-weight: 700;
-        letter-spacing: .2em;
-        text-transform: uppercase;
-        color: var(--muted);
-    }
-
-    @keyframes fadeUp {
-        from {
-            opacity: 0;
-            transform: translateY(12px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .fade-up {
-        animation: fadeUp .4s ease both;
-    }
-
-    .fade-up-1 {
-        animation-delay: .05s;
-    }
-
-    .fade-up-2 {
-        animation-delay: .1s;
-    }
-
-    .fade-up-3 {
-        animation-delay: .15s;
-    }
-
-    .fade-up-4 {
-        animation-delay: .2s;
+        box-shadow: 0 28px 80px rgba(0, 0, 0, .35);
     }
 
     .sh-modal.wide {
-        max-width: 900px;
+        max-width: 1120px
     }
 
-    .rarity-common {
-        color: #9ca3af;
-        background: rgba(156, 163, 175, .1);
-        border-color: #9ca3af;
-    }
-
-    .rarity-rare {
-        color: #3b82f6;
-        background: rgba(59, 130, 246, .1);
-        border-color: #3b82f6;
-    }
-
-    .rarity-epic {
-        color: #a855f7;
-        background: rgba(168, 85, 247, .1);
-        border-color: #a855f7;
-    }
-
-    .rarity-legendary {
-        color: #f5a623;
-        background: rgba(245, 166, 35, .1);
-        border-color: #f5a623;
-    }
-
-    .inv-stat {
-        background: var(--surface2);
-        border-radius: 10px;
-        padding: 14px 18px;
-        text-align: center;
-        flex: 1;
-    }
-
-    .inv-stat-val {
-        font-family: 'Space Mono', monospace;
-        font-size: 1.4rem;
-        font-weight: 700;
-        line-height: 1;
-    }
-
-    .inv-stat-label {
-        font-size: .6rem;
-        font-weight: 700;
-        letter-spacing: .12em;
-        text-transform: uppercase;
-        color: var(--muted);
-        margin-top: 4px;
-    }
-
-    .code-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 10px 16px;
-        border-bottom: 1px solid var(--border);
-        transition: background .15s;
-    }
-
-    .code-row:last-child {
-        border-bottom: none;
-    }
-
-    .code-row:hover {
-        background: var(--glow);
-    }
-
-    .loot-row {
+    .grid-2 {
         display: grid;
-        grid-template-columns: 1fr auto auto auto auto;
-        align-items: center;
-        gap: 12px;
-        padding: 11px 16px;
-        border-bottom: 1px solid var(--border);
-        transition: background .15s;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px
     }
 
-    .loot-row:last-child {
-        border-bottom: none;
-    }
-
-    .loot-row:hover {
-        background: var(--glow);
-    }
-
-    .prob-bar-wrap {
-        background: var(--surface2);
-        border-radius: 99px;
-        height: 4px;
-        width: 80px;
-        overflow: hidden;
-    }
-
-    .prob-bar-fill {
-        height: 100%;
-        border-radius: 99px;
-        background: var(--accent);
-        transition: width .4s;
-    }
-
-    .modal-split {
+    .grid-3 {
         display: grid;
-        grid-template-columns: 1fr 320px;
-        gap: 24px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px
     }
 
-    @media (max-width: 700px) {
-        .modal-split {
-            grid-template-columns: 1fr;
+    .grid-4 {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px
+    }
+
+    .skeleton {
+        height: 78px;
+        border-radius: 16px;
+        background: linear-gradient(90deg, var(--surface2), var(--surface3), var(--surface2));
+        background-size: 200% 100%;
+        animation: shimmer 1.2s linear infinite;
+    }
+
+    @keyframes shimmer {
+        to {
+            background-position: -200% 0
         }
     }
 
-    @media (max-width: 640px) {
-        .stat-val {
-            font-size: 1.5rem;
+    @media(max-width:1100px) {
+        .grid-4 {
+            grid-template-columns: repeat(2, 1fr)
+        }
+    }
+
+    @media(max-width:760px) {
+        .sh-shell {
+            padding: 22px 12px
+        }
+
+        .grid-2,
+        .grid-3,
+        .grid-4 {
+            grid-template-columns: 1fr
+        }
+
+        .sh-title {
+            font-size: 1.55rem
+        }
+
+        .stat-num {
+            font-size: 1.55rem
         }
 
         .sh-modal {
-            padding: 20px;
+            padding: 18px
         }
 
-        .stat-cards-grid {
-            grid-template-columns: 1fr 1fr;
+        .table thead {
+            display: none
         }
-    }
 
-    .sh-modal-overlay.hidden {
-        display: none !important;
-    }
+        .table,
+        .table tbody,
+        .table tr,
+        .table td {
+            display: block;
+            width: 100%
+        }
 
-    #inv-modal.hidden,
-    #mystery-modal.hidden {
-        display: none !important;
+        .table tr {
+            border-bottom: 1px solid var(--line);
+            padding: 10px 0
+        }
+
+        .table td {
+            border: none;
+            padding: 6px 0
+        }
+
+        .table td:before {
+            content: attr(data-label);
+            display: block;
+            font-size: .62rem;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 4px;
+            font-weight: 800;
+        }
     }
 </style>
 <main class="sh-wrap pt-24 lg:pl-72 transition-all duration-300">
-    <div class="max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div id="hub-loader" class="sh-loader">
-            <div class="sh-spinner"></div>
-            <p class="sh-loader-text">Loading Seller Hub</p>
+    <div class="sh-shell">
+        <div id="hub-loader" class="space-y-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                <div class="skeleton"></div>
+                <div class="skeleton"></div>
+                <div class="skeleton"></div>
+                <div class="skeleton"></div>
+            </div>
+            <div class="skeleton" style="height:420px"></div>
         </div>
-        <div id="hub-content" class="hidden space-y-8">
-            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 fade-up">
-                <div>
-                    <p class="section-title mb-2">Kitta Gashy — Seller Terminal</p>
-                    <h1 style="font-family:'Space Mono',monospace;font-size:1.9rem;font-weight:700;line-height:1;color:var(--text)">Seller Hub</h1>
-                </div>
-                <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-                    <button onclick="loadHub()" class="btn-ghost">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m14.836 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-14.837-2m14.837 2H15" />
-                        </svg>
-                        Refresh
-                    </button>
-                    <button onclick="openProductModal()" class="btn-primary">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14" />
-                        </svg>
-                        New Product
-                    </button>
+
+        <div id="hub-content" class="hidden space-y-6">
+            <div class="sh-card p-5 md:p-6">
+                <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-5">
+                    <div class="space-y-2">
+                        <div class="sh-sub">Kitta Gashy Seller Terminal</div>
+                        <div class="sh-title">Seller Hub</div>
+                        <div class="text-sm text-[var(--muted)] max-w-2xl">Manage products, gift card options, code inventory, mystery box loot, payouts, and seller performance from one premium control center.</div>
+                    </div>
+                    <div class="toolbar w-full xl:w-auto">
+                        <button type="button" onclick="loadHub()" class="btn btn-alt">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m14.836 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-14.837-2m14.837 2H15" />
+                            </svg>
+                            Refresh
+                        </button>
+                        <button type="button" onclick="openWithdrawModal()" class="btn btn-alt">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a5 5 0 00-10 0v2m-2 0h14a2 2 0 012 2v7a2 2 0 01-2 2H5a2 2 0 01-2-2v-7a2 2 0 012-2z" />
+                            </svg>
+                            Withdraw
+                        </button>
+                        <button type="button" onclick="openProductModal()" class="btn btn-main">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14" />
+                            </svg>
+                            New Product
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 stat-cards-grid fade-up fade-up-1">
-                <div class="sh-card accent-green p-6 flex flex-col gap-4">
-                    <div class="flex items-start justify-between">
+
+            <div class="grid-4">
+                <div class="sh-card p-5">
+                    <div class="flex items-start justify-between gap-3">
                         <div>
-                            <p class="stat-label mb-3">Available</p>
-                            <p class="stat-val" style="color:#00e5c3"><span id="stat-available">0.00</span><span style="font-size:.8rem;opacity:.5;margin-left:4px;">G</span></p>
+                            <div class="sh-sub mb-3">Available</div>
+                            <div class="stat-num" style="color:var(--accent)"><span id="stat-available">0.00</span><span class="mono" style="font-size:.82rem;opacity:.55;margin-left:4px">G</span></div>
                         </div>
-                        <div class="icon-dot green">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,229,195,.1);color:var(--accent)">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
                     </div>
-                    <button onclick="requestWithdraw()" class="btn-ghost" style="width:100%;justify-content:center;font-size:.7rem;">Withdraw</button>
+                    <div class="mt-4 flex items-center justify-between text-xs text-[var(--muted)]">
+                        <span>Withdrawable now</span>
+                        <button type="button" onclick="openWithdrawModal()" class="btn btn-alt" style="padding:7px 12px;font-size:.68rem">Request</button>
+                    </div>
                 </div>
-                <div class="sh-card accent-blue p-6 flex flex-col gap-2">
-                    <div class="flex items-start justify-between">
+
+                <div class="sh-card p-5">
+                    <div class="flex items-start justify-between gap-3">
                         <div>
-                            <p class="stat-label mb-3">Lifetime Earnings</p>
-                            <p class="stat-val" style="color:var(--text)"><span id="stat-earnings">0.00</span><span style="font-size:.8rem;opacity:.5;margin-left:4px;">G</span></p>
+                            <div class="sh-sub mb-3">Lifetime Earnings</div>
+                            <div class="stat-num"><span id="stat-earnings">0.00</span><span class="mono" style="font-size:.82rem;opacity:.55;margin-left:4px">G</span></div>
                         </div>
-                        <div class="icon-dot blue">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(124,109,255,.1);color:var(--accent2)">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                             </svg>
                         </div>
                     </div>
-                    <p class="stat-label" id="stat-fee" style="margin-top:auto;padding-top:12px;border-top:1px solid var(--border);">After Platform Fee</p>
+                    <div id="stat-fee" class="mt-4 text-xs text-[var(--muted)] border-t pt-3" style="border-color:var(--line)">After Platform Fee</div>
                 </div>
-                <div class="sh-card accent-pink p-6">
-                    <div class="flex items-start justify-between">
+
+                <div class="sh-card p-5">
+                    <div class="flex items-start justify-between gap-3">
                         <div>
-                            <p class="stat-label mb-3">Units Sold</p>
-                            <p class="stat-val" style="color:var(--text)" id="stat-sales">0</p>
+                            <div class="sh-sub mb-3">Units Sold</div>
+                            <div class="stat-num" id="stat-sales">0</div>
                         </div>
-                        <div class="icon-dot pink">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(255,77,106,.1);color:var(--danger)">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                             </svg>
                         </div>
                     </div>
+                    <div class="mt-4 flex items-center gap-2 text-xs text-[var(--muted)]">
+                        <span class="badge active">Live Sales</span>
+                        <span>Products moving through completed orders</span>
+                    </div>
                 </div>
-                <div class="sh-card accent-gold p-6">
-                    <div class="flex items-start justify-between">
+
+                <div class="sh-card p-5">
+                    <div class="flex items-start justify-between gap-3">
                         <div>
-                            <p class="stat-label mb-3">Store Rating</p>
-                            <p class="stat-val" style="color:#f5a623" id="stat-rating">0.0</p>
+                            <div class="sh-sub mb-3">Store Rating</div>
+                            <div class="stat-num" id="stat-rating" style="color:var(--warn)">0.0</div>
                         </div>
-                        <div class="icon-dot gold">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(245,166,35,.1);color:var(--warn)">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                             </svg>
                         </div>
                     </div>
+                    <div class="mt-4 text-xs text-[var(--muted)]">Trust, delivery quality, and seller reputation signal.</div>
                 </div>
             </div>
-            <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 fade-up fade-up-2">
-                <div class="xl:col-span-2 sh-card overflow-hidden">
-                    <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 p-5 border-b" style="border-color:var(--border)">
-                        <div class="tab-bar">
-                            <button onclick="toggleTab('products')" id="tab-products" class="tab-pill active">Inventory&nbsp;<span id="stat-products" style="opacity:.6">0</span></button>
-                            <button onclick="toggleTab('withdrawals')" id="tab-withdrawals" class="tab-pill">Withdrawals</button>
+
+            <div class="grid grid-cols-1 2xl:grid-cols-[1.7fr_1fr] gap-6">
+                <div class="space-y-6">
+                    <div class="sh-card overflow-hidden">
+                        <div class="p-5 border-b" style="border-color:var(--line)">
+                            <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
+                                <div class="tabbar">
+                                    <button type="button" onclick="toggleTab('products')" id="tab-products" class="tabbtn active">Inventory <span id="stat-products" style="opacity:.55">0</span></button>
+                                    <button type="button" onclick="toggleTab('withdrawals')" id="tab-withdrawals" class="tabbtn">Withdrawals</button>
+                                </div>
+                                <div class="toolbar w-full xl:w-auto">
+                                    <div class="relative w-full xl:w-[290px]">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted)">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z" />
+                                        </svg>
+                                        <input id="product-search" type="text" class="input" placeholder="Search products..." style="padding-left:40px">
+                                    </div>
+                                    <select id="product-type-filter" class="select w-full xl:w-[170px]">
+                                        <option value="">All Types</option>
+                                        <option value="digital">Digital</option>
+                                        <option value="gift_card">Gift Card</option>
+                                        <option value="mystery_box">Mystery Box</option>
+                                        <option value="nft">NFT</option>
+                                        <option value="physical">Physical</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                        <div class="w-full lg:w-[360px]">
-                            <div class="relative">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted)">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z" />
-                                </svg>
-                                <input id="product-search" type="text" class="sh-input" placeholder="Search products..." style="padding-left:40px">
+
+                        <div id="view-products">
+                            <div class="table-wrap hidden md:block">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Pricing</th>
+                                            <th>Inventory</th>
+                                            <th>Type</th>
+                                            <th>Status</th>
+                                            <th style="text-align:right">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="product-list">
+                                        <tr>
+                                            <td colspan="6">
+                                                <div class="empty"><b>Loading products...</b>Seller inventory is being prepared.</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="product-cards-mobile" class="md:hidden p-4 space-y-3">
+                                <div class="empty"><b>Loading products...</b>Seller inventory is being prepared.</div>
+                            </div>
+                        </div>
+
+                        <div id="view-withdrawals" class="hidden">
+                            <div class="table-wrap hidden md:block">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#ID</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th style="text-align:right">Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="withdrawal-list">
+                                        <tr>
+                                            <td colspan="4">
+                                                <div class="empty"><b>No withdrawals yet</b>Your payout requests will appear here.</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="withdrawal-cards-mobile" class="md:hidden p-4 space-y-3">
+                                <div class="empty"><b>No withdrawals yet</b>Your payout requests will appear here.</div>
                             </div>
                         </div>
                     </div>
-                    <div id="view-products" class="overflow-x-auto">
-                        <table class="sh-table">
-                            <thead>
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Price</th>
-                                    <th>Stock</th>
-                                    <th>Status</th>
-                                    <th style="text-align:right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="product-list"></tbody>
-                        </table>
-                    </div>
-                    <div id="view-withdrawals" class="overflow-x-auto hidden">
-                        <table class="sh-table">
-                            <thead>
-                                <tr>
-                                    <th>#ID</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                    <th style="text-align:right">Date</th>
-                                </tr>
-                            </thead>
-                            <tbody id="withdrawal-list"></tbody>
-                        </table>
+
+                    <div class="sh-card p-5">
+                        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-5">
+                            <div>
+                                <div class="sh-sub mb-2">Seller Notes</div>
+                                <div class="text-lg font-extrabold">Tools & workflow help</div>
+                            </div>
+                            <div class="badge active">Premium Seller Flow</div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                            <div class="sh-soft rounded-2xl p-4 border" style="border-color:var(--line)">
+                                <div class="font-extrabold mb-2">Gift Cards</div>
+                                <div class="text-[var(--muted)]">Create options first, then import codes for each option or default stock pool.</div>
+                            </div>
+                            <div class="sh-soft rounded-2xl p-4 border" style="border-color:var(--line)">
+                                <div class="font-extrabold mb-2">Mystery Boxes</div>
+                                <div class="text-[var(--muted)]">Keep total probability at or below 100% and balance reward value carefully.</div>
+                            </div>
+                            <div class="sh-soft rounded-2xl p-4 border" style="border-color:var(--line)">
+                                <div class="font-extrabold mb-2">Attributes</div>
+                                <div class="text-[var(--muted)]">Use JSON attributes like color, size, region, platform, or edition for richer listings.</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="xl:col-span-1 sh-card overflow-hidden">
-                    <div class="flex items-center gap-2 p-5 border-b" style="border-color:var(--border)">
-                        <div class="icon-dot green" style="width:28px;height:28px;border-radius:7px">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                            </svg>
+
+                <div class="space-y-6">
+                    <div class="sh-card overflow-hidden">
+                        <div class="p-5 border-b flex items-center justify-between" style="border-color:var(--line)">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,229,195,.1);color:var(--accent)">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="sh-sub">Activity</div>
+                                    <div class="text-base font-extrabold">Recent Sales</div>
+                                </div>
+                            </div>
+                            <div class="badge active">Live</div>
                         </div>
-                        <span style="font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text)">Recent Sales</span>
+                        <div id="sales-list" class="max-h-[480px] overflow-y-auto">
+                            <div class="empty"><b>No sales yet</b>Completed sales will appear here.</div>
+                        </div>
                     </div>
-                    <div class="overflow-y-auto sh-scroll" style="max-height:420px">
-                        <div id="sales-list"></div>
+
+                    <div class="sh-card p-5">
+                        <div class="sh-sub mb-2">Quick Actions</div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <button type="button" onclick="openProductModal()" class="btn btn-main w-full">Add Product</button>
+                            <button type="button" onclick="toggleTab('withdrawals')" class="btn btn-alt w-full">View Payouts</button>
+                            <button type="button" onclick="openWithdrawModal()" class="btn btn-alt w-full">Request Withdraw</button>
+                            <button type="button" onclick="loadHub()" class="btn btn-alt w-full">Reload Hub</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 </main>
-<div id="product-modal" class="sh-modal-overlay hidden">
-    <div class="sh-modal sh-scroll">
-        <div class="flex items-center justify-between mb-8">
+<div id="product-modal" class="modal-backdrop hidden">
+    <div class="sh-modal" onclick="event.stopPropagation()">
+        <div class="flex items-center justify-between gap-4 mb-6">
             <div>
-                <p class="section-title mb-1">Seller Terminal</p>
-                <h2 id="modal-title" style="font-family:'Space Mono',monospace;font-size:1.25rem;font-weight:700;color:var(--text)">Add Product</h2>
+                <div class="sh-sub mb-2">Seller Product Studio</div>
+                <div id="modal-title" class="text-2xl font-extrabold">Add Product</div>
             </div>
-            <button onclick="closeProductModal()" class="btn-icon" style="width:36px;height:36px;border:1.5px solid var(--border);border-radius:9px;color:var(--muted)">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <button type="button" onclick="closeProductModal()" class="icon-btn">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
         </div>
-        <form id="product-form" onsubmit="event.preventDefault(); saveProduct();">
+
+        <form id="product-form" onsubmit="event.preventDefault();saveProduct();" class="space-y-5">
             <input type="hidden" id="prod-id" value="0">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+
+            <div class="grid-2">
                 <div>
-                    <label class="sh-label">Product Title</label>
-                    <input type="text" id="prod-title" required class="sh-input" placeholder="e.g. Premium Steam Key">
+                    <label class="label">Product Title</label>
+                    <input id="prod-title" type="text" class="input" placeholder="Premium Steam Key">
                 </div>
                 <div>
-                    <label class="sh-label">Price (USD)</label>
-                    <input type="number" step="0.01" id="prod-price" required class="sh-input mono" placeholder="0.00">
+                    <label class="label">Price USD</label>
+                    <input id="prod-price" type="number" step="0.01" class="input mono" placeholder="0.00">
                 </div>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-5">
+
+            <div class="grid-3">
                 <div>
-                    <label class="sh-label">Stock Qty</label>
-                    <input type="number" id="prod-stock" required class="sh-input mono" placeholder="0">
+                    <label class="label">Stock Qty</label>
+                    <input id="prod-stock" type="number" class="input mono" placeholder="0">
                 </div>
                 <div>
-                    <label class="sh-label">Product Type</label>
-                    <select id="prod-type" class="sh-input">
+                    <label class="label">Product Type</label>
+                    <select id="prod-type" class="select" onchange="hubTypeUI()">
                         <option value="digital">Digital</option>
                         <option value="gift_card">Gift Card</option>
                         <option value="mystery_box">Mystery Box</option>
@@ -906,187 +826,232 @@ $cats = getQuery(" SELECT * FROM categories WHERE is_active=1 ORDER BY name ASC 
                     </select>
                 </div>
                 <div>
-                    <label class="sh-label">Category</label>
-                    <select id="prod-cat" class="sh-input">
+                    <label class="label">Category</label>
+                    <select id="prod-cat" class="select">
                         <?php foreach ($cats as $c): ?>
                             <option value="<?= $c['id'] ?>"><?= $c['name'] ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
             </div>
-            <div class="mb-5">
-                <label class="sh-label">Description</label>
-                <textarea id="prod-desc" class="sh-input" placeholder="Describe your product..."></textarea>
+
+            <div id="type-help-box" class="sh-soft rounded-2xl p-4 border text-sm" style="border-color:var(--line)">
+                Gift card products support options and inventory codes.
             </div>
-            <div class="mb-8">
-                <label class="sh-label">Product Image</label>
-                <input type="file" id="prod-image-file" accept="image/*" class="sh-input" style="padding:8px 14px;cursor:pointer;">
+
+            <div>
+                <label class="label">Description</label>
+                <textarea id="prod-desc" class="textarea" placeholder="Describe your product..."></textarea>
             </div>
-            <button type="submit" class="btn-primary" style="width:100%;justify-content:center;padding:13px;font-size:.9rem;">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-                Save Product
-            </button>
+
+            <div>
+                <label class="label">Attributes JSON</label>
+                <textarea id="prod-attributes" class="textarea mono" placeholder='{"platform":"Steam","region":"Global","edition":"Ultimate"}'></textarea>
+            </div>
+
+            <div class="grid-2">
+                <div>
+                    <label class="label">Product Image</label>
+                    <input id="prod-image-file" type="file" accept="image/*" class="input" onchange="hubPreviewImage(this)">
+                </div>
+                <div>
+                    <label class="label">Preview</label>
+                    <img id="prod-preview" class="thumb-lg" src="assets/placeholder.png">
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <button type="button" onclick="duplicateCurrentProduct()" class="btn btn-alt w-full">Duplicate Product</button>
+                <button type="submit" class="btn btn-main w-full">Save Product</button>
+            </div>
         </form>
     </div>
 </div>
-<div id="inv-modal" class="sh-modal-overlay hidden">
-    <div class="sh-modal wide sh-scroll" onclick="event.stopPropagation()">
+
+<div id="withdraw-modal" class="modal-backdrop hidden">
+    <div class="sh-modal" onclick="event.stopPropagation()">
         <div class="flex items-center justify-between mb-6">
             <div>
-                <p class="section-title mb-1">Digital / Gift Card</p>
-                <h2 id="inv-modal-title" style="font-family:'Space Mono',monospace;font-size:1.2rem;font-weight:700;color:var(--text)">Manage Codes</h2>
+                <div class="sh-sub mb-2">Seller Payout</div>
+                <div class="text-2xl font-extrabold">Withdraw Funds</div>
             </div>
-            <button onclick="closeInvModal()" class="btn-icon" style="width:36px;height:36px;border:1.5px solid var(--border);border-radius:9px;color:var(--muted)">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <button type="button" onclick="closeWithdrawModal()" class="icon-btn">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
         </div>
-        <div style="display:flex;gap:12px;margin-bottom:20px" id="inv-stats">
-            <div class="inv-stat">
-                <div class="inv-stat-val" id="inv-stat-total">—</div>
-                <div class="inv-stat-label">Total</div>
+
+        <div class="space-y-5">
+            <div class="sh-soft rounded-2xl p-4 border text-sm" style="border-color:var(--line)">
+                Available balance: <b><span id="withdraw-available">0.000</span> G</b>
             </div>
-            <div class="inv-stat">
-                <div class="inv-stat-val" style="color:#00e5c3" id="inv-stat-available">—</div>
-                <div class="inv-stat-label">Available</div>
+            <div>
+                <label class="label">Amount</label>
+                <input id="withdraw-amount" type="number" step="0.001" class="input mono" placeholder="0.000">
             </div>
-            <div class="inv-stat">
-                <div class="inv-stat-val" style="color:#7c6dff" id="inv-stat-sold">—</div>
-                <div class="inv-stat-label">Sold</div>
+            <div class="grid-2">
+                <button type="button" onclick="closeWithdrawModal()" class="btn btn-alt w-full">Cancel</button>
+                <button type="button" onclick="requestWithdraw()" class="btn btn-main w-full">Submit Request</button>
             </div>
         </div>
+    </div>
+</div>
+
+<div id="delete-modal" class="modal-backdrop hidden">
+    <div class="sh-modal" style="max-width:520px" onclick="event.stopPropagation()">
+        <div class="text-center space-y-4">
+            <div class="mx-auto w-14 h-14 rounded-2xl flex items-center justify-center" style="background:rgba(255,77,106,.12);color:var(--danger)">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+            </div>
+            <div class="text-2xl font-extrabold">Delete Product?</div>
+            <div class="text-sm text-[var(--muted)]">This will hide the product from listings and deactivate sales.</div>
+            <div class="grid-2">
+                <button type="button" onclick="closeDeleteModal()" class="btn btn-alt w-full">Cancel</button>
+                <button type="button" id="delete-confirm-btn" class="btn btn-red w-full">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="inv-modal" class="modal-backdrop hidden">
+    <div class="sh-modal wide" onclick="event.stopPropagation()">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <div class="sh-sub mb-2">Digital Inventory</div>
+                <div id="inv-modal-title" class="text-2xl font-extrabold">Manage Codes</div>
+            </div>
+            <button type="button" onclick="closeInvModal()" class="icon-btn">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="grid-3 mb-5">
+            <div class="sh-soft rounded-2xl p-4 border text-center" style="border-color:var(--line)">
+                <div class="sh-sub mb-2">Total</div>
+                <div id="inv-stat-total" class="stat-num sm">0</div>
+            </div>
+            <div class="sh-soft rounded-2xl p-4 border text-center" style="border-color:var(--line)">
+                <div class="sh-sub mb-2">Available</div>
+                <div id="inv-stat-available" class="stat-num sm" style="color:var(--accent)">0</div>
+            </div>
+            <div class="sh-soft rounded-2xl p-4 border text-center" style="border-color:var(--line)">
+                <div class="sh-sub mb-2">Sold</div>
+                <div id="inv-stat-sold" class="stat-num sm" style="color:var(--accent2)">0</div>
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 xl:grid-cols-[1.1fr_.9fr] gap-5">
             <div class="space-y-5">
-                <div class="sh-card p-4" style="border-radius:12px">
-                    <div class="mb-4">
-                        <label class="sh-label">Gift Card Option</label>
-                        <div style="display:flex;gap:10px">
-                            <select id="inv-option" class="sh-input flex-1"></select>
-                            <button onclick="invAddOptionModal()" class="btn-primary" style="padding:8px 14px;font-size:.7rem">+ Add</button>
-                        </div>
+                <div class="sh-card p-5">
+                    <label class="label">Gift Card Option</label>
+                    <div class="grid grid-cols-[1fr_auto] gap-3">
+                        <select id="inv-option" class="select"></select>
+                        <button type="button" onclick="invAddOptionModal()" class="btn btn-main">Add</button>
                     </div>
-                    <p class="sh-label mb-3">Add Codes — one per line, optional PIN after pipe <span style="font-family:monospace">CODE|PIN</span></p>
-                    <textarea id="inv-codes-input" class="sh-input" rows="4" placeholder="XXXX-XXXX-XXXX&#10;YYYY-YYYY|1234&#10;..."></textarea>
-                    <button onclick="invAddCodes()" class="btn-primary" style="margin-top:12px;width:100%;justify-content:center">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14" />
-                        </svg>
-                        Import Codes
-                    </button>
+
+                    <div class="mt-5">
+                        <label class="label">Import Codes</label>
+                        <textarea id="inv-codes-input" class="textarea mono" placeholder="CODE-1234|PIN&#10;CODE-5678"></textarea>
+                    </div>
+
+                    <div class="grid-2 mt-4">
+                        <button type="button" onclick="loadInvCodes()" class="btn btn-alt w-full">Reload</button>
+                        <button type="button" onclick="invAddCodes()" class="btn btn-main w-full">Import</button>
+                    </div>
                 </div>
-                <div class="sh-card overflow-hidden" style="border-radius:12px">
-                    <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
-                        <span style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Code List</span>
-                        <span style="font-size:.7rem;color:var(--muted)" id="inv-codes-count"></span>
+
+                <div class="sh-card overflow-hidden">
+                    <div class="p-4 border-b flex items-center justify-between" style="border-color:var(--line)">
+                        <div class="sh-sub">Codes</div>
+                        <input id="inv-filter" class="input w-[180px]" placeholder="Search tail...">
                     </div>
-                    <div id="inv-codes-list" class="sh-scroll" style="max-height:360px;overflow-y:auto"></div>
+                    <div id="inv-codes-list" class="max-h-[420px] overflow-y-auto">
+                        <div class="empty"><b>No codes yet</b>Add your first inventory batch.</div>
+                    </div>
                 </div>
             </div>
-            <div class="sh-card overflow-hidden" style="border-radius:12px">
-                <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
-                    <span style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Options Grid</span>
-                    <span style="font-size:.7rem;color:var(--muted)">USD / GASHY</span>
+
+            <div class="sh-card overflow-hidden">
+                <div class="p-4 border-b flex items-center justify-between" style="border-color:var(--line)">
+                    <div class="sh-sub">Options Grid</div>
+                    <div class="text-xs text-[var(--muted)]">USD / GASHY</div>
                 </div>
-                <div id="inv-options-grid" class="sh-scroll" style="max-height:520px;overflow-y:auto;padding:14px"></div>
+                <div id="inv-options-grid" class="p-4 space-y-3 max-h-[560px] overflow-y-auto">
+                    <div class="empty"><b>No options yet</b>Create variants like $10 / $25 / $50.</div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-<div id="mystery-modal" class="sh-modal-overlay hidden">
-    <div class="sh-modal wide sh-scroll" onclick="event.stopPropagation()">
+</div>
+
+<div id="mystery-modal" class="modal-backdrop hidden">
+    <div class="sh-modal wide" onclick="event.stopPropagation()">
         <div class="flex items-center justify-between mb-6">
             <div>
-                <p class="section-title mb-1">Mystery Box</p>
-                <h2 id="mystery-modal-title" style="font-family:'Space Mono',monospace;font-size:1.2rem;font-weight:700;color:var(--text)">Loot Table</h2>
+                <div class="sh-sub mb-2">Mystery Box Builder</div>
+                <div id="mystery-modal-title" class="text-2xl font-extrabold">Loot Table</div>
             </div>
-            <button onclick="closeMysteryModal()" class="btn-icon" style="width:36px;height:36px;border:1.5px solid var(--border);border-radius:9px;color:var(--muted)">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <button type="button" onclick="closeMysteryModal()" class="icon-btn">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
         </div>
-        <div class="modal-split">
-            <div class="sh-card overflow-hidden" style="border-radius:12px">
-                <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
-                    <span style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Loot Entries</span>
-                    <span id="mystery-total-prob" style="font-size:.7rem;font-family:'Space Mono',monospace;color:var(--muted)"></span>
+
+        <div class="sh-soft rounded-2xl p-4 border text-sm mb-5" style="border-color:var(--line)">
+            Keep total probability at or below 100%. Avoid reward values larger than box price unless intentionally promotional.
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-[1.25fr_.75fr] gap-5">
+            <div class="sh-card overflow-hidden">
+                <div class="p-4 border-b flex items-center justify-between" style="border-color:var(--line)">
+                    <div class="sh-sub">Loot Entries</div>
+                    <div id="mystery-total-prob" class="mono text-sm text-[var(--muted)]">0%</div>
                 </div>
-                <div style="display:grid;grid-template-columns:1fr auto auto auto auto;gap:12px;padding:8px 16px;border-bottom:1px solid var(--border)">
-                    <span style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Reward</span>
-                    <span style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Amt</span>
-                    <span style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Rarity</span>
-                    <span style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Chance</span>
-                    <span></span>
+                <div id="mystery-loot-list" class="max-h-[520px] overflow-y-auto">
+                    <div class="empty"><b>No loot entries</b>Add rewards to activate the box.</div>
                 </div>
-                <div id="mystery-loot-list" class="sh-scroll" style="max-height:380px;overflow-y:auto"></div>
             </div>
-            <div>
-                <div class="sh-card p-5" style="border-radius:12px">
-                    <p class="sh-label mb-4">Add Loot Entry</p>
-                    <div style="display:flex;flex-direction:column;gap:14px">
-                        <div>
-                            <label class="sh-label">Reward Type</label>
-                            <select id="mystery-reward-product" class="sh-input">
-                                <option value="">Tokens (GASHY)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="sh-label">Amount</label>
-                            <input type="number" id="mystery-reward-amount" step="0.001" value="0" class="sh-input mono" placeholder="0.000">
-                        </div>
-                        <div>
-                            <label class="sh-label">Rarity</label>
-                            <select id="mystery-rarity" class="sh-input">
-                                <option value="common">Common</option>
-                                <option value="rare">Rare</option>
-                                <option value="epic">Epic</option>
-                                <option value="legendary">Legendary</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="sh-label">Probability %</label>
-                            <input type="number" id="mystery-probability" step="0.01" class="sh-input mono" placeholder="e.g. 45.00">
-                        </div>
-                        <button onclick="mysteryAddLoot()" class="btn-primary" style="width:100%;justify-content:center">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14" />
-                            </svg>
-                            Add to Table
-                        </button>
-                    </div>
+
+            <div class="sh-card p-5 space-y-4">
+                <div class="font-extrabold text-lg">Add Loot Entry</div>
+
+                <div>
+                    <label class="label">Reward Product</label>
+                    <select id="mystery-reward-product" class="select">
+                        <option value="">Tokens (GASHY)</option>
+                    </select>
                 </div>
+
+                <div>
+                    <label class="label">Amount</label>
+                    <input id="mystery-reward-amount" type="number" step="0.001" value="0" class="input mono">
+                </div>
+
+                <div>
+                    <label class="label">Rarity</label>
+                    <select id="mystery-rarity" class="select">
+                        <option value="common">Common</option>
+                        <option value="rare">Rare</option>
+                        <option value="epic">Epic</option>
+                        <option value="legendary">Legendary</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="label">Probability %</label>
+                    <input id="mystery-probability" type="number" step="0.01" class="input mono" placeholder="25.00">
+                </div>
+
+                <button type="button" onclick="mysteryAddLoot()" class="btn btn-main w-full">Add Entry</button>
             </div>
         </div>
     </div>
 </div>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const search = document.getElementById('product-search')
-        if (!search) return
-        search.addEventListener('input', function() {
-            if (typeof myProducts === 'undefined') return
-            const q = (this.value || '').toLowerCase().trim()
-            const rows = document.querySelectorAll('#product-list tr[data-title]')
-            rows.forEach(row => {
-                row.style.display = !q || row.dataset.title.indexOf(q) !== -1 ? '' : 'none'
-            })
-        })
-        const hubList = document.getElementById('product-list')
-        if (hubList) {
-            const observer = new MutationObserver(() => {
-                const q = (search.value || '').toLowerCase().trim()
-                if (!q) return
-                document.querySelectorAll('#product-list tr[data-title]').forEach(row => {
-                    row.style.display = row.dataset.title.indexOf(q) !== -1 ? '' : 'none'
-                })
-            })
-            observer.observe(hubList, {
-                childList: true
-            })
-        }
-    })
-</script>
 <?php require_once 'footer.php'; ?>
