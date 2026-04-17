@@ -321,5 +321,4 @@ $price_gashy = $rate > 0 ? $p['price_usd'] / $rate : 0;
     window.GASHY_PRICE = <?= (float)$price_gashy ?>;
     window.GASHY_PRODUCT_SELLER_ID = <?= (int)$p['seller_id'] ?>;
 </script>
-<script src="./public/js/pages/product.js"></script>
 <?php require_once 'footer.php'; ?>

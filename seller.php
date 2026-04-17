@@ -251,5 +251,4 @@ $uid = 0;
         </div>
     </div>
 </main>
-<script src="./public/js/pages/seller.js"></script>
 <?php require_once 'footer.php'; ?>

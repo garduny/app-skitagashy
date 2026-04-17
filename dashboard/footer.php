@@ -1,5 +1,5 @@
 <style>
-    @keyframes shimmer-footer {
+    @keyframes footerline {
         0% {
             background-position: 200% center
         }
@@ -9,15 +9,29 @@
         }
     }
 
+    @keyframes footerpulse {
+
+        0%,
+        100% {
+            transform: scale(1);
+            opacity: 1
+        }
+
+        50% {
+            transform: scale(1.15);
+            opacity: .7
+        }
+    }
+
     .admin-footer {
-        background: linear-gradient(135deg, rgba(10, 14, 26, 0.95), rgba(19, 24, 36, 0.95));
-        backdrop-filter: blur(20px);
-        border-top: 2px solid rgba(0, 255, 170, 0.1);
+        background: linear-gradient(135deg, rgba(10, 14, 26, .96), rgba(19, 24, 36, .96));
+        backdrop-filter: blur(18px);
+        border-top: 1px solid rgba(0, 255, 170, .12);
         position: relative;
         overflow: hidden
     }
 
-    .admin-footer::before {
+    .admin-footer:before {
         content: '';
         position: absolute;
         top: 0;
@@ -26,85 +40,93 @@
         height: 2px;
         background: linear-gradient(90deg, transparent, #00ffaa, transparent);
         background-size: 200% 100%;
-        animation: shimmer-footer 3s linear infinite
+        animation: footerline 3s linear infinite
     }
 
-    .live-site-btn {
-        background: linear-gradient(135deg, rgba(0, 255, 170, 0.1), rgba(139, 92, 246, 0.1));
-        border: 2px solid rgba(0, 255, 170, 0.2);
-        transition: all 0.3s ease;
+    .footer-btn {
+        background: linear-gradient(135deg, rgba(0, 255, 170, .08), rgba(139, 92, 246, .08));
+        border: 1px solid rgba(0, 255, 170, .2);
+        transition: .25s ease;
         position: relative;
         overflow: hidden
     }
 
-    .live-site-btn::before {
+    .footer-btn:before {
         content: '';
         position: absolute;
         inset: 0;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-        transform: translateX(-100%);
-        transition: transform 0.6s
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .08), transparent);
+        transform: translateX(-120%);
+        transition: transform .6s
     }
 
-    .live-site-btn:hover::before {
-        transform: translateX(100%)
+    .footer-btn:hover:before {
+        transform: translateX(120%)
     }
 
-    .live-site-btn:hover {
+    .footer-btn:hover {
         background: linear-gradient(135deg, #00ffaa, #00d48f);
         color: #000;
         border-color: #00ffaa;
-        box-shadow: 0 8px 25px rgba(0, 255, 170, 0.3);
+        box-shadow: 0 12px 30px rgba(0, 255, 170, .22);
         transform: translateY(-2px)
     }
 
+    .footer-dot {
+        animation: footerpulse 1.6s infinite
+    }
+
     html:not(.dark) .admin-footer {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.98));
-        border-top: 2px solid rgba(0, 212, 143, 0.15)
+        background: linear-gradient(135deg, rgba(255, 255, 255, .98), rgba(248, 250, 252, .98));
+        border-top: 1px solid rgba(0, 212, 143, .12)
     }
 
-    html:not(.dark) .live-site-btn {
-        background: linear-gradient(135deg, rgba(0, 212, 143, 0.08), rgba(139, 92, 246, 0.08));
-        border: 2px solid rgba(0, 212, 143, 0.25)
+    html:not(.dark) .footer-btn {
+        background: linear-gradient(135deg, rgba(0, 212, 143, .08), rgba(139, 92, 246, .06));
+        border-color: rgba(0, 212, 143, .18)
     }
 
-    html:not(.dark) .live-site-btn:hover {
+    html:not(.dark) .footer-btn:hover {
         color: #000
     }
 </style>
-<footer class="admin-footer lg:pl-72 mt-auto py-8 transition-colors duration-300 shadow-2xl">
-    <div class="flex flex-col md:flex-row justify-between items-center px-6 gap-6">
-        <div class="flex flex-col sm:flex-row items-center gap-4">
+
+<footer class="admin-footer lg:pl-72 mt-auto py-6 transition-colors duration-300">
+    <div class="px-6 flex flex-col xl:flex-row items-center justify-between gap-5">
+        <div class="flex flex-col md:flex-row items-center gap-5">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#00ffaa] to-[#00d48f] flex items-center justify-center shadow-lg">
-                    <img src="../public/img/logo.png" alt="GASHY" class="w-full h-full rounded-xl">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00ffaa] to-[#00d48f] p-[2px] shadow-lg">
+                    <img src="../public/img/logo.png" alt="GASHY" class="w-full h-full rounded-[10px] object-cover">
                 </div>
                 <div>
-                    <p class="text-xs font-black text-gray-700 dark:text-gray-300" style="font-family:'Space Mono',monospace">&copy; <?= date('Y') ?> GASHY BAZAAR</p>
-                    <p class="text-[9px] text-gray-500 dark:text-gray-500 font-bold uppercase tracking-widest -mt-0.5">Admin System v2.0.0</p>
+                    <div class="text-xs font-black tracking-wider text-gray-800 dark:text-gray-200">&copy; <?= date('Y') ?> GASHY BAZAAR</div>
+                    <div class="text-[10px] uppercase font-bold tracking-[.22em] text-gray-500">Admin Control Panel</div>
                 </div>
             </div>
-            <div class="hidden sm:block w-px h-8 bg-gray-300 dark:bg-white/10"></div>
-            <div class="flex items-center gap-2 text-[10px] text-gray-500 dark:text-gray-500 font-mono">
-                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                <span class="font-bold">SYSTEM ONLINE</span>
+
+            <div class="hidden md:block w-px h-8 bg-gray-300 dark:bg-white/10"></div>
+
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10">
+                <div class="w-2 h-2 rounded-full bg-green-500 footer-dot"></div>
+                <div class="text-[10px] font-black tracking-widest text-gray-700 dark:text-gray-300">SYSTEM ONLINE</div>
+            </div>
+
+            <div class="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10">
+                <i class="fa-solid fa-shield-halved text-[#00ffaa] text-xs"></i>
+                <div class="text-[10px] font-black tracking-widest text-gray-700 dark:text-gray-300">SECURED</div>
             </div>
         </div>
-        <div class="flex items-center gap-4">
-            <div class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10">
-                <svg class="w-3 h-3 text-[#00ffaa]" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                </svg>
-                <span class="text-[10px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Secured</span>
-            </div>
-            <a href="../" target="_blank" class="live-site-btn flex items-center gap-3 px-6 py-3 rounded-xl font-black text-sm shadow-xl">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-                </svg>
+
+        <div class="flex items-center gap-3 flex-wrap justify-center">
+            <a href="app.php" class="footer-btn px-4 py-2 rounded-xl text-xs font-black text-gray-700 dark:text-gray-200 flex items-center gap-2">
+                <i class="fa-solid fa-chart-line text-[11px]"></i>
+                <span>DASHBOARD</span>
+            </a>
+
+            <a href="../" target="_blank" class="footer-btn px-5 py-2.5 rounded-xl text-sm font-black text-gray-700 dark:text-gray-200 flex items-center gap-3 shadow-xl">
+                <i class="fa-solid fa-globe"></i>
                 <span>VIEW LIVE SITE</span>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
+                <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
             </a>
         </div>
     </div>
