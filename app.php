@@ -321,7 +321,7 @@ $heroStats = [
             </div>
 
             <div class="mt-8 max-w-4xl mx-auto">
-                <form action="products.php" method="get" class="panel-bg bg-[rgba(8,13,26,.85)] border border-[rgba(0,255,170,.14)] rounded-2xl p-3 md:p-4 flex flex-col md:flex-row gap-3 shadow-[0_8px_32px_rgba(0,255,170,.05)]">
+                <form action="market.php" method="get" class="panel-bg bg-[rgba(8,13,26,.85)] border border-[rgba(0,255,170,.14)] rounded-2xl p-3 md:p-4 flex flex-col md:flex-row gap-3 shadow-[0_8px_32px_rgba(0,255,170,.05)]">
                     <div class="flex-1 relative">
                         <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
                         <input type="text" name="search" placeholder="Search gift cards, mystery boxes, digital items..." class="search-glow w-full h-12 rounded-xl bg-white/5 border border-white/10 pl-11 pr-4 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 outline-none">
