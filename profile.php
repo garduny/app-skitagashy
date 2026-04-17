@@ -182,7 +182,7 @@ require_once 'sidebar.php';
         <div class="absolute bottom-1/4 left-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"></div>
     </div>
     <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div id="guest-view" class="fade-in flex flex-col items-center justify-center min-h-[80vh] text-center space-y-6">
+        <div id="guest-view" class="hidden fade-in flex-col items-center justify-center min-h-[80vh] text-center space-y-6">
             <div class="relative">
                 <div class="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 blur-2xl rounded-full animate-pulse"></div>
                 <div class="relative w-24 h-24 rounded-2xl bg-gradient-to-br from-gray-100 to-gray-200 dark:from-dark-700 dark:to-dark-800 flex items-center justify-center shadow-xl border-2 border-white dark:border-white/10">
@@ -202,7 +202,7 @@ require_once 'sidebar.php';
                 Connect Phantom Wallet
             </button>
         </div>
-        <div id="auth-view" class="hidden space-y-6 fade-in">
+        <div id="auth-view" class="block space-y-6 fade-in">
             <div class="profile-header rounded-2xl p-6 shadow-lg">
                 <div class="flex flex-col md:flex-row items-center gap-6">
                     <div class="relative">
@@ -210,30 +210,30 @@ require_once 'sidebar.php';
                             <div class="w-full h-full rounded-full bg-white dark:bg-dark-900 flex items-center justify-center text-3xl">👤</div>
                         </div>
                         <div class="absolute -bottom-1 -right-1 w-8 h-8 bg-white dark:bg-dark-800 rounded-full flex items-center justify-center border-3 border-white dark:border-dark-900 shadow-lg" title="Tier Badge">
-                            <span id="account-tier-icon" class="text-lg">🥉</span>
+                            <span id="account-tier-icon" class="text-lg">🥇</span>
                         </div>
                     </div>
                     <div class="text-center md:text-left flex-1">
-                        <h1 class="text-2xl md:text-3xl font-black text-gray-900 dark:text-white mb-2">Welcome, <span id="profile-accountname" class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Account</span></h1>
+                        <h1 class="text-2xl md:text-3xl font-black text-gray-900 dark:text-white mb-2">Welcome, <span id="profile-accountname" class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">gardunydev</span></h1>
                         <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 rounded-lg border border-blue-500/30 mb-3">
                             <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
                                 <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z" />
                             </svg>
-                            <p id="profile-wallet" class="text-blue-700 dark:text-blue-400 font-mono text-xs font-semibold">Loading...</p>
+                            <p id="profile-wallet" class="text-blue-700 dark:text-blue-400 font-mono text-xs font-semibold">6dygwo6jHPrExGKrohykhYoC1DkAA6CyPp9qDbhMe1JT</p>
                         </div>
                         <div class="flex flex-wrap justify-center md:justify-start gap-3">
                             <div class="stat-card px-4 py-2 rounded-lg">
                                 <div class="text-xs text-gray-600 dark:text-gray-400 font-semibold mb-1">Tier</div>
-                                <div id="profile-tier" class="text-base font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">...</div>
+                                <div id="profile-tier" class="text-base font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">gold</div>
                             </div>
                             <div class="stat-card px-4 py-2 rounded-lg">
                                 <div class="text-xs text-gray-600 dark:text-gray-400 font-semibold mb-1">Spent</div>
-                                <div id="profile-spent" class="text-base font-black text-gray-900 dark:text-white">...</div>
+                                <div id="profile-spent" class="text-base font-black text-gray-900 dark:text-white">0 GASHY</div>
                             </div>
                             <div class="stat-card px-4 py-2 rounded-lg">
                                 <div class="text-xs text-gray-600 dark:text-gray-400 font-semibold mb-1">Orders</div>
-                                <div id="profile-orders-count" class="text-base font-black text-gray-900 dark:text-white">...</div>
+                                <div id="profile-orders-count" class="text-base font-black text-gray-900 dark:text-white">0</div>
                             </div>
                         </div>
                     </div>
@@ -257,9 +257,9 @@ require_once 'sidebar.php';
                         <a href="orders.php" class="px-3 py-1.5 bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-lg font-semibold text-sm hover:bg-blue-500/20 transition-all">View All →</a>
                     </div>
                     <div id="recent-orders-list" class="space-y-3 max-h-96 overflow-y-auto">
-                        <div class="content-card p-8 text-center rounded-xl">
-                            <div class="w-12 h-12 mx-auto rounded-full border-3 border-blue-500/20 border-t-blue-500 animate-spin"></div>
-                            <p class="text-gray-600 dark:text-gray-400 mt-4 text-sm font-semibold">Loading orders...</p>
+                        <div class="content-card p-12 text-center rounded-xl flex flex-col items-center justify-center min-h-[300px]">
+                            <p class="text-gray-500 dark:text-gray-400 text-sm mb-2">No orders found.</p>
+                            <a href="market.php" class="text-blue-500 hover:text-blue-400 text-sm">Browse Market</a>
                         </div>
                     </div>
                 </div>
@@ -268,11 +268,11 @@ require_once 'sidebar.php';
                     <div class="content-card rounded-xl p-5 space-y-4">
                         <div>
                             <label class="block text-xs font-bold text-gray-600 dark:text-gray-400 uppercase mb-2">Username</label>
-                            <input type="text" id="input-accountname" class="input-field w-full rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white font-medium" placeholder="Enter username">
+                            <input type="text" id="input-accountname" value="gardunydev" class="input-field w-full rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white font-medium" placeholder="Enter username">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-600 dark:text-gray-400 uppercase mb-2">Email Address</label>
-                            <input type="email" id="input-email" class="input-field w-full rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white font-medium" placeholder="your@email.com">
+                            <input type="email" id="input-email" value="gardunydeveloper@gmail.com" class="input-field w-full rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white font-medium" placeholder="your@email.com">
                         </div>
                         <button onclick="saveProfile()" class="action-btn w-full py-3 text-white font-bold rounded-lg">
                             Save Changes
@@ -289,7 +289,7 @@ require_once 'sidebar.php';
                         </div>
                         <p class="text-sm text-gray-700 dark:text-gray-300 mb-4">Share your code and earn <span class="font-bold text-purple-600 dark:text-purple-400">5%</span> of trading fees!</p>
                         <div class="flex gap-2">
-                            <input type="text" id="referral-code" readonly class="flex-1 bg-white/50 dark:bg-black/30 border-2 border-purple-300 dark:border-purple-500/30 rounded-lg px-3 py-2 text-xs text-purple-700 dark:text-purple-300 font-mono font-bold">
+                            <input type="text" id="referral-code" readonly value="GASHY-REF-Account1" class="flex-1 bg-white/50 dark:bg-black/30 border-2 border-purple-300 dark:border-purple-500/30 rounded-lg px-3 py-2 text-xs text-purple-700 dark:text-purple-300 font-mono font-bold">
                             <button onclick="navigator.clipboard.writeText(document.getElementById('referral-code').value);notyf.success('Referral Code Copied!')" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg font-bold text-sm transition-all">
                                 Copy
                             </button>
@@ -298,15 +298,15 @@ require_once 'sidebar.php';
                     <div class="content-card rounded-xl p-5 space-y-4">
                         <div class="flex items-center justify-between">
                             <div class="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase">Balance</div>
-                            <div id="withdrawable-balance" class="text-xl font-black text-green-500">0 GASHY</div>
+                            <div id="withdrawable-balance" class="text-xl font-black text-green-500">5.000 GASHY</div>
                         </div>
                         <input type="number" id="withdraw-amount" placeholder="Enter amount" class="input-field w-full rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white">
                         <button onclick="requestWithdraw()" class="action-btn w-full py-3 text-white font-bold rounded-lg">Request Withdrawal</button>
                     </div>
                     <div class="content-card rounded-xl p-5 space-y-3">
                         <h3 class="text-base font-black text-gray-900 dark:text-white">Withdrawal History</h3>
-                        <div id="withdrawals-list" class="space-y-2 max-h-48 overflow-y-auto">
-                            <div class="text-gray-500 text-sm">Loading...</div>
+                        <div id="withdrawals-list" class="space-y-2 max-h-48 overflow-y-auto flex items-center justify-center min-h-[100px]">
+                            <div class="text-gray-400 dark:text-gray-500 text-sm">No withdrawals yet</div>
                         </div>
                     </div>
                 </div>

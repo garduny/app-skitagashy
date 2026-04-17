@@ -24,327 +24,322 @@ $cats = getQuery(" SELECT name,slug,icon,( SELECT COUNT(*) FROM products WHERE c
 $rate = toGashy();
 ?>
 <style>
-    /* ── CSS VARIABLES ── */
     :root {
         --neon: #00ffaa;
         --neon-dim: #00d48f;
-        --neon-dark: #007a55;
         --accent: #8b5cf6;
-        --panel-dark: rgba(13, 17, 28, 0.92);
-        --panel-border-dark: rgba(0, 255, 170, 0.1);
-        --text-muted-dark: #6b7280;
-        --text-muted-light: #64748b;
-        --font-mono: 'JetBrains Mono', monospace;
+        --bg: #0a0e1a;
+        --panel: rgba(8, 13, 26, 0.92);
+        --border: rgba(0, 255, 170, 0.1);
+        --text: #e2e8f0;
+        --muted: #6b7280;
+        --mono: 'JetBrains Mono', monospace;
     }
 
-    /* ── LAYOUT ── */
-    .market-wrap {
+    .mw {
         min-height: 100vh;
-        padding-top: 6rem;
+        padding-top: 5rem;
         padding-left: 0;
-        background: #0a0e1a;
-        color: #e2e8f0;
-        transition: background 0.3s, color 0.3s;
+        background: var(--bg);
+        color: var(--text);
+        transition: background .3s, color .3s;
     }
 
     @media(min-width:1024px) {
-        .market-wrap {
+        .mw {
             padding-left: 18rem
         }
     }
 
-    .market-bg {
+    .mw-bg {
         position: fixed;
         inset: 0;
         pointer-events: none;
         z-index: 0;
-        background-image:
-            linear-gradient(rgba(0, 255, 170, 0.02) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 255, 170, 0.02) 1px, transparent 1px);
+        background-image: linear-gradient(rgba(0, 255, 170, .02) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 170, .02) 1px, transparent 1px);
         background-size: 60px 60px;
     }
 
-    .market-orb-1 {
+    .orb1,
+    .orb2 {
         position: fixed;
-        width: 600px;
-        height: 600px;
-        background: #00ffaa;
         border-radius: 50%;
-        filter: blur(130px);
-        opacity: 0.04;
-        top: -100px;
-        left: 20%;
+        filter: blur(120px);
         pointer-events: none;
         z-index: 0;
     }
 
-    .market-orb-2 {
-        position: fixed;
+    .orb1 {
         width: 500px;
         height: 500px;
-        background: #8b5cf6;
-        border-radius: 50%;
-        filter: blur(130px);
-        opacity: 0.04;
-        bottom: -100px;
-        right: 10%;
-        pointer-events: none;
-        z-index: 0;
+        background: #00ffaa;
+        opacity: .03;
+        top: -80px;
+        left: 20%;
     }
 
-    .market-content {
+    .orb2 {
+        width: 400px;
+        height: 400px;
+        background: #8b5cf6;
+        opacity: .03;
+        bottom: -80px;
+        right: 10%;
+    }
+
+    .mc {
         position: relative;
         z-index: 10;
         max-width: 1920px;
         margin: 0 auto;
-        padding: 1.5rem;
+        padding: 1rem;
     }
 
-    /* ── FILTER PANEL ── */
-    .filter-panel {
-        background: rgba(8, 13, 26, 0.9);
-        border: 1px solid rgba(0, 255, 170, 0.1);
-        border-radius: 1rem;
+    .fp {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: .875rem;
         position: sticky;
-        top: 7rem;
+        top: 6rem;
         overflow: hidden;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        transition: border-color 0.3s;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, .4);
     }
 
-    .filter-panel::before {
+    .fp::before {
         content: '';
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         height: 2px;
-        background: linear-gradient(90deg, transparent, rgba(0, 255, 170, 0.5), transparent);
+        background: linear-gradient(90deg, transparent, rgba(0, 255, 170, .45), transparent);
     }
 
-    .filter-panel-inner {
-        padding: 1.5rem;
+    .fp-inner {
+        padding: 1rem;
         position: relative;
         z-index: 1;
     }
 
-    .filter-title {
-        font-family: var(--font-mono);
-        font-size: 0.7rem;
-        font-weight: 700;
-        letter-spacing: 0.2em;
-        color: var(--text-muted-dark);
-        text-transform: uppercase;
-        margin-bottom: 1rem;
+    .fp-head {
         display: flex;
         align-items: center;
-        gap: 0.75rem;
+        gap: .6rem;
+        margin-bottom: .875rem;
     }
 
-    .filter-title::after {
-        content: '';
-        flex: 1;
-        height: 1px;
-        background: linear-gradient(90deg, rgba(0, 255, 170, 0.3), transparent);
-    }
-
-    .filter-icon-wrap {
-        width: 2.5rem;
-        height: 2.5rem;
-        border-radius: 0.6rem;
+    .fp-icon {
+        width: 2rem;
+        height: 2rem;
+        border-radius: .5rem;
         background: linear-gradient(135deg, #00d48f, #8b5cf6);
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        box-shadow: 0 4px 12px rgba(0, 212, 143, 0.3);
+        box-shadow: 0 3px 10px rgba(0, 212, 143, .3);
     }
 
-    /* ── CATEGORY ITEMS ── */
-    .cat-item {
+    .fp-h {
+        font-size: .875rem;
+        font-weight: 900;
+        line-height: 1;
+    }
+
+    .sec-label {
+        font-family: var(--mono);
+        font-size: .6rem;
+        font-weight: 700;
+        letter-spacing: .18em;
+        color: var(--muted);
+        text-transform: uppercase;
+        margin-bottom: .5rem;
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+    }
+
+    .sec-label::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, rgba(0, 255, 170, .25), transparent);
+    }
+
+    .ci {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 0.7rem 1rem;
-        border-radius: 0.6rem;
-        font-size: 0.85rem;
+        padding: .45rem .75rem;
+        border-radius: .5rem;
+        font-size: .78rem;
         font-weight: 600;
         text-decoration: none;
-        transition: all 0.2s;
+        transition: all .2s;
         position: relative;
         overflow: hidden;
-        color: #6b7280;
+        color: var(--muted);
     }
 
-    .cat-item::before {
+    .ci::before {
         content: '';
         position: absolute;
         left: 0;
         top: 0;
         bottom: 0;
-        width: 3px;
+        width: 2px;
         background: linear-gradient(180deg, #00d48f, #8b5cf6);
         transform: scaleY(0);
-        transition: transform 0.25s;
+        transition: transform .25s;
         transform-origin: bottom;
-        border-radius: 0 2px 2px 0;
     }
 
-    .cat-item:hover::before,
-    .cat-item.active::before {
-        transform: scaleY(1)
+    .ci:hover::before,
+    .ci.active::before {
+        transform: scaleY(1);
     }
 
-    .cat-item:hover {
+    .ci:hover {
         color: #00ffaa;
-        background: rgba(0, 255, 170, 0.04)
+        background: rgba(0, 255, 170, .04);
     }
 
-    .cat-item.active {
+    .ci.active {
         background: linear-gradient(135deg, #00d48f, #00ffaa);
         color: #0a0e1a;
+        font-weight: 800;
+        box-shadow: 0 3px 12px rgba(0, 212, 143, .25);
+    }
+
+    .ci.active::before {
+        display: none;
+    }
+
+    .ci-count {
+        font-family: var(--mono);
+        font-size: .58rem;
         font-weight: 700;
-        box-shadow: 0 4px 16px rgba(0, 212, 143, 0.25);
+        padding: .15rem .4rem;
+        border-radius: .3rem;
+        background: rgba(0, 0, 0, .2);
+        opacity: .75;
     }
 
-    .cat-item.active::before {
-        display: none
-    }
-
-    .cat-count {
-        font-family: var(--font-mono);
-        font-size: 0.65rem;
-        font-weight: 700;
-        padding: 0.2rem 0.5rem;
-        border-radius: 0.35rem;
-        background: rgba(0, 0, 0, 0.25);
-        color: inherit;
-        opacity: 0.75;
-    }
-
-    .cat-item.active .cat-count {
-        background: rgba(0, 0, 0, 0.2);
-        color: #0a0e1a
-    }
-
-    /* ── INPUTS ── */
-    .mkt-input {
+    .mi {
         width: 100%;
-        background: rgba(3, 5, 13, 0.7);
-        border: 1px solid rgba(0, 255, 170, 0.1);
-        border-radius: 0.6rem;
-        padding: 0.7rem 1rem;
-        font-size: 0.85rem;
-        color: #e2e8f0;
+        background: rgba(3, 5, 13, .7);
+        border: 1px solid rgba(0, 255, 170, .1);
+        border-radius: .5rem;
+        padding: .55rem .75rem;
+        font-size: .8rem;
+        color: var(--text);
         font-weight: 500;
-        transition: all 0.25s;
+        transition: all .25s;
         outline: none;
         appearance: none;
     }
 
-    .mkt-input::placeholder {
-        color: rgba(107, 114, 128, 0.7)
+    .mi::placeholder {
+        color: rgba(107, 114, 128, .6);
     }
 
-    .mkt-input:focus {
-        border-color: rgba(0, 255, 170, 0.4);
-        background: rgba(3, 5, 13, 0.9);
-        box-shadow: 0 0 0 3px rgba(0, 255, 170, 0.08), 0 0 16px rgba(0, 255, 170, 0.06);
+    .mi:focus {
+        border-color: rgba(0, 255, 170, .4);
+        background: rgba(3, 5, 13, .9);
+        box-shadow: 0 0 0 3px rgba(0, 255, 170, .07);
     }
 
-    .input-unit {
+    .iu {
         position: absolute;
-        right: 0.75rem;
+        right: .65rem;
         top: 50%;
         transform: translateY(-50%);
-        font-family: var(--font-mono);
-        font-size: 0.55rem;
+        font-family: var(--mono);
+        font-size: .52rem;
         font-weight: 700;
-        color: rgba(107, 114, 128, 0.6);
-        letter-spacing: 0.05em;
+        color: rgba(107, 114, 128, .55);
         pointer-events: none;
+        letter-spacing: .05em;
     }
 
-    /* ── APPLY BUTTON ── */
-    .apply-btn {
+    .ab {
         width: 100%;
-        padding: 0.8rem;
+        padding: .65rem;
         background: linear-gradient(135deg, #00d48f, #00ffaa);
         color: #0a0e1a;
         border: none;
-        border-radius: 0.6rem;
+        border-radius: .5rem;
         font-weight: 800;
-        font-size: 0.85rem;
-        letter-spacing: 0.05em;
+        font-size: .8rem;
+        letter-spacing: .04em;
         cursor: pointer;
-        transition: all 0.2s;
-        box-shadow: 0 4px 16px rgba(0, 212, 143, 0.3);
+        transition: all .2s;
+        box-shadow: 0 3px 12px rgba(0, 212, 143, .3);
         position: relative;
         overflow: hidden;
     }
 
-    .apply-btn::before {
+    .ab::before {
         content: '';
         position: absolute;
         inset: 0;
-        background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+        background: linear-gradient(135deg, transparent, rgba(255, 255, 255, .15), transparent);
         transform: translateX(-100%);
-        transition: transform 0.4s;
+        transition: transform .4s;
     }
 
-    .apply-btn:hover::before {
-        transform: translateX(100%)
+    .ab:hover::before {
+        transform: translateX(100%);
     }
 
-    .apply-btn:hover {
-        box-shadow: 0 6px 24px rgba(0, 212, 143, 0.45);
-        transform: translateY(-1px)
+    .ab:hover {
+        box-shadow: 0 5px 20px rgba(0, 212, 143, .4);
+        transform: translateY(-1px);
     }
 
-    /* ── HEADER BAR ── */
-    .mkt-header {
-        background: rgba(8, 13, 26, 0.9);
-        border: 1px solid rgba(0, 255, 170, 0.08);
-        border-radius: 1rem;
-        padding: 1.25rem 1.5rem;
+    .mh {
+        background: var(--panel);
+        border: 1px solid rgba(0, 255, 170, .07);
+        border-radius: .875rem;
+        padding: .875rem 1.1rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
         flex-wrap: wrap;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
+        gap: .75rem;
+        margin-bottom: 1rem;
         position: relative;
         overflow: hidden;
     }
 
-    .mkt-header::before {
+    .mh::before {
         content: '';
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(0, 255, 170, 0.3), transparent);
+        background: linear-gradient(90deg, transparent, rgba(0, 255, 170, .28), transparent);
     }
 
-    .mkt-header-left {
+    .mh-l {
         display: flex;
         align-items: center;
-        gap: 1rem
+        gap: .75rem;
     }
 
-    .mkt-title-bar {
+    .mh-bar {
         width: 3px;
-        height: 2rem;
+        height: 1.75rem;
         background: linear-gradient(180deg, #00ffaa, #8b5cf6);
         border-radius: 999px;
         flex-shrink: 0;
     }
 
-    .mkt-title {
-        font-size: 1.6rem;
+    .mh-title {
+        font-size: 1.25rem;
         font-weight: 900;
-        letter-spacing: -0.02em;
+        letter-spacing: -.02em;
         background: linear-gradient(135deg, #fff, #00ffaa);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -352,286 +347,332 @@ $rate = toGashy();
         line-height: 1;
     }
 
-    .mkt-count {
-        font-family: var(--font-mono);
-        font-size: 0.7rem;
-        color: #6b7280;
+    .mh-sub {
+        font-family: var(--mono);
+        font-size: .62rem;
+        color: var(--muted);
         display: flex;
         align-items: center;
-        gap: 0.4rem;
-        margin-top: 0.2rem;
+        gap: .35rem;
+        margin-top: .15rem;
     }
 
-    .mkt-count-badge {
-        padding: 0.15rem 0.5rem;
-        background: rgba(0, 255, 170, 0.1);
-        border: 1px solid rgba(0, 255, 170, 0.2);
+    .mh-badge {
+        padding: .12rem .45rem;
+        background: rgba(0, 255, 170, .1);
+        border: 1px solid rgba(0, 255, 170, .2);
         color: #00ffaa;
-        border-radius: 0.35rem;
+        border-radius: .3rem;
         font-weight: 700;
     }
 
-    .sort-wrap {
-        position: relative
+    .ss-wrap {
+        position: relative;
     }
 
-    .sort-select {
+    .ss {
         appearance: none;
-        background: rgba(3, 5, 13, 0.7);
-        border: 1px solid rgba(0, 255, 170, 0.1);
-        border-radius: 0.6rem;
-        padding: 0.65rem 2.5rem 0.65rem 2.25rem;
-        font-size: 0.8rem;
+        background: rgba(3, 5, 13, .7);
+        border: 1px solid rgba(0, 255, 170, .1);
+        border-radius: .5rem;
+        padding: .55rem 2.2rem .55rem 1.9rem;
+        font-size: .75rem;
         font-weight: 600;
-        color: #e2e8f0;
+        color: var(--text);
         cursor: pointer;
         outline: none;
-        transition: all 0.2s;
-        min-width: 180px;
+        transition: all .2s;
+        min-width: 160px;
     }
 
-    .sort-select:focus {
-        border-color: rgba(0, 255, 170, 0.35);
-        box-shadow: 0 0 0 3px rgba(0, 255, 170, 0.08);
+    .ss:focus {
+        border-color: rgba(0, 255, 170, .35);
+        box-shadow: 0 0 0 3px rgba(0, 255, 170, .07);
     }
 
-    .sort-icon-l,
-    .sort-icon-r {
+    .ss-il,
+    .ss-ir {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
         pointer-events: none;
-        color: #6b7280;
+        color: var(--muted);
     }
 
-    .sort-icon-l {
-        left: 0.65rem
+    .ss-il {
+        left: .55rem;
     }
 
-    .sort-icon-r {
-        right: 0.65rem
+    .ss-ir {
+        right: .55rem;
     }
 
-    /* ── PRODUCT GRID ── */
-    .products-grid {
+    .pg {
         display: grid;
         grid-template-columns: repeat(1, 1fr);
-        gap: 1.25rem;
+        gap: 1rem;
     }
 
-    @media(min-width:640px) {
-        .products-grid {
-            grid-template-columns: repeat(2, 1fr)
+    @media(min-width:480px) {
+        .pg {
+            grid-template-columns: repeat(2, 1fr);
         }
     }
 
     @media(min-width:1280px) {
-        .products-grid {
-            grid-template-columns: repeat(3, 1fr)
+        .pg {
+            grid-template-columns: repeat(3, 1fr);
         }
     }
 
     @media(min-width:1600px) {
-        .products-grid {
-            grid-template-columns: repeat(4, 1fr)
+        .pg {
+            grid-template-columns: repeat(4, 1fr);
         }
     }
 
-    /* ── PRODUCT CARD ── */
-    .pcard {
-        background: rgba(8, 13, 26, 0.85);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 1rem;
+    .pc {
+        background: rgba(8, 13, 26, .88);
+        border: 1px solid rgba(255, 255, 255, .05);
+        border-radius: .875rem;
         overflow: hidden;
         display: flex;
         flex-direction: column;
-        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all .3s cubic-bezier(.4, 0, .2, 1);
         position: relative;
     }
 
-    .pcard:hover {
-        border-color: rgba(0, 255, 170, 0.28);
-        transform: translateY(-6px) scale(1.01);
-        box-shadow: 0 16px 48px rgba(0, 255, 170, 0.1), 0 0 60px rgba(139, 92, 246, 0.06);
+    .pc:hover {
+        border-color: rgba(0, 255, 170, .25);
+        transform: translateY(-4px) scale(1.01);
+        box-shadow: 0 12px 40px rgba(0, 255, 170, .09), 0 0 50px rgba(139, 92, 246, .05);
     }
 
-    .pcard-img {
-        aspect-ratio: 4/3;
+    .pc-img {
+        aspect-ratio: 16/10;
         position: relative;
         overflow: hidden;
         background: #0c1120;
     }
 
-    .pcard-img img {
+    .pc-img img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.6s ease;
+        transition: transform .6s ease, opacity .5s ease;
         display: block;
-    }
-
-    .pcard:hover .pcard-img img {
-        transform: scale(1.1)
-    }
-
-    .pcard-img-overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to bottom, transparent 40%, rgba(3, 5, 13, 0.85) 100%);
         opacity: 0;
-        transition: opacity 0.3s;
     }
 
-    .pcard:hover .pcard-img-overlay {
-        opacity: 1
+    .pc-img img.loaded {
+        opacity: 1;
     }
 
-    .pcard-link {
+    .pc:hover .pc-img img {
+        transform: scale(1.08);
+    }
+
+    .img-skel {
         position: absolute;
         inset: 0;
-        z-index: 10
+        z-index: 1;
+        background: linear-gradient(90deg, #0c1120 25%, rgba(0, 255, 170, .04) 50%, #0c1120 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.6s infinite;
+        transition: opacity .4s ease;
     }
 
-    .pcard-badges {
+    .img-skel.done {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    @keyframes shimmer {
+        0% {
+            background-position: 200% 0
+        }
+
+        100% {
+            background-position: -200% 0
+        }
+    }
+
+    .img-skel-icon {
         position: absolute;
-        top: 0.85rem;
-        left: 0.85rem;
+        inset: 0;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity .4s ease;
+    }
+
+    .img-skel-icon.done {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .img-skel-icon svg {
+        opacity: .12;
+    }
+
+    .pc-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, transparent 40%, rgba(3, 5, 13, .8) 100%);
+        opacity: 0;
+        transition: opacity .3s;
+    }
+
+    .pc:hover .pc-overlay {
+        opacity: 1;
+    }
+
+    .pc-link {
+        position: absolute;
+        inset: 0;
+        z-index: 10;
+    }
+
+    .pc-badges {
+        position: absolute;
+        top: .65rem;
+        left: .65rem;
         display: flex;
         flex-wrap: wrap;
-        gap: 0.4rem;
+        gap: .3rem;
         z-index: 5;
     }
 
-    .badge-type {
-        padding: 0.25rem 0.6rem;
-        background: rgba(3, 5, 13, 0.88);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 0.35rem;
-        font-family: var(--font-mono);
-        font-size: 0.6rem;
+    .b-type {
+        padding: .2rem .5rem;
+        background: rgba(3, 5, 13, .85);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, .07);
+        border-radius: .3rem;
+        font-family: var(--mono);
+        font-size: .55rem;
         font-weight: 700;
         color: #e2e8f0;
-        letter-spacing: 0.08em;
+        letter-spacing: .07em;
         text-transform: uppercase;
     }
 
-    .badge-verified {
-        padding: 0.25rem 0.6rem;
-        background: rgba(0, 255, 170, 0.12);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(0, 255, 170, 0.25);
-        border-radius: 0.35rem;
-        font-family: var(--font-mono);
-        font-size: 0.6rem;
+    .b-ver {
+        padding: .2rem .5rem;
+        background: rgba(0, 255, 170, .1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 255, 170, .25);
+        border-radius: .3rem;
+        font-family: var(--mono);
+        font-size: .55rem;
         font-weight: 700;
         color: #00ffaa;
-        letter-spacing: 0.05em;
+        letter-spacing: .05em;
         display: flex;
         align-items: center;
-        gap: 0.3rem;
+        gap: .25rem;
     }
 
-    .pcard-body {
-        padding: 1.1rem 1.25rem;
+    .pc-body {
+        padding: .875rem 1rem;
         flex: 1;
         display: flex;
         flex-direction: column;
-        position: relative
+        position: relative;
     }
 
-    .pcard-body::before {
+    .pc-body::before {
         content: '';
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .05), transparent);
     }
 
-    .pcard-cat {
-        font-family: var(--font-mono);
-        font-size: 0.6rem;
+    .pc-cat {
+        font-family: var(--mono);
+        font-size: .58rem;
         font-weight: 700;
-        letter-spacing: 0.15em;
+        letter-spacing: .14em;
         color: #00d48f;
         text-transform: uppercase;
         display: flex;
         align-items: center;
-        gap: 0.35rem;
-        margin-bottom: 0.5rem;
+        gap: .3rem;
+        margin-bottom: .35rem;
     }
 
-    .pcard-cat-dot {
-        width: 5px;
-        height: 5px;
+    .pc-cat-dot {
+        width: 4px;
+        height: 4px;
         border-radius: 50%;
         background: #00d48f;
-        flex-shrink: 0
+        flex-shrink: 0;
     }
 
-    .pcard-title {
+    .pc-title {
         font-weight: 800;
-        font-size: 0.95rem;
+        font-size: .875rem;
         color: #f1f5f9;
         line-height: 1.35;
-        margin-bottom: 0.5rem;
+        margin-bottom: .35rem;
         display: -webkit-box;
         -webkit-line-clamp: 2;
-        -webkit-box-overflow: hidden;
+        -webkit-box-orient: vertical;
         overflow: hidden;
         text-decoration: none;
-        transition: color 0.2s;
+        transition: color .2s;
     }
 
-    .pcard-title:hover {
-        color: #00ffaa
+    .pc-title:hover {
+        color: #00ffaa;
     }
 
-    .pcard-seller {
-        font-size: 0.75rem;
-        color: #6b7280;
+    .pc-seller {
+        font-size: .7rem;
+        color: var(--muted);
         display: flex;
         align-items: center;
-        gap: 0.4rem;
-        margin-bottom: 1rem;
+        gap: .35rem;
+        margin-bottom: .75rem;
     }
 
-    .pcard-seller-name {
+    .pc-sname {
         color: #9ca3af;
         font-weight: 600;
-        transition: color 0.2s;
-        cursor: pointer
+        transition: color .2s;
+        cursor: pointer;
     }
 
-    .pcard-seller-name:hover {
-        color: #e2e8f0
+    .pc-sname:hover {
+        color: #e2e8f0;
     }
 
-    .pcard-footer {
+    .pc-foot {
         margin-top: auto;
-        padding-top: 0.85rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        padding-top: .65rem;
+        border-top: 1px solid rgba(255, 255, 255, .05);
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
-        gap: 0.5rem;
+        gap: .4rem;
     }
 
-    .price-tag {
+    .pt {
         display: inline-flex;
         align-items: baseline;
-        gap: 0.4rem;
-        padding: 0.4rem 0.75rem;
-        background: linear-gradient(135deg, rgba(0, 212, 143, 0.1), rgba(139, 92, 246, 0.1));
-        border: 1px solid rgba(0, 255, 170, 0.15);
-        border-radius: 0.5rem;
-        backdrop-filter: blur(10px);
+        gap: .3rem;
+        padding: .3rem .6rem;
+        background: linear-gradient(135deg, rgba(0, 212, 143, .1), rgba(139, 92, 246, .1));
+        border: 1px solid rgba(0, 255, 170, .14);
+        border-radius: .4rem;
     }
 
-    .price-val {
-        font-size: 1.15rem;
+    .pt-v {
+        font-size: 1rem;
         font-weight: 900;
         background: linear-gradient(135deg, #00ffaa, #8b5cf6);
         -webkit-background-clip: text;
@@ -639,527 +680,439 @@ $rate = toGashy();
         background-clip: text;
     }
 
-    .price-unit {
-        font-family: var(--font-mono);
-        font-size: 0.6rem;
+    .pt-u {
+        font-family: var(--mono);
+        font-size: .55rem;
         font-weight: 700;
-        color: #6b7280;
+        color: var(--muted);
     }
 
-    .price-usd {
-        font-family: var(--font-mono);
-        font-size: 0.65rem;
-        color: #6b7280;
-        margin-top: 0.25rem;
-        padding-left: 0.1rem;
+    .pt-usd {
+        font-family: var(--mono);
+        font-size: .6rem;
+        color: var(--muted);
+        margin-top: .2rem;
+        padding-left: .1rem;
     }
 
-    .stock-badge {
-        font-family: var(--font-mono);
-        font-size: 0.6rem;
+    .sb {
+        font-family: var(--mono);
+        font-size: .57rem;
         font-weight: 700;
         color: #f87171;
-        background: rgba(239, 68, 68, 0.1);
-        border: 1px solid rgba(239, 68, 68, 0.2);
-        padding: 0.3rem 0.6rem;
-        border-radius: 0.4rem;
+        background: rgba(239, 68, 68, .1);
+        border: 1px solid rgba(239, 68, 68, .2);
+        padding: .25rem .5rem;
+        border-radius: .35rem;
         white-space: nowrap;
-        letter-spacing: 0.05em;
     }
 
-    /* ── EMPTY STATE ── */
-    .empty-state {
+    .es {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 6rem 2rem;
+        padding: 4rem 2rem;
         text-align: center;
-        border: 2px dashed rgba(0, 255, 170, 0.1);
-        border-radius: 1.5rem;
-        position: relative;
-        overflow: hidden;
+        border: 2px dashed rgba(0, 255, 170, .1);
+        border-radius: 1.25rem;
     }
 
-    .empty-state::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(circle at center, rgba(0, 255, 170, 0.03) 0%, transparent 70%);
-    }
-
-    .empty-icon {
-        width: 6rem;
-        height: 6rem;
+    .es-icon {
+        width: 4.5rem;
+        height: 4.5rem;
         border-radius: 50%;
-        background: linear-gradient(135deg, rgba(0, 255, 170, 0.08), rgba(139, 92, 246, 0.08));
-        border: 1px solid rgba(0, 255, 170, 0.15);
+        background: linear-gradient(135deg, rgba(0, 255, 170, .07), rgba(139, 92, 246, .07));
+        border: 1px solid rgba(0, 255, 170, .14);
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 0 40px rgba(0, 255, 170, 0.05);
+        margin-bottom: 1rem;
     }
 
-    .empty-title {
-        font-size: 1.8rem;
+    .es-t {
+        font-size: 1.4rem;
         font-weight: 900;
         color: #f1f5f9;
-        margin-bottom: 0.75rem;
-        letter-spacing: -0.02em;
+        margin-bottom: .5rem;
     }
 
-    .empty-desc {
-        font-size: 0.9rem;
-        color: #6b7280;
-        max-width: 28rem;
-        line-height: 1.7;
-        margin-bottom: 2rem
+    .es-d {
+        font-size: .82rem;
+        color: var(--muted);
+        max-width: 24rem;
+        line-height: 1.65;
+        margin-bottom: 1.5rem;
     }
 
-    .empty-btn {
+    .es-btn {
         display: inline-flex;
         align-items: center;
-        gap: 0.6rem;
-        padding: 0.85rem 2rem;
+        gap: .5rem;
+        padding: .7rem 1.75rem;
         background: linear-gradient(135deg, #00d48f, #00ffaa);
         color: #0a0e1a;
-        border-radius: 0.6rem;
+        border-radius: .5rem;
         font-weight: 800;
-        font-size: 0.9rem;
+        font-size: .82rem;
         text-decoration: none;
-        transition: all 0.2s;
-        box-shadow: 0 4px 16px rgba(0, 212, 143, 0.3);
+        transition: all .2s;
+        box-shadow: 0 4px 14px rgba(0, 212, 143, .3);
     }
 
-    .empty-btn:hover {
+    .es-btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 28px rgba(0, 212, 143, 0.4)
+        box-shadow: 0 7px 24px rgba(0, 212, 143, .4);
     }
 
-    /* ── LOAD MORE ── */
-    .load-more-wrap {
-        display: flex;
-        justify-content: center;
-        margin-top: 3rem
-    }
-
-    .load-more-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.9rem 2.5rem;
-        background: rgba(0, 255, 170, 0.04);
-        border: 2px solid rgba(0, 255, 170, 0.15);
-        border-radius: 0.75rem;
-        color: #9ca3af;
-        font-weight: 800;
-        font-size: 0.85rem;
-        letter-spacing: 0.03em;
-        cursor: pointer;
-        transition: all 0.25s;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .load-more-btn::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(90deg, transparent, rgba(0, 255, 170, 0.08), transparent);
-        transform: translateX(-100%);
-        transition: transform 0.5s;
-    }
-
-    .load-more-btn:hover::before {
-        transform: translateX(100%)
-    }
-
-    .load-more-btn:hover {
-        border-color: rgba(0, 255, 170, 0.4);
-        color: #00ffaa;
-        box-shadow: 0 0 24px rgba(0, 255, 170, 0.1);
-        transform: translateY(-2px);
-    }
-
-    /* ══════════════════════════════════════
-   LIGHT MODE OVERRIDES
-   ══════════════════════════════════════ */
-    html:not(.dark) .market-wrap {
+    html:not(.dark) .mw {
         background: #f1f5f9;
         color: #0f172a;
     }
 
-    html:not(.dark) .market-bg {
-        background-image:
-            linear-gradient(rgba(0, 163, 114, 0.05) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 163, 114, 0.05) 1px, transparent 1px);
+    html:not(.dark) .mw-bg {
+        background-image: linear-gradient(rgba(0, 163, 114, .04) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 163, 114, .04) 1px, transparent 1px);
     }
 
-    html:not(.dark) .market-orb-1 {
+    html:not(.dark) .orb1 {
         background: #00c896;
-        opacity: 0.05
+        opacity: .04;
     }
 
-    html:not(.dark) .market-orb-2 {
+    html:not(.dark) .orb2 {
         background: #8b5cf6;
-        opacity: 0.04
+        opacity: .03;
     }
 
-    /* Filter panel */
-    html:not(.dark) .filter-panel {
-        background: rgba(255, 255, 255, 0.97);
-        border-color: rgba(0, 163, 114, 0.12);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.07);
+    html:not(.dark) .fp {
+        background: rgba(255, 255, 255, .97);
+        border-color: rgba(0, 163, 114, .12);
+        box-shadow: 0 8px 28px rgba(0, 0, 0, .07);
     }
 
-    html:not(.dark) .filter-panel::before {
-        background: linear-gradient(90deg, transparent, rgba(0, 163, 114, 0.35), transparent);
+    html:not(.dark) .fp::before {
+        background: linear-gradient(90deg, transparent, rgba(0, 163, 114, .3), transparent);
     }
 
-    html:not(.dark) .filter-title {
-        color: var(--text-muted-light)
+    html:not(.dark) .sec-label {
+        color: #64748b;
     }
 
-    html:not(.dark) .filter-title::after {
-        background: linear-gradient(90deg, rgba(0, 163, 114, 0.25), transparent)
+    html:not(.dark) .sec-label::after {
+        background: linear-gradient(90deg, rgba(0, 163, 114, .22), transparent);
     }
 
-    /* Cat items */
-    html:not(.dark) .cat-item {
-        color: #475569
+    html:not(.dark) .ci {
+        color: #475569;
     }
 
-    html:not(.dark) .cat-item:hover {
+    html:not(.dark) .ci:hover {
         color: #007a55;
-        background: rgba(0, 163, 114, 0.06)
+        background: rgba(0, 163, 114, .05);
     }
 
-    html:not(.dark) .cat-item.active {
+    html:not(.dark) .ci.active {
         background: linear-gradient(135deg, #00a372, #00c896);
         color: #fff;
-        box-shadow: 0 4px 16px rgba(0, 163, 114, 0.25);
     }
 
-    html:not(.dark) .cat-item.active .cat-count {
-        color: rgba(255, 255, 255, 0.85)
-    }
-
-    html:not(.dark) .cat-count {
-        background: rgba(0, 0, 0, 0.08);
-        color: inherit
-    }
-
-    /* Inputs */
-    html:not(.dark) .mkt-input {
-        background: rgba(241, 245, 249, 0.9);
-        border-color: rgba(0, 0, 0, 0.1);
+    html:not(.dark) .mi {
+        background: rgba(241, 245, 249, .9);
+        border-color: rgba(0, 0, 0, .09);
         color: #0f172a;
     }
 
-    html:not(.dark) .mkt-input::placeholder {
-        color: rgba(100, 116, 139, 0.6)
-    }
-
-    html:not(.dark) .mkt-input:focus {
+    html:not(.dark) .mi:focus {
         background: #fff;
-        border-color: rgba(0, 163, 114, 0.5);
-        box-shadow: 0 0 0 3px rgba(0, 163, 114, 0.1);
+        border-color: rgba(0, 163, 114, .45);
+        box-shadow: 0 0 0 3px rgba(0, 163, 114, .09);
     }
 
-    html:not(.dark) .input-unit {
-        color: rgba(100, 116, 139, 0.6)
-    }
-
-    /* Apply btn */
-    html:not(.dark) .apply-btn {
+    html:not(.dark) .ab {
         background: linear-gradient(135deg, #00a372, #00c896);
-        box-shadow: 0 4px 16px rgba(0, 163, 114, 0.3);
     }
 
-    html:not(.dark) .apply-btn:hover {
-        box-shadow: 0 6px 24px rgba(0, 163, 114, 0.4)
+    html:not(.dark) .mh {
+        background: rgba(255, 255, 255, .97);
+        border-color: rgba(0, 163, 114, .09);
+        box-shadow: 0 3px 14px rgba(0, 0, 0, .06);
     }
 
-    /* Header bar */
-    html:not(.dark) .mkt-header {
-        background: rgba(255, 255, 255, 0.97);
-        border-color: rgba(0, 163, 114, 0.1);
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    html:not(.dark) .mh::before {
+        background: linear-gradient(90deg, transparent, rgba(0, 163, 114, .22), transparent);
     }
 
-    html:not(.dark) .mkt-header::before {
-        background: linear-gradient(90deg, transparent, rgba(0, 163, 114, 0.25), transparent);
-    }
-
-    html:not(.dark) .mkt-title {
+    html:not(.dark) .mh-title {
         background: linear-gradient(135deg, #0f172a, #007a55);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
     }
 
-    html:not(.dark) .mkt-count {
-        color: #64748b
-    }
-
-    html:not(.dark) .mkt-count-badge {
-        background: rgba(0, 163, 114, 0.1);
-        border-color: rgba(0, 163, 114, 0.2);
-        color: #007a55;
-    }
-
-    html:not(.dark) .sort-select {
-        background: rgba(241, 245, 249, 0.9);
-        border-color: rgba(0, 0, 0, 0.1);
-        color: #0f172a;
-    }
-
-    html:not(.dark) .sort-select:focus {
-        border-color: rgba(0, 163, 114, 0.4);
-        box-shadow: 0 0 0 3px rgba(0, 163, 114, 0.08);
-    }
-
-    html:not(.dark) .sort-icon-l,
-    html:not(.dark) .sort-icon-r {
-        color: #94a3b8
-    }
-
-    /* Product cards */
-    html:not(.dark) .pcard {
-        background: rgba(255, 255, 255, 0.97);
-        border-color: rgba(0, 0, 0, 0.07);
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
-
-    html:not(.dark) .pcard:hover {
-        border-color: rgba(0, 163, 114, 0.3);
-        box-shadow: 0 16px 48px rgba(0, 163, 114, 0.1), 0 0 40px rgba(139, 92, 246, 0.05);
-    }
-
-    html:not(.dark) .pcard-img {
-        background: #f1f5f9
-    }
-
-    html:not(.dark) .pcard-body::before {
-        background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05), transparent);
-    }
-
-    html:not(.dark) .badge-type {
-        background: rgba(15, 23, 42, 0.07);
-        border-color: rgba(0, 0, 0, 0.08);
-        color: #334155;
-    }
-
-    html:not(.dark) .badge-verified {
-        background: rgba(0, 163, 114, 0.1);
-        border-color: rgba(0, 163, 114, 0.25);
-        color: #007a55;
-    }
-
-    html:not(.dark) .pcard-cat {
-        color: #007a55
-    }
-
-    html:not(.dark) .pcard-cat-dot {
-        background: #007a55
-    }
-
-    html:not(.dark) .pcard-title {
-        color: #0f172a
-    }
-
-    html:not(.dark) .pcard-title:hover {
-        color: #007a55
-    }
-
-    html:not(.dark) .pcard-seller {
-        color: #94a3b8
-    }
-
-    html:not(.dark) .pcard-seller-name {
-        color: #64748b
-    }
-
-    html:not(.dark) .pcard-seller-name:hover {
-        color: #0f172a
-    }
-
-    html:not(.dark) .pcard-footer {
-        border-top-color: rgba(0, 0, 0, 0.06)
-    }
-
-    html:not(.dark) .price-tag {
-        background: linear-gradient(135deg, rgba(0, 163, 114, 0.08), rgba(139, 92, 246, 0.08));
-        border-color: rgba(0, 163, 114, 0.2);
-    }
-
-    html:not(.dark) .price-usd {
-        color: #94a3b8
-    }
-
-    html:not(.dark) .stock-badge {
-        color: #dc2626;
-        background: rgba(220, 38, 38, 0.08);
-        border-color: rgba(220, 38, 38, 0.15);
-    }
-
-    /* Empty state */
-    html:not(.dark) .empty-state {
-        border-color: rgba(0, 163, 114, 0.15);
-        background: rgba(255, 255, 255, 0.7);
-    }
-
-    html:not(.dark) .empty-state::before {
-        background: radial-gradient(circle at center, rgba(0, 163, 114, 0.04) 0%, transparent 70%);
-    }
-
-    html:not(.dark) .empty-icon {
-        background: linear-gradient(135deg, rgba(0, 163, 114, 0.08), rgba(139, 92, 246, 0.06));
-        border-color: rgba(0, 163, 114, 0.15);
-    }
-
-    html:not(.dark) .empty-title {
-        color: #0f172a
-    }
-
-    html:not(.dark) .empty-desc {
-        color: #64748b
-    }
-
-    html:not(.dark) .empty-btn {
-        background: linear-gradient(135deg, #00a372, #00c896);
-        color: #fff;
-        box-shadow: 0 4px 16px rgba(0, 163, 114, 0.3);
-    }
-
-    html:not(.dark) .empty-btn:hover {
-        box-shadow: 0 8px 28px rgba(0, 163, 114, 0.4)
-    }
-
-    /* Load more */
-    html:not(.dark) .load-more-btn {
-        background: rgba(0, 163, 114, 0.04);
-        border-color: rgba(0, 163, 114, 0.2);
+    html:not(.dark) .mh-sub {
         color: #64748b;
     }
 
-    html:not(.dark) .load-more-btn:hover {
-        border-color: rgba(0, 163, 114, 0.45);
+    html:not(.dark) .mh-badge {
+        background: rgba(0, 163, 114, .1);
+        border-color: rgba(0, 163, 114, .2);
         color: #007a55;
-        box-shadow: 0 0 24px rgba(0, 163, 114, 0.1);
     }
 
-    html:not(.dark) .load-more-btn::before {
-        background: linear-gradient(90deg, transparent, rgba(0, 163, 114, 0.06), transparent);
+    html:not(.dark) .ss {
+        background: rgba(241, 245, 249, .9);
+        border-color: rgba(0, 0, 0, .09);
+        color: #0f172a;
+    }
+
+    html:not(.dark) .ss:focus {
+        border-color: rgba(0, 163, 114, .4);
+        box-shadow: 0 0 0 3px rgba(0, 163, 114, .08);
+    }
+
+    html:not(.dark) .pc {
+        background: rgba(255, 255, 255, .97);
+        border-color: rgba(0, 0, 0, .07);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .05);
+    }
+
+    html:not(.dark) .pc:hover {
+        border-color: rgba(0, 163, 114, .28);
+        box-shadow: 0 12px 40px rgba(0, 163, 114, .09);
+    }
+
+    html:not(.dark) .pc-img {
+        background: #f1f5f9;
+    }
+
+    html:not(.dark) .img-skel {
+        background: linear-gradient(90deg, #e8eef5 25%, rgba(0, 163, 114, .06) 50%, #e8eef5 75%);
+        background-size: 200% 100%;
+    }
+
+    html:not(.dark) .b-type {
+        background: rgba(15, 23, 42, .06);
+        border-color: rgba(0, 0, 0, .07);
+        color: #334155;
+    }
+
+    html:not(.dark) .b-ver {
+        background: rgba(0, 163, 114, .1);
+        border-color: rgba(0, 163, 114, .22);
+        color: #007a55;
+    }
+
+    html:not(.dark) .pc-cat {
+        color: #007a55;
+    }
+
+    html:not(.dark) .pc-cat-dot {
+        background: #007a55;
+    }
+
+    html:not(.dark) .pc-title {
+        color: #0f172a;
+    }
+
+    html:not(.dark) .pc-title:hover {
+        color: #007a55;
+    }
+
+    html:not(.dark) .pc-seller {
+        color: #94a3b8;
+    }
+
+    html:not(.dark) .pc-sname {
+        color: #64748b;
+    }
+
+    html:not(.dark) .pc-sname:hover {
+        color: #0f172a;
+    }
+
+    html:not(.dark) .pc-foot {
+        border-top-color: rgba(0, 0, 0, .06);
+    }
+
+    html:not(.dark) .pt {
+        background: linear-gradient(135deg, rgba(0, 163, 114, .08), rgba(139, 92, 246, .07));
+        border-color: rgba(0, 163, 114, .18);
+    }
+
+    html:not(.dark) .pt-usd {
+        color: #94a3b8;
+    }
+
+    html:not(.dark) .sb {
+        color: #dc2626;
+        background: rgba(220, 38, 38, .07);
+        border-color: rgba(220, 38, 38, .14);
+    }
+
+    html:not(.dark) .es {
+        border-color: rgba(0, 163, 114, .14);
+        background: rgba(255, 255, 255, .7);
+    }
+
+    html:not(.dark) .es-t {
+        color: #0f172a;
+    }
+
+    html:not(.dark) .es-d {
+        color: #64748b;
+    }
+
+    html:not(.dark) .es-btn {
+        background: linear-gradient(135deg, #00a372, #00c896);
+        color: #fff;
     }
 </style>
-
-<main class="market-wrap">
-    <div class="market-bg"></div>
-    <div class="market-orb-1"></div>
-    <div class="market-orb-2"></div>
-    <div class="market-content">
-        <div class="flex flex-col xl:flex-row gap-6">
-            <aside class="w-full xl:w-80 flex-shrink-0">
-                <div class="filter-panel">
-                    <div class="filter-panel-inner">
-                        <div class="flex items-center gap-3 mb-6">
-                            <div class="filter-icon-wrap"></div>
-                            <h3 class="text-lg font-black">Filters</h3>
+<main class="mw">
+    <div class="mw-bg"></div>
+    <div class="orb1"></div>
+    <div class="orb2"></div>
+    <div class="mc">
+        <div class="flex flex-col xl:flex-row gap-4">
+            <aside class="w-full xl:w-72 flex-shrink-0">
+                <div class="fp">
+                    <div class="fp-inner">
+                        <div class="fp-head">
+                            <div class="fp-icon">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0a0e1a" stroke-width="2.5">
+                                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+                                </svg>
+                            </div>
+                            <span class="fp-h">Filters</span>
                         </div>
-                        <div class="space-y-1 mb-7">
-                            <div class="filter-title">Categories</div>
-                            <a href="market.php" class="cat-item <?= !$cat ? 'active' : '' ?>">
+                        <div class="space-y-0.5 mb-5">
+                            <div class="sec-label">Categories</div>
+                            <a href="market.php" class="ci <?= !$cat ? 'active' : '' ?>">
                                 <span>All Items</span>
-                                <span class="cat-count"><?= array_sum(array_column($cats, 'count')) ?></span>
+                                <span class="ci-count"><?= array_sum(array_column($cats, 'count')) ?></span>
                             </a>
                             <?php foreach ($cats as $c): ?>
-                                <a href="market.php?category=<?= htmlspecialchars($c['slug']) ?>" class="cat-item <?= $cat === $c['slug'] ? 'active' : '' ?>">
-                                    <span>
+                                <a href="market.php?category=<?= htmlspecialchars($c['slug']) ?>" class="ci <?= $cat === $c['slug'] ? 'active' : '' ?>">
+                                    <span class="flex items-center gap-1.5">
                                         <?php if ($c['icon']): ?>
-                                            <img width="20px" src="./<?= htmlspecialchars($c['icon']) ?>" loading="lazy">
+                                            <img width="16" src="./<?= htmlspecialchars($c['icon']) ?>" loading="lazy">
                                         <?php endif; ?>
                                         <?= htmlspecialchars($c['name']) ?>
                                     </span>
-                                    <span class="cat-count"><?= $c['count'] ?></span>
+                                    <span class="ci-count"><?= $c['count'] ?></span>
                                 </a>
                             <?php endforeach; ?>
                         </div>
-                        <form action="market.php" method="GET" class="space-y-4">
+                        <form action="market.php" method="GET" class="space-y-3">
                             <?php if ($cat): ?><input type="hidden" name="category" value="<?= htmlspecialchars($cat) ?>"><?php endif; ?>
-                            <div class="filter-title">Price Range</div>
+                            <div class="sec-label">Price Range</div>
                             <div class="flex gap-2">
                                 <div class="flex-1 relative">
-                                    <input type="number" name="min" value="<?= htmlspecialchars((string)$min) ?>" placeholder="Min" class="mkt-input pr-14">
-                                    <span class="input-unit">USD</span>
+                                    <input type="number" name="min" value="<?= htmlspecialchars((string)$min) ?>" placeholder="Min" class="mi pr-10">
+                                    <span class="iu">USD</span>
                                 </div>
                                 <div class="flex-1 relative">
-                                    <input type="number" name="max" value="<?= htmlspecialchars((string)$max) ?>" placeholder="Max" class="mkt-input pr-14">
-                                    <span class="input-unit">USD</span>
+                                    <input type="number" name="max" value="<?= htmlspecialchars((string)$max) ?>" placeholder="Max" class="mi pr-10">
+                                    <span class="iu">USD</span>
                                 </div>
                             </div>
-                            <button type="submit" class="apply-btn">Apply Filters</button>
+                            <button type="submit" class="ab">Apply Filters</button>
                         </form>
                     </div>
                 </div>
             </aside>
             <div class="flex-1 min-w-0">
-                <div class="mkt-header">
-                    <div class="mkt-header-left">
-                        <div class="mkt-title-bar"></div>
+                <div class="mh">
+                    <div class="mh-l">
+                        <div class="mh-bar"></div>
                         <div>
-                            <div class="mkt-title">Marketplace</div>
-                            <div class="mkt-count">Showing <span class="mkt-count-badge"><?= count($products) ?></span> premium items</div>
+                            <div class="mh-title">Marketplace</div>
+                            <div class="mh-sub">Showing <span class="mh-badge"><?= count($products) ?></span> items</div>
                         </div>
                     </div>
-                    <div class="sort-wrap">
-                        <select class="sort-select" onchange="window.location.href='market.php?sort='+this.value+'<?= $cat ? '&category=' . htmlspecialchars($cat) : '' ?>'">
-                            <option value="newest" <?= $sort === 'newest' ? 'selected' : '' ?>>Newest First</option>
-                            <option value="popular" <?= $sort === 'popular' ? 'selected' : '' ?>>Most Popular</option>
-                            <option value="price_asc" <?= $sort === 'price_asc' ? 'selected' : '' ?>>Price: Low → High</option>
+                    <div class="ss-wrap">
+                        <svg class="ss-il" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 6h18M7 12h10M11 18h2" />
+                        </svg>
+                        <select class="ss" onchange="window.location.href='market.php?sort='+this.value+'<?= $cat ? '&category=' . htmlspecialchars($cat) : '' ?>'">
+                            <option value="newest" <?= $sort === 'newest'     ? 'selected' : '' ?>>Newest First</option>
+                            <option value="popular" <?= $sort === 'popular'    ? 'selected' : '' ?>>Most Popular</option>
+                            <option value="price_asc" <?= $sort === 'price_asc'  ? 'selected' : '' ?>>Price: Low → High</option>
                             <option value="price_desc" <?= $sort === 'price_desc' ? 'selected' : '' ?>>Price: High → Low</option>
                         </select>
+                        <svg class="ss-ir" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M6 9l6 6 6-6" />
+                        </svg>
                     </div>
                 </div>
                 <?php if (empty($products)): ?>
-                    <div class="empty-state">
-                        <h3 class="empty-title">No Items Found</h3>
-                        <p class="empty-desc">Try adjusting filters.</p>
-                        <a href="market.php" class="empty-btn">Clear Filters</a>
+                    <div class="es">
+                        <div class="es-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00ffaa" stroke-width="1.5">
+                                <circle cx="11" cy="11" r="8" />
+                                <path d="m21 21-4.35-4.35" />
+                            </svg>
+                        </div>
+                        <h3 class="es-t">No Items Found</h3>
+                        <p class="es-d">Try adjusting your filters or browse all available items.</p>
+                        <a href="market.php" class="es-btn">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0" />
+                                <path d="M3 12h18" />
+                            </svg>
+                            Clear Filters
+                        </a>
                     </div>
                 <?php else: ?>
-                    <div class="products-grid">
+                    <div class="pg">
                         <?php foreach ($products as $p):
                             $img = json_decode($p['images'])[0] ?? 'assets/placeholder.png';
                             $g = $rate > 0 ? $p['price_usd'] / $rate : 0;
                         ?>
-                            <div class="pcard">
-                                <div class="pcard-img">
-                                    <img src="./<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($p['title']) ?>" loading="lazy">
-                                    <div class="pcard-img-overlay"></div>
-                                    <a href="product.php?slug=<?= htmlspecialchars($p['slug']) ?>" class="pcard-link"></a>
-                                    <div class="pcard-badges">
-                                        <span class="badge-type"><?= htmlspecialchars($p['type']) ?></span>
+                            <div class="pc">
+                                <div class="pc-img">
+                                    <div class="img-skel"></div>
+                                    <div class="img-skel-icon">
+                                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#00ffaa" stroke-width="1">
+                                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                                            <circle cx="8.5" cy="8.5" r="1.5" />
+                                            <polyline points="21 15 16 10 5 21" />
+                                        </svg>
+                                    </div>
+                                    <img data-src="./<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($p['title']) ?>" loading="lazy" class="lazy-img">
+                                    <div class="pc-overlay"></div>
+                                    <a href="product.php?slug=<?= htmlspecialchars($p['slug']) ?>" class="pc-link"></a>
+                                    <div class="pc-badges">
+                                        <span class="b-type"><?= htmlspecialchars($p['type']) ?></span>
                                         <?php if ($p['is_approved']): ?>
-                                            <span class="badge-verified">VERIFIED</span>
+                                            <span class="b-ver">
+                                                <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                                    <polyline points="20 6 9 17 4 12" />
+                                                </svg>
+                                                VERIFIED
+                                            </span>
                                         <?php endif; ?>
                                     </div>
                                 </div>
-                                <div class="pcard-body">
-                                    <div class="pcard-cat"><?= htmlspecialchars($p['cat_name']) ?></div>
-                                    <a href="product.php?slug=<?= htmlspecialchars($p['slug']) ?>" class="pcard-title"><?= htmlspecialchars($p['title']) ?></a>
-                                    <div class="pcard-seller"><span class="pcard-seller-name"><?= htmlspecialchars($p['store_name']) ?></span></div>
-                                    <div class="pcard-footer">
+                                <div class="pc-body">
+                                    <div class="pc-cat"><span class="pc-cat-dot"></span><?= htmlspecialchars($p['cat_name']) ?></div>
+                                    <a href="product.php?slug=<?= htmlspecialchars($p['slug']) ?>" class="pc-title"><?= htmlspecialchars($p['title']) ?></a>
+                                    <div class="pc-seller">
+                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                            <circle cx="12" cy="7" r="4" />
+                                        </svg>
+                                        <span class="pc-sname"><?= htmlspecialchars($p['store_name']) ?></span>
+                                    </div>
+                                    <div class="pc-foot">
                                         <div>
-                                            <div class="price-tag">
-                                                <span class="price-val"><?= number_format($g, 2) ?></span>
-                                                <span class="price-unit">$GASHY</span>
+                                            <div class="pt">
+                                                <span class="pt-v"><?= number_format($g, 2) ?></span>
+                                                <span class="pt-u">$GASHY</span>
                                             </div>
-                                            <div class="price-usd">≈ $<?= number_format($p['price_usd'], 7) ?> USD</div>
+                                            <div class="pt-usd">≈ $<?= number_format($p['price_usd'], 7) ?> USD</div>
                                         </div>
                                         <?php if ($p['stock'] < 5): ?>
-                                            <span class="stock-badge">LOW STOCK</span>
+                                            <span class="sb">LOW STOCK</span>
                                         <?php endif; ?>
                                     </div>
                                 </div>
@@ -1171,4 +1124,40 @@ $rate = toGashy();
         </div>
     </div>
 </main>
+<script>
+    (function() {
+        const imgs = document.querySelectorAll('img.lazy-img');
+        if (!imgs.length) return;
+        const reveal = (img) => {
+            const skel = img.parentElement.querySelector('.img-skel');
+            const icon = img.parentElement.querySelector('.img-skel-icon');
+            img.src = img.dataset.src;
+            img.onload = () => {
+                img.classList.add('loaded');
+                if (skel) skel.classList.add('done');
+                if (icon) icon.classList.add('done');
+            };
+            img.onerror = () => {
+                if (skel) skel.classList.add('done');
+                if (icon) icon.classList.add('done');
+            };
+        };
+        if ('IntersectionObserver' in window) {
+            const io = new IntersectionObserver((entries, obs) => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        reveal(e.target);
+                        obs.unobserve(e.target);
+                    }
+                });
+            }, {
+                rootMargin: '200px 0px',
+                threshold: 0
+            });
+            imgs.forEach(img => io.observe(img));
+        } else {
+            imgs.forEach(reveal);
+        }
+    })();
+</script>
 <?php require_once 'footer.php'; ?>

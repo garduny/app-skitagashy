@@ -30,7 +30,7 @@ if (post('edit_option')) {
     redirect("inventory.php?product_id=$pid&option_id=$oid");
 }
 if (get('delete_option')) {
-    $oid = (int)get('delete_option');
+    $oid = (int)request('delete_option', 'get');
     execute("DELETE FROM gift_card_options WHERE id=$oid AND product_id=$pid");
     redirect("inventory.php?product_id=$pid");
 }
@@ -57,7 +57,7 @@ if (post('add_codes')) {
     redirect("inventory.php?product_id=$pid&option_id=$oid");
 }
 if (get('delete')) {
-    $cid = (int)get('delete');
+    $cid = (int)request('delete', 'get');
     execute("DELETE FROM gift_cards WHERE id=$cid AND is_sold=0");
     redirect("inventory.php?product_id=$pid&option_id=$oid");
 }
@@ -77,10 +77,13 @@ require_once 'sidebar.php';
             <h1 class="text-2xl font-black text-gray-900 dark:text-white">Inventory</h1>
             <p class="text-sm text-gray-500"><?= $prod['title'] ?></p>
         </div>
-        <div class="flex gap-2"><a href="inventory.php?product_id=<?= $pid ?>" class="px-4 py-2 bg-gray-200 dark:bg-white/10 rounded-lg text-xs font-bold">Refresh</a><button onclick="openModal('optionModal')" class="px-4 py-2 bg-primary-600 text-white rounded-lg text-xs font-bold">Add Option</button></div>
+        <div class="flex gap-2">
+            <a href="inventory.php?product_id=<?= $pid ?>" class="px-4 py-2 bg-gray-200 dark:bg-white/10 rounded-lg text-xs font-bold">Refresh</a>
+            <button onclick="openModal('optionModal')" class="px-4 py-2 bg-primary-600 text-white rounded-lg text-xs font-bold">Add Option</button>
+        </div>
     </div>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <?php foreach ($options as $o): ?>
+        <?php foreach ($options as $o): if ($oid && $o['id'] != $oid) continue; ?>
             <div class="p-4 bg-white dark:bg-dark-800 border rounded-xl">
                 <div class="flex justify-between items-start">
                     <div>
@@ -88,9 +91,13 @@ require_once 'sidebar.php';
                         <div class="text-xs text-gray-500">$<?= number_format($o['price_usd'], 2) ?></div>
                     </div>
                     <div class="flex gap-2">
-                        <a href="?product_id=<?= $pid ?>&option_id=<?= $o['id'] ?>" class="text-blue-500 text-xs <?= $countOptions > 1 ? 'block' : 'hidden' ?>">Open</a>
-                        <a href="?product_id=<?= $pid ?>&delete_option=<?= $o['id'] ?>" onclick="return confirm('Delete option?')" class="text-red-500 text-xs">Del</a>
-                        <button onclick="editOption(<?= $o['id'] ?>,'<?= $o['name'] ?>','<?= $o['price_usd'] ?>')" class="text-gray-500 text-xs">Edit</button>
+                        <?php if ($oid && $o['id'] == $oid): ?>
+                            <a href="?product_id=<?= $pid ?>" class="text-orange-500 text-xs font-bold">Close</a>
+                        <?php else: ?>
+                            <a href="?product_id=<?= $pid ?>&option_id=<?= $o['id'] ?>" class="text-blue-500 text-xs <?= $countOptions > 1 ? 'block' : 'hidden' ?>">Open</a>
+                            <a href="?product_id=<?= $pid ?>&delete_option=<?= $o['id'] ?>" class="text-red-500 text-xs">Del</a>
+                            <button onclick="editOption(<?= $o['id'] ?>,'<?= htmlspecialchars($o['name'], ENT_QUOTES) ?>','<?= $o['price_usd'] ?>')" class="text-gray-500 text-xs">Edit</button>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -112,7 +119,9 @@ require_once 'sidebar.php';
                 <div class="text-3xl font-black text-blue-500"><?= $sold_count ?></div>
             </div>
         </div>
-        <div class="flex justify-between mb-4"><button onclick="openModal('addModal')" class="px-4 py-2 bg-primary-600 text-white rounded-lg text-xs font-bold">Add Codes</button></div>
+        <div class="flex justify-between mb-4">
+            <button onclick="openModal('addModal')" class="px-4 py-2 bg-primary-600 text-white rounded-lg text-xs font-bold">Add Codes</button>
+        </div>
         <div class="bg-white dark:bg-dark-800 rounded-2xl border overflow-hidden">
             <table class="w-full text-left">
                 <thead>
@@ -143,24 +152,50 @@ require_once 'sidebar.php';
     <div class="absolute inset-0 bg-black/60" onclick="closeModal('optionModal')"></div>
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white dark:bg-dark-800 rounded-2xl p-6">
         <h3 class="font-bold mb-4">Add Option</h3>
-        <form method="POST"><input type="text" name="name" placeholder="Option name" required class="w-full mb-3 px-3 py-2 border rounded"><input type="number" step="0.01" name="price_usd" placeholder="Price USD" required class="w-full mb-3 px-3 py-2 border rounded"><button type="submit" name="add_option" value="1" class="w-full py-2 bg-primary-600 text-white rounded">Save</button></form>
+        <form method="POST">
+            <input type="text" name="name" placeholder="Option name" required class="w-full mb-3 px-3 py-2 border rounded">
+            <input type="number" step="0.01" name="price_usd" placeholder="Price USD" required class="w-full mb-3 px-3 py-2 border rounded">
+            <button type="submit" name="add_option" value="1" class="w-full py-2 bg-primary-600 text-white rounded">Save</button>
+        </form>
     </div>
 </div>
 <div id="editModal" class="fixed inset-0 hidden z-[60]">
     <div class="absolute inset-0 bg-black/60" onclick="closeModal('editModal')"></div>
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white dark:bg-dark-800 rounded-2xl p-6">
         <h3 class="font-bold mb-4">Edit Option</h3>
-        <form method="POST"><input type="hidden" name="oid" id="edit_oid"><input type="text" name="name" id="edit_name" required class="w-full mb-3 px-3 py-2 border rounded"><input type="number" step="0.01" name="price_usd" id="edit_price" required class="w-full mb-3 px-3 py-2 border rounded"><button type="submit" name="edit_option" value="1" class="w-full py-2 bg-primary-600 text-white rounded">Update</button></form>
+        <form method="POST">
+            <input type="hidden" name="oid" id="edit_oid">
+            <input type="text" name="name" id="edit_name" required class="w-full mb-3 px-3 py-2 border rounded">
+            <input type="number" step="0.01" name="price_usd" id="edit_price" required class="w-full mb-3 px-3 py-2 border rounded">
+            <button type="submit" name="edit_option" value="1" class="w-full py-2 bg-primary-600 text-white rounded">Update</button>
+        </form>
     </div>
 </div>
 <div id="addModal" class="fixed inset-0 hidden z-[60]">
     <div class="absolute inset-0 bg-black/60" onclick="closeModal('addModal')"></div>
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white dark:bg-dark-800 rounded-2xl p-6">
         <h3 class="font-bold mb-4">Add Codes</h3>
-        <form method="POST"><textarea name="codes" rows="10" required class="w-full mb-3 px-3 py-2 border rounded"></textarea><button type="submit" name="add_codes" value="1" class="w-full py-2 bg-primary-600 text-white rounded">Import</button></form>
+        <form method="POST">
+            <textarea name="codes" rows="10" required class="w-full mb-3 px-3 py-2 border rounded bg-white dark:bg-dark-800"></textarea>
+            <button type="submit" name="add_codes" value="1" class="w-full py-2 bg-primary-600 text-white rounded">Import</button>
+        </form>
+    </div>
+</div>
+<div id="confirmModal" class="fixed inset-0 hidden z-[80]">
+    <div class="absolute inset-0 bg-black/70" onclick="closeModal('confirmModal')"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm bg-white dark:bg-dark-800 rounded-2xl p-6 shadow-2xl">
+        <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-2xl font-black">!</div>
+        <h3 class="text-lg font-black text-center mb-2 text-gray-900 dark:text-white">Confirmation</h3>
+        <p id="confirmText" class="text-sm text-center text-gray-500 mb-6"></p>
+        <div class="grid grid-cols-2 gap-3">
+            <button onclick="closeModal('confirmModal')" class="py-2 rounded-xl bg-gray-200 dark:bg-white/10 font-bold text-sm">Cancel</button>
+            <button onclick="runConfirm()" class="py-2 rounded-xl bg-red-600 text-white font-bold text-sm">Delete</button>
+        </div>
     </div>
 </div>
 <script>
+    let confirmUrl = ''
+
     function openModal(i) {
         document.getElementById(i).classList.remove('hidden')
     }
@@ -170,10 +205,34 @@ require_once 'sidebar.php';
     }
 
     function editOption(id, n, p) {
-        document.getElementById('edit_oid').value = id;
-        document.getElementById('edit_name').value = n;
-        document.getElementById('edit_price').value = p;
+        document.getElementById('edit_oid').value = id
+        document.getElementById('edit_name').value = n
+        document.getElementById('edit_price').value = p
         openModal('editModal')
     }
+
+    function openConfirm(url, msg) {
+        confirmUrl = url
+        document.getElementById('confirmText').innerText = msg
+        openModal('confirmModal')
+    }
+
+    function runConfirm() {
+        if (confirmUrl) window.location = confirmUrl
+    }
+    document.addEventListener('click', function(e) {
+        const a = e.target.closest('a')
+        if (!a) return
+        const href = a.getAttribute('href') || ''
+        if (href.includes('delete_option=')) {
+            e.preventDefault()
+            openConfirm(href, 'Delete this option?')
+            return
+        }
+        if (href.includes('&delete=')) {
+            e.preventDefault()
+            openConfirm(href, 'Delete this inventory code?')
+        }
+    })
 </script>
 <?php require_once 'footer.php'; ?>

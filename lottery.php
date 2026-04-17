@@ -17,9 +17,10 @@ if ($rid) {
 }
 $my_tickets = 0;
 $token = request('token') ?? str_replace('Bearer ', '', $_SERVER['HTTP_AUTHORIZATION'] ?? '');
+$token = trim((string)$token);
 $session = findQuery(" SELECT account_id FROM account_sessions WHERE token='$token' AND expires_at>NOW() ");
 if ($session && $rid) {
-    $uid = $session['account_id'];
+    $uid = (int)$session['account_id'];
     $ticket_query = findQuery(" SELECT COALESCE(SUM(ticket_count),0) as total FROM lottery_entries WHERE round_id=$rid AND account_id=$uid ");
     $my_tickets = (int)($ticket_query['total'] ?? 0);
 }
@@ -27,12 +28,21 @@ $closed_rounds = getQuery(" SELECT winning_numbers, draw_time FROM lottery_round
 $real_winners = [];
 foreach ($closed_rounds as $cr) {
     $winners_array = json_decode($cr['winning_numbers'], true) ?? [];
+    if (isset($winners_array['account_id'])) {
+        $winners_array = [['user' => $winners_array['account_id'], 'amount' => $winners_array['amount'] ?? 0]];
+    }
+    if (!is_array($winners_array)) {
+        $winners_array = [];
+    }
     foreach ($winners_array as $w) {
-        $u = findQuery(" SELECT wallet_address FROM accounts WHERE id=" . (int)$w['user']);
-        if ($u) {
+        $winner_id = (int)($w['user'] ?? 0);
+        if ($winner_id <= 0) continue;
+        $u = findQuery(" SELECT wallet_address FROM accounts WHERE id=$winner_id ");
+        if ($u && !empty($u['wallet_address'])) {
+            $wallet = (string)$u['wallet_address'];
             $real_winners[] = [
-                'wallet' => substr($u['wallet_address'], 0, 4) . '...' . substr($u['wallet_address'], -4),
-                'amount' => $w['amount'],
+                'wallet' => strlen($wallet) > 8 ? substr($wallet, 0, 4) . '...' . substr($wallet, -4) : $wallet,
+                'amount' => (float)($w['amount'] ?? 0),
                 'date' => $cr['draw_time']
             ];
         }

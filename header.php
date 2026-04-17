@@ -160,8 +160,8 @@
         }
 
         ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px
+            width: 6px;
+            height: 6px
         }
 
         ::-webkit-scrollbar-track {
@@ -177,12 +177,13 @@
             background: linear-gradient(180deg, #00ffaa, #a855f7)
         }
 
+        /* Header — 60px (was 80px) */
         .glass-header {
             background: rgba(13, 17, 28, .9);
             backdrop-filter: blur(20px) saturate(180%);
             border-bottom: 1px solid rgba(0, 255, 170, .08);
             box-shadow: 0 4px 30px rgba(0, 0, 0, .3), 0 0 20px rgba(0, 255, 170, .05);
-            height: 80px
+            height: 60px
         }
 
         .glass-header::before {
@@ -225,7 +226,7 @@
         }
 
         .logo-glow {
-            filter: drop-shadow(0 0 10px rgba(0, 255, 170, .4)) drop-shadow(0 0 20px rgba(139, 92, 246, .2))
+            filter: drop-shadow(0 0 8px rgba(0, 255, 170, .4)) drop-shadow(0 0 16px rgba(139, 92, 246, .2))
         }
 
         .search-input {
@@ -304,8 +305,8 @@
         .balance-card {
             background: linear-gradient(135deg, rgba(0, 212, 143, .1) 0%, rgba(139, 92, 246, .1) 100%);
             border: 1px solid rgba(0, 255, 170, .2);
-            border-radius: 12px;
-            padding: 8px 16px
+            border-radius: 10px;
+            padding: 5px 12px
         }
 
         .mobile-menu-btn {
@@ -369,17 +370,24 @@
 
         @media(max-width:768px) {
             .glass-header {
-                height: 64px !important
+                height: 52px !important
             }
 
-            .balance-card {
-                padding: 6px 12px
+            .mobile-menu-btn,
+            .btn-secondary,
+            #wallet-btn,
+            #logout-btn {
+                min-width: 40px;
+                min-height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center
             }
         }
 
         @media(max-width:640px) {
             .glass-header {
-                height: 60px !important
+                height: 50px !important
             }
 
             .search-input {
@@ -387,25 +395,12 @@
             }
 
             .logo-glow {
-                width: 36px !important;
-                height: 36px !important
+                width: 30px !important;
+                height: 30px !important
             }
         }
 
-        @media(max-width:768px) {
-
-            .mobile-menu-btn,
-            .btn-secondary,
-            #wallet-btn,
-            #logout-btn {
-                min-width: 44px;
-                min-height: 44px;
-                display: flex;
-                align-items: center;
-                justify-content: center
-            }
-        }
-
+        /* Light mode */
         html:not(.dark) body {
             background: #f1f5f9;
             color: #0f172a
@@ -517,110 +512,104 @@
 <body class="antialiased selection:bg-primary-500 selection:text-dark-900 transition-colors duration-300">
     <div id="mobile-search-modal" class="mobile-search-modal flex-col items-center justify-start pt-6 px-4">
         <div class="w-full max-w-2xl">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-xl font-bold dark:text-white text-gray-900">Search</h3>
+            <div class="flex items-center justify-between mb-5">
+                <h3 class="text-lg font-bold dark:text-white text-gray-900">Search</h3>
                 <button onclick="document.getElementById('mobile-search-modal').classList.remove('active')"
                     class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
             <div class="relative w-full group">
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <svg class="w-5 h-5 text-gray-400 group-focus-within:text-primary-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 text-gray-400 group-focus-within:text-primary-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                 </div>
                 <input type="text" id="mobile-search-input"
                     onkeydown="if(event.key==='Enter'){window.location='market.php?search='+this.value}"
                     placeholder="Search crypto products, NFTs, services..."
-                    class="search-input block w-full pl-12 pr-4 py-4 rounded-xl text-base placeholder-gray-500 focus:outline-none font-medium"
+                    class="search-input block w-full pl-11 pr-4 py-3 rounded-xl text-sm placeholder-gray-500 focus:outline-none font-medium"
                     autofocus>
             </div>
         </div>
     </div>
     <header class="glass-header fixed top-0 left-0 right-0 z-50 animate-slide-down">
-        <div class="relative flex items-center justify-between h-full px-3 sm:px-4 md:px-6 lg:px-8 max-w-[2000px] mx-auto">
-            <div class="flex items-center gap-2 sm:gap-3 md:gap-6 z-10 flex-shrink-0">
+        <div class="relative flex items-center justify-between h-full px-3 sm:px-4 md:px-5 lg:px-6 max-w-[2000px] mx-auto">
+            <div class="flex items-center gap-2 sm:gap-3 md:gap-5 z-10 flex-shrink-0">
                 <button id="sidebar-toggle"
                     onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full');document.getElementById('sidebar-overlay').classList.toggle('hidden');this.classList.toggle('active')"
-                    class="mobile-menu-btn lg:hidden p-2.5 text-gray-500 dark:text-gray-400 hover:text-primary-500 transition-colors"
+                    class="mobile-menu-btn lg:hidden p-2 text-gray-500 dark:text-gray-400 hover:text-primary-500 transition-colors"
                     aria-label="Toggle menu">
                     <div class="w-5 h-4 flex flex-col justify-between">
                         <span></span><span></span><span></span>
                     </div>
                 </button>
-                <a href="app.php" class="flex items-center gap-2 sm:gap-3 group">
-                    <div class="relative w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-primary-500 via-primary-600 to-accent-500 flex items-center justify-center logo-glow transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
-                        <img src="./<?= settings('site_logo') ?? 'https://ui-avatars.com/api/?name=GB&background=00ffaa&color=000' ?>" alt="GASHY" class="w-full h-full object-contain p-2"
+                <a href="app.php" class="flex items-center gap-2 group">
+                    <div class="relative w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-primary-500 via-primary-600 to-accent-500 flex items-center justify-center logo-glow transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+                        <img src="./<?= settings('site_logo') ?? 'https://ui-avatars.com/api/?name=GB&background=00ffaa&color=000' ?>" alt="GASHY" class="w-full h-full object-contain p-1.5"
                             onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-                        <svg class="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
-                        <div class="absolute inset-0 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 opacity-0 group-hover:opacity-20 blur-xl transition-opacity"></div>
+                        <div class="absolute inset-0 rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 opacity-0 group-hover:opacity-20 blur-xl transition-opacity"></div>
                     </div>
-                    <div class="hidden sm:flex flex-col">
-                        <span class="logo-text-main text-lg sm:text-xl md:text-2xl font-black tracking-tighter bg-gradient-to-r from-white via-primary-500 to-accent-500 bg-clip-text text-transparent">GASHY</span>
-                        <span class="logo-text-sub text-[9px] sm:text-[10px] md:text-xs font-bold tracking-widest text-primary-500 -mt-1">BAZAAR</span>
+                    <div class="hidden sm:flex flex-col leading-none">
+                        <span class="logo-text-main text-base sm:text-lg font-black tracking-tighter bg-gradient-to-r from-white via-primary-500 to-accent-500 bg-clip-text text-transparent">GASHY</span>
+                        <span class="logo-text-sub text-[8px] font-bold tracking-widest text-primary-500">BAZAAR</span>
                     </div>
                 </a>
             </div>
-            <div class="hidden md:flex items-center flex-1 max-w-2xl mx-4 lg:mx-12">
+            <div class="hidden md:flex items-center flex-1 max-w-xl mx-4 lg:mx-10">
                 <div class="relative w-full group">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <svg class="w-5 h-5 text-gray-400 group-focus-within:text-primary-500 transition-colors header-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-400 group-focus-within:text-primary-500 transition-colors header-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                     </div>
                     <input type="text"
                         onkeydown="if(event.key==='Enter')window.location='market.php?search='+this.value"
                         placeholder="Search crypto products, NFTs, services..."
-                        class="search-input block w-full pl-12 pr-12 py-3 rounded-xl text-sm md:text-base placeholder-gray-500 focus:outline-none font-medium">
-                    <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none opacity-0 group-focus-within:opacity-100 transition-opacity">
-                        <kbd class="search-kbd px-2 py-1 text-xs font-semibold text-gray-400 dark:text-gray-500 bg-dark-700 dark:bg-dark-700 bg-gray-200 border border-white/10 dark:border-white/10 border-gray-300 rounded">Enter</kbd>
+                        class="search-input block w-full pl-10 pr-10 py-2 rounded-lg text-sm placeholder-gray-500 focus:outline-none font-medium">
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none opacity-0 group-focus-within:opacity-100 transition-opacity">
+                        <kbd class="search-kbd px-1.5 py-0.5 text-[10px] font-semibold text-gray-400 dark:text-gray-500 bg-dark-700 border border-white/10 rounded">↵</kbd>
                     </div>
                 </div>
             </div>
-            <div class="flex items-center gap-1 sm:gap-1.5 md:gap-2 z-10 flex-shrink-0">
+            <div class="flex items-center gap-1 sm:gap-1.5 z-10 flex-shrink-0">
                 <button onclick="document.getElementById('mobile-search-modal').classList.add('active');setTimeout(()=>document.getElementById('mobile-search-input').focus(),100)"
-                    class="md:hidden btn-secondary btn-glow p-2 rounded-lg transition-all header-icon"
+                    class="md:hidden btn-secondary btn-glow p-1.5 rounded-lg transition-all header-icon"
                     aria-label="Search">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                 </button>
                 <button onclick="App.toggleTheme()"
-                    class="btn-secondary btn-glow p-2 rounded-lg transition-all header-icon"
+                    class="btn-secondary btn-glow p-1.5 rounded-lg transition-all header-icon"
                     aria-label="Toggle theme">
                     <svg id="theme-sun" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
                     <svg id="theme-moon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                     </svg>
                 </button>
                 <div id="account-info" class="balance-card hidden lg:flex flex-col items-end opacity-0 transition-all duration-300">
-                    <span class="balance-label text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Balance</span>
-                    <span id="account-balance"
-                        class="text-sm font-black bg-gradient-to-r from-green-400 to-primary-500 bg-clip-text text-transparent font-mono">
-                        0.00 SOL
-                    </span>
+                    <span class="balance-label text-[7px] font-bold text-gray-400 uppercase tracking-widest">Balance</span>
+                    <span id="account-balance" class="text-xs font-black bg-gradient-to-r from-green-400 to-primary-500 bg-clip-text text-transparent font-mono">0.00 SOL</span>
                 </div>
                 <button id="wallet-btn" onclick="App.connectWallet()"
-                    class="btn-primary btn-glow flex items-center gap-1 px-2.5 sm:px-3 py-2 rounded-lg font-bold text-xs sm:text-sm shadow-md transition-all">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    class="btn-primary btn-glow flex items-center gap-1 px-2.5 py-1.5 rounded-lg font-bold text-xs shadow-md transition-all">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                     <span id="wallet-text" class="hidden sm:inline">Connect</span>
                 </button>
                 <button id="logout-btn" onclick="App.logout()"
-                    class="hidden btn-glow items-center gap-1 px-2.5 sm:px-3 py-2 rounded-lg bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold text-xs sm:text-sm shadow-md transition-all">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    class="hidden btn-glow items-center gap-1 px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold text-xs shadow-md transition-all">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
                 </button>
             </div>

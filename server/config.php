@@ -1,7 +1,6 @@
 <?php
 $envPath = dirname(__DIR__) . '/.env';
 static $env = [];
-
 if (empty($env)) {
     if (!is_file($envPath)) {
         throw new RuntimeException(".env file not found: $envPath");
@@ -14,15 +13,10 @@ if (empty($env)) {
         $env[substr($line, 0, $eq)] = substr($line, $eq + 1);
     }
 }
-
 $r = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
-
-// FIX: Detect if running on live server path OR if REMOTE_ADDR is not local
 $is_live_path = strpos(__DIR__, '/www/wwwroot/') !== false;
 $is_not_local_ip = !preg_match('/^(127\.|192\.168\.|10\.|::1|localhost)/', $r);
-
 $l = $is_live_path || (PHP_SAPI !== 'cli' && PHP_SAPI !== 'cli-server' && $is_not_local_ip);
-
 return [
     'app' => [
         'timezone' => $env['APP_TIMEZONE'] ?? 'Asia/Baghdad',
