@@ -25,6 +25,25 @@ function productsBaseUrl($extra = [])
     $params = array_merge($params, $extra);
     return 'products.php' . ($params ? '?' . http_build_query($params) : '');
 }
+function buildAttributesJsonFromPost()
+{
+    $names = $_POST['attribute_name'] ?? [];
+    $values = $_POST['attribute_values'] ?? [];
+    $result = [];
+    if (!is_array($names) || !is_array($values)) return json_encode(new stdClass(), JSON_UNESCAPED_UNICODE);
+    foreach ($names as $i => $name) {
+        $name = trim((string)$name);
+        $valsRaw = $values[$i] ?? '';
+        if ($name === '') continue;
+        $vals = array_values(array_filter(array_map('trim', explode(',', $valsRaw)), function ($v) {
+            return $v !== '';
+        }));
+        if (!$vals) continue;
+        $cleanName = strip_tags($name);
+        $result[$cleanName] = array_values(array_unique($vals));
+    }
+    return $result ? json_encode($result, JSON_UNESCAPED_UNICODE) : json_encode(new stdClass(), JSON_UNESCAPED_UNICODE);
+}
 $cats = getQuery(" SELECT id,name,slug FROM categories ORDER BY name ASC ");
 $sellers = getQuery(" SELECT account_id,store_name FROM sellers WHERE is_approved=1 ORDER BY store_name ASC ");
 if (get('delete')) {
@@ -47,6 +66,7 @@ if (post('save_product')) {
     $cat = (int)request('category_id', 'post');
     $sid = (int)request('seller_id', 'post');
     $desc = secure(request('description', 'post'));
+    $attributesJson = $type === 'physical' ? buildAttributesJsonFromPost() : json_encode(new stdClass(), JSON_UNESCAPED_UNICODE);
     $exists = $id ? findQuery(" SELECT id FROM products WHERE (title='$title' OR slug='$slug') AND id!=$id LIMIT 1 ") : findQuery(" SELECT id FROM products WHERE title='$title' OR slug='$slug' LIMIT 1 ");
     if ($exists) redirect(productsBaseUrl(['msg' => 'exists']));
     $newImage = upload('image', $uploadPath);
@@ -62,13 +82,13 @@ if (post('save_product')) {
             $f = '../' . ltrim($oldImg, '/');
             if (file_exists($f)) @unlink($f);
         }
-        $imgs = json_encode([$finalImg]);
-        execute(" UPDATE products SET title='$title',slug='$slug',price_usd=$price,stock=$stock,type='$type',category_id=$cat,seller_id=$sid,description='$desc',images='$imgs' WHERE id=$id ");
+        $imgs = json_encode([$finalImg], JSON_UNESCAPED_UNICODE);
+        execute(" UPDATE products SET title='$title',slug='$slug',price_usd=$price,stock=$stock,type='$type',category_id=$cat,seller_id=$sid,description='$desc',attributes='$attributesJson',images='$imgs' WHERE id=$id ");
         redirect(productsBaseUrl(['msg' => 'updated']));
     } else {
         $img = $newImage ? $dbPath . $newImage : '';
-        $imgs = json_encode([$img]);
-        execute(" INSERT INTO products (title,slug,price_usd,stock,type,category_id,seller_id,description,images,status) VALUES ('$title','$slug',$price,$stock,'$type',$cat,$sid,'$desc','$imgs','active') ");
+        $imgs = json_encode([$img], JSON_UNESCAPED_UNICODE);
+        execute(" INSERT INTO products (title,slug,price_usd,stock,type,category_id,seller_id,description,attributes,images,status) VALUES ('$title','$slug',$price,$stock,'$type',$cat,$sid,'$desc','$attributesJson','$imgs','active') ");
         redirect(productsBaseUrl(['msg' => 'created']));
     }
 }
@@ -168,7 +188,7 @@ require_once 'sidebar.php';
                                     <?php if (isMysteryBox($p['type'])): ?>
                                         <a href="mystery-box-detail.php?id=<?= $p['id'] ?>" class="p-2 text-gray-400 hover:text-amber-500"><i class="fa-solid fa-gift"></i></a>
                                     <?php endif; ?>
-                                    <button onclick='editProduct(<?= json_encode($p) ?>)' class="p-2 text-gray-400 hover:text-primary-500"><i class="fa-solid fa-pen-to-square"></i></button>
+                                    <button onclick='editProduct(<?= json_encode($p, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>)' class="p-2 text-gray-400 hover:text-primary-500"><i class="fa-solid fa-pen-to-square"></i></button>
                                     <?php if ($p['status'] == 'banned'): ?>
                                         <a href="?restore=<?= $p['id'] ?>" class="p-2 text-green-500"><i class="fa-solid fa-rotate-left"></i></a>
                                     <?php else: ?>
@@ -189,7 +209,7 @@ require_once 'sidebar.php';
 </main>
 <div id="productModal" class="fixed inset-0 z-[60] hidden">
     <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal('productModal')"></div>
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl bg-white dark:bg-dark-800 rounded-2xl shadow-2xl p-0 max-h-[90vh] overflow-hidden flex flex-col">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-5xl bg-white dark:bg-dark-800 rounded-2xl shadow-2xl p-0 max-h-[90vh] overflow-hidden flex flex-col">
         <div class="p-6 border-b border-gray-200 dark:border-white/10 flex justify-between items-center">
             <h3 class="text-xl font-bold text-gray-900 dark:text-white" id="modalTitle">Add Product</h3><button onclick="closeModal('productModal')" class="text-gray-500 hover:text-red-500"><i class="fa-solid fa-times text-xl"></i></button>
         </div>
@@ -200,11 +220,21 @@ require_once 'sidebar.php';
                         <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Title</label><input type="text" name="title" id="prod_title" required class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none"></div>
                         <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Description</label><textarea name="description" id="prod_desc" rows="5" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none"></textarea></div>
                         <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Image</label><input type="file" name="image" id="prod_image" accept="image/*" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none"></div>
+                        <div id="physicalAttributesBox" class="hidden rounded-2xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-dark-900 p-4">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+                                <div>
+                                    <div class="text-sm font-black text-gray-900 dark:text-white">Physical Attributes</div>
+                                    <div class="text-xs text-gray-500">Add rows like Color, Size, Storage. Use comma separated values.</div>
+                                </div>
+                                <button type="button" onclick="addAttributeRow('','')" class="px-4 py-2 rounded-xl bg-primary-600 text-white text-xs font-bold">Add Attribute</button>
+                            </div>
+                            <div id="attributesRows" class="space-y-3"></div>
+                        </div>
                     </div>
                     <div class="lg:col-span-1 space-y-4">
                         <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Price USD</label><input type="number" step="0.01" name="price_usd" id="prod_price" required class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none"></div>
                         <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Stock</label><input type="number" name="stock" id="prod_stock" required class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none"></div>
-                        <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Type</label><select name="type" id="prod_type" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none">
+                        <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Type</label><select name="type" id="prod_type" onchange="toggleAttributesBox()" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none">
                                 <option value="digital">Digital</option>
                                 <option value="gift_card">Gift Card</option>
                                 <option value="physical">Physical</option>
@@ -229,6 +259,59 @@ require_once 'sidebar.php';
         const el = document.getElementById(id);
         if (el) el.classList.add('hidden')
     }
+    window.escapeHtml = function(v) {
+        return String(v || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;')
+    }
+    window.attributeRowTemplate = function(name = '', values = '') {
+        return `<div class="grid grid-cols-1 md:grid-cols-[1fr_2fr_auto] gap-3 attribute-row"><input type="text" name="attribute_name[]" value="${escapeHtml(name)}" placeholder="Attribute name" class="w-full bg-white dark:bg-dark-800 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none"><input type="text" name="attribute_values[]" value="${escapeHtml(values)}" placeholder="Black, White, Red" class="w-full bg-white dark:bg-dark-800 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none"><button type="button" onclick="removeAttributeRow(this)" class="px-4 py-2.5 rounded-xl bg-red-50 dark:bg-red-500/10 text-red-500 font-bold text-xs">Remove</button></div>`
+    }
+    window.addAttributeRow = function(name = '', values = '') {
+        const box = document.getElementById('attributesRows');
+        if (!box) return;
+        box.insertAdjacentHTML('beforeend', attributeRowTemplate(name, values))
+    }
+    window.removeAttributeRow = function(btn) {
+        const row = btn.closest('.attribute-row');
+        if (row) row.remove()
+    }
+    window.clearAttributeRows = function() {
+        const box = document.getElementById('attributesRows');
+        if (box) box.innerHTML = ''
+    }
+    window.toggleAttributesBox = function() {
+        const type = document.getElementById('prod_type');
+        const box = document.getElementById('physicalAttributesBox');
+        if (!type || !box) return;
+        if (type.value === 'physical') {
+            box.classList.remove('hidden')
+            if (!document.querySelector('#attributesRows .attribute-row')) addAttributeRow('', '')
+        } else {
+            box.classList.add('hidden')
+            clearAttributeRows()
+        }
+    }
+    window.loadAttributes = function(attributes) {
+        clearAttributeRows()
+        let data = attributes
+        if (typeof data === 'string' && data) {
+            try {
+                data = JSON.parse(data)
+            } catch (e) {
+                data = {}
+            }
+        }
+        if (data && typeof data === 'object' && !Array.isArray(data)) {
+            let hasRows = false
+            Object.keys(data).forEach(function(key) {
+                const values = Array.isArray(data[key]) ? data[key].join(', ') : ''
+                addAttributeRow(key, values)
+                hasRows = true
+            })
+            if (!hasRows) addAttributeRow('', '')
+        } else {
+            addAttributeRow('', '')
+        }
+    }
     window.resetForm = function() {
         const f = document.getElementById('productForm');
         if (f) f.reset();
@@ -236,11 +319,13 @@ require_once 'sidebar.php';
         if (id) id.value = '';
         const t = document.getElementById('modalTitle');
         if (t) t.innerText = 'Add Product'
+        clearAttributeRows()
+        toggleAttributesBox()
     }
     window.editProduct = function(p) {
         const map = (k, v) => {
             const el = document.getElementById(k);
-            if (el) el.value = v
+            if (el) el.value = v ?? ''
         };
         map('prod_id', p.id);
         map('prod_title', p.title);
@@ -252,6 +337,13 @@ require_once 'sidebar.php';
         map('prod_seller', p.seller_id);
         const t = document.getElementById('modalTitle');
         if (t) t.innerText = 'Edit Product';
+        if ((p.type || '') === 'physical') {
+            document.getElementById('physicalAttributesBox').classList.remove('hidden')
+            loadAttributes(p.attributes || '{}')
+        } else {
+            clearAttributeRows()
+            toggleAttributesBox()
+        }
         openModal('productModal')
     }
 </script>

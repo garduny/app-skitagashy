@@ -1,15 +1,11 @@
 <?php
 require_once 'init.php';
 $id = (int)request('id', 'get');
-if (!$id) {
-    $id = (int)request('approve', 'get');
-}
-if (!$id) {
-    $id = (int)request('ban', 'get');
-}
+if (!$id) $id = (int)request('approve', 'get');
+if (!$id) $id = (int)request('ban', 'get');
 if (!$id) redirect('sellers.php');
-$seller = findQuery(" SELECT s.*,a.accountname,a.email,a.wallet_address FROM sellers s JOIN accounts a ON s.account_id=a.id WHERE s.account_id=$id ");
-if (empty($seller)) redirect('sellers.php');
+$seller = findQuery(" SELECT s.*,a.accountname,a.email,a.wallet_address,a.tier,a.is_verified,a.is_banned,a.created_at account_created FROM sellers s JOIN accounts a ON s.account_id=a.id WHERE s.account_id=$id ");
+if (!$seller) redirect('sellers.php');
 if (get('approve')) {
     execute(" UPDATE sellers SET is_approved=1 WHERE account_id=$id ");
     redirect("sellerdetail.php?id=$id&msg=approved");
@@ -19,15 +15,20 @@ if (get('ban')) {
     redirect("sellerdetail.php?id=$id&msg=banned");
 }
 $products = getQuery(" SELECT * FROM products WHERE seller_id=$id ORDER BY id DESC LIMIT 50 ");
-$stats = findQuery(" SELECT COUNT(*) total_items,COALESCE(SUM(stock),0) total_stock FROM products WHERE seller_id=$id ");
+$stats = findQuery(" SELECT COUNT(*) total_items,COALESCE(SUM(stock),0) total_stock,COALESCE(SUM(CASE WHEN status='active' THEN 1 ELSE 0 END),0) active_items FROM products WHERE seller_id=$id ");
+$sellerSaleStats = sellerStats($seller['account_id']);
+$totalSales = $sellerSaleStats['total_sale'] ?? $seller['total_sales'] ?? 0;
 $gashyRate = toGashy();
 require_once 'header.php';
 require_once 'sidebar.php';
 ?>
 <main class="ml-0 lg:ml-64 pt-20 p-6 min-h-screen transition-all duration-300">
     <div class="flex items-center gap-4 mb-6">
-        <a href="sellers.php" class="p-2 rounded-lg bg-white dark:bg-white/5 text-gray-500 hover:text-white transition-colors"><i class="fa-solid fa-arrow-left"></i></a>
-        <h1 class="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Store Details</h1>
+        <a href="sellers.php" class="p-2 rounded-xl bg-white dark:bg-white/5 text-gray-500 hover:text-primary-500 transition-colors"><i class="fa-solid fa-arrow-left"></i></a>
+        <div>
+            <h1 class="text-2xl font-black text-gray-900 dark:text-white">Store Details</h1>
+            <p class="text-sm text-gray-500">Seller profile, status and products</p>
+        </div>
     </div>
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         <div class="lg:col-span-1 space-y-6">
@@ -36,42 +37,58 @@ require_once 'sidebar.php';
                     <div class="w-full h-full bg-white dark:bg-dark-800 rounded-full flex items-center justify-center text-2xl font-bold uppercase"><?= strtoupper(substr($seller['store_name'], 0, 1)) ?></div>
                 </div>
                 <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-1"><?= $seller['store_name'] ?></h2>
-                <p class="text-sm text-gray-500 mb-4">@<?= $seller['store_slug'] ?></p>
-                <div class="flex justify-center gap-2 mb-6">
-                    <span class="px-3 py-1 rounded-lg text-xs font-bold <?= $seller['is_approved'] ? 'bg-green-500/10 text-green-500' : 'bg-yellow-500/10 text-yellow-500' ?>"><?= $seller['is_approved'] ? 'Verified' : 'Pending' ?></span>
-                    <span class="px-3 py-1 bg-gray-100 dark:bg-white/10 rounded-lg text-xs font-bold text-gray-500"><i class="fa-solid fa-star text-yellow-500"></i> <?= $seller['rating'] ?></span>
+                <p class="text-sm text-primary-500 mb-4">@<?= $seller['store_slug'] ?></p>
+                <div class="flex flex-wrap justify-center gap-2 mb-6">
+                    <span class="px-3 py-1 rounded-lg text-xs font-bold <?= $seller['is_approved'] ? 'bg-green-500/10 text-green-500' : 'bg-yellow-500/10 text-yellow-500' ?>"><?= $seller['is_approved'] ? 'Live' : 'Pending' ?></span>
+                    <span class="px-3 py-1 bg-gray-100 dark:bg-white/10 rounded-lg text-xs font-bold text-gray-500"><i class="fa-solid fa-star text-yellow-500"></i> <?= number_format((float)$seller['rating'], 2) ?></span>
+                    <?php if ($seller['is_verified']): ?><span class="px-3 py-1 rounded-lg text-xs font-bold bg-blue-500/10 text-blue-500">Verified</span><?php endif; ?>
+                    <?php if ($seller['is_banned']): ?><span class="px-3 py-1 rounded-lg text-xs font-bold bg-red-500/10 text-red-500">Banned</span><?php endif; ?>
                 </div>
                 <div class="grid grid-cols-2 gap-4 border-t border-gray-100 dark:border-white/5 pt-4">
                     <div class="text-center">
                         <div class="text-xs text-gray-500 uppercase">Sales</div>
-                        <div class="text-lg font-bold text-gray-900 dark:text-white"><?= sellerStats($seller['account_id'])['total_sale'] ?></div>
+                        <div class="text-lg font-bold text-gray-900 dark:text-white"><?= number_format((float)$totalSales, 2) ?></div>
                     </div>
                     <div class="text-center">
                         <div class="text-xs text-gray-500 uppercase">Commission</div>
                         <div class="text-lg font-bold text-gray-900 dark:text-white"><?= $seller['commission_rate'] ?>%</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xs text-gray-500 uppercase">Products</div>
+                        <div class="text-lg font-bold text-gray-900 dark:text-white"><?= (int)$stats['total_items'] ?></div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xs text-gray-500 uppercase">Stock</div>
+                        <div class="text-lg font-bold text-gray-900 dark:text-white"><?= (int)$stats['total_stock'] ?></div>
                     </div>
                 </div>
             </div>
             <div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-200 dark:border-white/5 p-6 shadow-sm">
                 <h3 class="font-bold text-gray-900 dark:text-white mb-4">Owner Info</h3>
                 <div class="space-y-3 text-sm">
-                    <div class="flex justify-between"><span class="text-gray-500">Username</span><span class="text-gray-900 dark:text-white font-medium"><?= $seller['accountname'] ?></span></div>
-                    <div class="flex justify-between"><span class="text-gray-500">Email</span><span class="text-gray-900 dark:text-white font-medium"><?= $seller['email'] ?></span></div>
-                    <div class="flex justify-between"><span class="text-gray-500">Wallet</span><span class="text-primary-500 font-mono text-xs"><?= $seller['wallet_address'] ? substr($seller['wallet_address'], 0, 6) . '...' : '-' ?></span></div>
+                    <div class="flex items-center justify-between gap-4"><span class="text-gray-500">Username</span><span class="text-gray-900 dark:text-white font-medium text-right break-all"><?= $seller['accountname'] ?></span></div>
+                    <div class="flex items-center justify-between gap-4"><span class="text-gray-500">Email</span><span class="text-gray-900 dark:text-white font-medium text-right break-all"><?= $seller['email'] ?></span></div>
+                    <div class="flex items-center justify-between gap-4"><span class="text-gray-500">Wallet</span><span class="text-primary-500 font-mono text-xs text-right break-all"><?= $seller['wallet_address'] ?: '-' ?></span></div>
+                    <div class="flex items-center justify-between gap-4"><span class="text-gray-500">Tier</span><span class="text-gray-900 dark:text-white font-medium"><?= strtoupper($seller['tier']) ?></span></div>
+                    <div class="flex items-center justify-between gap-4"><span class="text-gray-500">Joined</span><span class="text-gray-900 dark:text-white font-medium"><?= !empty($seller['account_created']) ? date('Y-m-d', strtotime($seller['account_created'])) : '-' ?></span></div>
                 </div>
-                <div class="mt-6 flex gap-2">
+                <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button type="button" onclick="navigator.clipboard.writeText('<?= $seller['wallet_address'] ?>')" class="py-2 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-white rounded-lg text-sm font-bold">Copy Wallet</button>
                     <?php if ($seller['is_approved']): ?>
-                        <a href="?ban=<?= $id ?>" class="flex-1 py-2 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white text-center rounded-lg text-sm font-bold transition-colors">Ban Store</a>
+                        <a href="?ban=<?= $id ?>" class="py-2 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white text-center rounded-lg text-sm font-bold transition-colors">Suspend Store</a>
                     <?php else: ?>
-                        <a href="?approve=<?= $id ?>" class="flex-1 py-2 bg-green-500 hover:bg-green-600 text-white text-center rounded-lg text-sm font-bold transition-colors">Approve Store</a>
+                        <a href="?approve=<?= $id ?>" class="py-2 bg-green-500 hover:bg-green-600 text-white text-center rounded-lg text-sm font-bold transition-colors">Approve Store</a>
                     <?php endif; ?>
                 </div>
             </div>
         </div>
         <div class="lg:col-span-2">
             <div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-200 dark:border-white/5 p-6 shadow-sm overflow-hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-bold text-gray-900 dark:text-white">Products (<?= (int)$stats['total_items'] ?>)</h3>
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6">
+                    <div>
+                        <h3 class="font-bold text-gray-900 dark:text-white">Products (<?= (int)$stats['total_items'] ?>)</h3>
+                        <p class="text-sm text-gray-500"><?= (int)$stats['active_items'] ?> active items</p>
+                    </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-sm">
@@ -86,29 +103,40 @@ require_once 'sidebar.php';
                         </thead>
                         <tbody class="divide-y divide-gray-100 dark:divide-white/5">
                             <?php foreach ($products as $p):
-                                $img = json_decode($p['images'], true)[0] ?? 'assets/placeholder.png';
-                                $usd = $p['price_usd'];
+                                $imgs = json_decode($p['images'], true);
+                                $img = $imgs[0] ?? 'assets/placeholder.png';
+                                $usd = (float)$p['price_usd'];
                                 $gashy = $gashyRate ? ($usd / $gashyRate) : 0;
                             ?>
                                 <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
                                     <td class="py-3 pl-2">
-                                        <div class="flex items-center gap-3">
-                                            <img src="../<?= ltrim($img, '/') ?>" class="w-8 h-8 rounded bg-gray-100 dark:bg-white/5 object-cover">
-                                            <span class="font-bold text-gray-900 dark:text-white truncate max-w-[200px]"><?= $p['title'] ?></span>
+                                        <div class="flex items-center gap-3 min-w-[240px]">
+                                            <img src="../<?= ltrim($img, '/') ?>" class="w-10 h-10 rounded bg-gray-100 dark:bg-white/5 object-cover">
+                                            <div>
+                                                <div class="font-bold text-gray-900 dark:text-white truncate max-w-[260px]"><?= $p['title'] ?></div>
+                                                <?php if (!empty($p['slug'])): ?><div class="text-xs text-primary-500"><?= $p['slug'] ?></div><?php endif; ?>
+                                            </div>
                                         </div>
                                     </td>
-                                    <td class="py-3 font-mono">$<?= number_format($usd, 2) ?><div class="text-xs text-primary-500"><?= number_format($gashy, 2) ?> GASHY</div>
+                                    <td class="py-3 font-mono">
+                                        <div class="text-gray-900 dark:text-white">$<?= number_format($usd, 2) ?></div>
+                                        <div class="text-xs text-primary-500"><?= number_format($gashy, 2) ?> GASHY</div>
                                     </td>
                                     <td class="py-3"><?= (int)$p['stock'] ?></td>
                                     <td class="py-3"><span class="px-2 py-0.5 rounded text-[10px] uppercase font-bold <?= $p['status'] == 'active' ? 'text-green-500 bg-green-500/10' : 'text-red-500 bg-red-500/10' ?>"><?= $p['status'] ?></span></td>
                                     <td class="py-3 pr-2 text-right">
                                         <div class="flex justify-end gap-2">
                                             <a href="../product.php?slug=<?= $p['slug'] ?>" target="_blank" class="p-1 text-gray-400 hover:text-blue-500" title="View"><i class="fa-solid fa-eye"></i></a>
-                                            <a href="productdetail.php?id=<?= $p['id'] ?>" class="p-1 text-gray-400 hover:text-primary-500" title="Edit"><i class="fa-solid fa-pen"></i></a>
+                                            <a href="productdetail.php?id=<?= $p['id'] ?>" class="p-1 text-gray-400 hover:text-primary-500" title="Details"><i class="fa-solid fa-pen"></i></a>
                                         </div>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
+                            <?php if (!$products): ?>
+                                <tr>
+                                    <td colspan="5" class="py-10 text-center text-gray-400">No products found for this seller</td>
+                                </tr>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
