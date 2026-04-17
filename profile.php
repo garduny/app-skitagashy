@@ -195,12 +195,14 @@ require_once 'sidebar.php';
                 <h1 class="text-3xl md:text-4xl font-black bg-gradient-to-r from-gray-900 via-blue-900 to-gray-900 dark:from-white dark:via-blue-200 dark:to-white bg-clip-text text-transparent mb-3">Connect Your Wallet</h1>
                 <p class="text-gray-600 dark:text-gray-400 max-w-xl mx-auto text-base leading-relaxed">Access your dashboard, track orders, and unlock exclusive features on Solana blockchain.</p>
             </div>
-            <button onclick="App.connectWallet()" class="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold text-base rounded-xl shadow-lg shadow-blue-600/30 hover:shadow-blue-600/50 transition-all transform hover:-translate-y-1 flex items-center gap-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-                Connect Phantom Wallet
-            </button>
+            <center>
+                <button onclick="App.connectWallet()" class="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold text-base rounded-xl shadow-lg shadow-blue-600/30 hover:shadow-blue-600/50 transition-all transform hover:-translate-y-1 flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    Connect Phantom Wallet
+                </button>
+            </center>
         </div>
         <div id="auth-view" class="block space-y-6 fade-in">
             <div class="profile-header rounded-2xl p-6 shadow-lg">

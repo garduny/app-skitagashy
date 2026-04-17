@@ -191,7 +191,7 @@ require_once 'sidebar.php';
     document.addEventListener('DOMContentLoaded', async () => {
         setTimeout(() => {
             if (!App.state.token) {
-                window.location.href = 'app.php';
+                window.location.href = 'profile.php';
                 return;
             }
         }, 2000);

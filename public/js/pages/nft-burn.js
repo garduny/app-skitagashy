@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         clearInterval(checkAuth);
         setTimeout(() => {
             if (!App.state.token) {
-                window.location.href = 'app.php';
+                window.location.href = 'profile.php';
                 return;
             }
         }, 2000);
