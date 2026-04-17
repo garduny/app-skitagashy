@@ -1,132 +1,147 @@
 document.addEventListener('DOMContentLoaded', async () => {
+    const guest = document.getElementById('guest-view')
+    const auth = document.getElementById('auth-view')
     if (!App.state.token) {
-        document.getElementById('guest-view').classList.remove('hidden');
-        document.getElementById('auth-view').classList.add('hidden');
-        return;
+        guest.classList.remove('hidden')
+        guest.classList.add('flex')
+        auth.classList.add('hidden')
+        return
     }
-    document.getElementById('guest-view').classList.add('hidden');
-    document.getElementById('auth-view').classList.remove('hidden');
-    await loadAccountData();
-    await loadWithdrawals();
-    await loadRecentOrders();
-});
+    guest.classList.add('hidden')
+    guest.classList.remove('flex')
+    auth.classList.remove('hidden')
+    await Promise.all([loadAccountData(), loadWithdrawals(), loadRecentOrders()])
+})
+const $ = id => document.getElementById(id)
+const setText = (id, val) => { const el = $(id); if (el) el.innerText = val }
+const setVal = (id, val) => { const el = $(id); if (el) el.value = val }
+const fmt = n => parseFloat(n || 0).toFixed(3)
+const fmt2 = n => parseFloat(n || 0).toFixed(2)
+const fmt0 = n => parseFloat(n || 0).toFixed(0)
+const shortWallet = v => !v ? '' : (v.length > 18 ? v.substring(0, 8) + '...' + v.slice(-8) : v)
+function esc(v) {
+    return String(v ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]))
+}
 async function loadAccountData() {
     try {
-        const res = await App.post('./api/account/profile.php', {});
-        if (res.status && res.data) {
-            const u = res.data;
-            document.getElementById('profile-accountname').innerText = u.accountname || 'Trader';
-            document.getElementById('profile-wallet').innerText = u.wallet_address;
-            document.getElementById('profile-tier').innerText = u.tier;
-            document.getElementById('profile-spent').innerText = parseFloat(u.stats.spent || 0).toFixed(0) + ' GASHY';
-            document.getElementById('profile-orders-count').innerText = u.stats.orders || 0;
-            document.getElementById('input-accountname').value = u.accountname || '';
-            document.getElementById('input-email').value = u.email || '';
-            document.getElementById('referral-code').value = 'GASHY-REF-Account' + u.id;
-            document.getElementById('withdrawable-balance').innerText =
-                parseFloat(u.wallet_stats.withdrawable || 0).toFixed(3) + ' GASHY';
-            const tiers = { 'bronze': '🥉', 'silver': '🥈', 'gold': '🥇', 'platinum': '💎', 'diamond': '👑' };
-            document.getElementById('account-tier-icon').innerText = tiers[u.tier] || '🥉';
-        }
+        const res = await App.post('./api/account/profile.php', {})
+        if (!res.status || !res.data) return
+        const u = res.data
+        setText('profile-accountname', u.accountname || 'Trader')
+        setText('profile-wallet', shortWallet(u.wallet_address || ''))
+        setText('profile-tier', (u.tier || 'bronze').toUpperCase())
+        setText('profile-spent', fmt0(u.stats?.spent) + ' GASHY')
+        setText('profile-orders-count', u.stats?.orders || 0)
+        setVal('input-accountname', u.accountname || '')
+        setVal('input-email', u.email || '')
+        setVal('referral-code', 'GASHY-REF-Account' + u.id)
+        setText('withdrawable-balance', fmt(u.wallet_stats?.withdrawable) + ' GASHY')
+        const tiers = { bronze: '🥉', silver: '🥈', gold: '🥇', platinum: '💎', diamond: '👑' }
+        setText('account-tier-icon', tiers[(u.tier || 'bronze').toLowerCase()] || '🥉')
     } catch (e) {
-        console.error("Profile Load Error", e);
+        console.error(e)
+        notyf.error('Profile load failed')
     }
 }
 async function requestWithdraw() {
-    const amount = parseFloat(document.getElementById('withdraw-amount').value || 0);
-    if (amount <= 0) { notyf.error('Invalid amount'); return; }
+    const btn = event?.currentTarget
+    const amount = parseFloat(($('withdraw-amount').value || 0))
+    if (amount <= 0) { notyf.error('Invalid amount'); return }
+    if (btn) btn.disabled = true
     try {
-        const res = await App.post('./api/account/withdrawal.php', { amount });
+        const res = await App.post('./api/account/withdrawal.php', { amount })
         if (res.status) {
-            notyf.success(res.message);
-            document.getElementById('withdrawable-balance').innerText =
-                parseFloat(res.available).toFixed(3) + ' GASHY';
-        } else notyf.error(res.message);
-    } catch (e) { notyf.error('Withdraw failed'); }
+            notyf.success(res.message || 'Request sent')
+            setText('withdrawable-balance', fmt(res.available) + ' GASHY')
+            $('withdraw-amount').value = ''
+            loadWithdrawals()
+        } else notyf.error(res.message || 'Failed')
+    } catch (e) {
+        notyf.error('Withdraw failed')
+    }
+    if (btn) btn.disabled = false
 }
 async function loadWithdrawals() {
-    const box = document.getElementById('withdrawals-list');
+    const box = $('withdrawals-list')
     try {
-        const res = await App.post('./api/account/withdrawals.php', {});
-        if (res.status && res.data.length) {
+        const res = await App.post('./api/account/withdrawals.php', {})
+        if (res.status && res.data && res.data.length) {
             box.innerHTML = res.data.map(w => `
-<div class="flex items-center justify-between p-4 bg-white dark:bg-[#151A23] rounded-xl border border-gray-200 dark:border-white/5">
+<div class="stat-line">
 <div>
-<div class="font-bold text-gray-900 dark:text-white">${parseFloat(w.amount).toFixed(3)} GASHY</div>
-<div class="text-xs text-gray-500">${new Date(w.created_at).toLocaleDateString()}</div>
+<div class="font-black text-gray-900 dark:text-white">${fmt(w.amount)} GASHY</div>
+<div class="subtle-text text-xs">${new Date(w.created_at).toLocaleDateString()}</div>
 </div>
-<div class="text-right">
-<span class="px-2 py-1 rounded text-[10px] font-bold uppercase ${getWithdrawColor(w.status)}">${w.status}</span>
+<span class="px-3 py-1 rounded-full text-[10px] font-black uppercase ${getWithdrawColor(w.status)}">${esc(w.status)}</span>
 </div>
-</div>
-`).join('');
+`).join('')
         } else {
-            box.innerHTML = `<div class="text-center text-gray-500 text-sm py-6">No withdrawals yet</div>`;
+            box.innerHTML = `<div class="stat-line"><div><div class="font-bold text-gray-900 dark:text-white text-sm">No withdrawals yet</div><div class="subtle-text text-xs">Your requests will appear here.</div></div></div>`
         }
     } catch (e) {
-        box.innerHTML = `<div class="text-center text-red-500 text-sm py-6">Failed to load</div>`;
+        box.innerHTML = `<div class="text-center text-red-500 text-sm py-4">Failed to load</div>`
     }
 }
 function getWithdrawColor(status) {
-    if (status === 'approved') return 'bg-green-100 text-green-600 dark:bg-green-500/20 dark:text-green-400';
-    if (status === 'pending') return 'bg-yellow-100 text-yellow-600 dark:bg-yellow-500/20 dark:text-yellow-400';
-    return 'bg-red-100 text-red-600 dark:bg-red-500/20 dark:text-red-400';
+    status = (status || '').toLowerCase()
+    if (status === 'approved') return 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400'
+    if (status === 'pending') return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-400'
+    return 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400'
 }
 async function loadRecentOrders() {
-    const list = document.getElementById('recent-orders-list');
+    const list = $('recent-orders-list')
     try {
-        const res = await App.post('./api/orders/history.php', { page: 1, limit: 3 });
-        if (res.status && res.data && res.data.length > 0) {
+        const res = await App.post('./api/orders/history.php', { page: 1, limit: 3 })
+        if (res.status && res.data && res.data.length) {
             list.innerHTML = res.data.map(o => `
-                <div class="bg-white dark:bg-[#151A23] rounded-xl p-4 border border-gray-200 dark:border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm dark:shadow-none hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                    <div class="flex items-center gap-4 w-full sm:w-auto">
-                        <div class="w-12 h-12 rounded-lg bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-500">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-                        </div>
-                        <div>
-                            <div class="text-gray-900 dark:text-white font-bold">Order #${o.id}</div>
-                            <div class="text-xs text-gray-500">${new Date(o.created_at).toLocaleDateString()}</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between w-full sm:w-auto gap-4">
-                        <div class="text-right">
-                            <div class="text-gray-900 dark:text-white font-bold">${parseFloat(o.total_gashy).toFixed(2)} G</div>
-                            <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase ${getStatusColor(o.status)}">${o.status}</span>
-                        </div>
-                        <button onclick="location.href='orders.php'" class="px-3 py-1.5 bg-gray-100 dark:bg-white/10 hover:bg-gray-200 rounded-lg text-xs text-gray-600 dark:text-gray-300">View</button>
-                    </div>
-                </div>
-            `).join('');
+<div class="order-item">
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/15 to-purple-500/15 flex items-center justify-center border border-blue-500/15">
+<svg class="w-6 h-6 text-blue-600 dark:text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+</div>
+<div>
+<div class="font-black text-gray-900 dark:text-white">Order #${esc(o.id)}</div>
+<div class="subtle-text text-xs">${new Date(o.created_at).toLocaleDateString()}</div>
+</div>
+</div>
+<div class="flex items-center gap-3 justify-between sm:justify-end">
+<div class="text-right">
+<div class="font-black text-gray-900 dark:text-white">${fmt2(o.total_gashy)} G</div>
+<span class="inline-block mt-1 px-3 py-1 rounded-full text-[10px] font-black uppercase ${getStatusColor(o.status)}">${esc(o.status)}</span>
+</div>
+<a href="orders.php" class="action-btn px-4 py-2 text-xs">View</a>
+</div>
+</div>
+</div>
+`).join('')
         } else {
-            list.innerHTML = `
-                <div class="p-8 text-center bg-white dark:bg-[#151A23] rounded-2xl border border-gray-200 dark:border-white/5">
-                    <p class="text-gray-500">No orders found.</p>
-                    <a href="market.php" class="text-blue-500 hover:underline mt-2 inline-block text-sm">Browse Market</a>
-                </div>
-            `;
+            list.innerHTML = `<div class="empty-state"><div class="space-y-2"><h3 class="text-lg font-black text-gray-900 dark:text-white">No orders found</h3><p class="subtle-text">Browse products and your orders will appear here.</p></div><a href="market.php" class="action-btn px-5 py-3 text-sm">Browse Market</a></div>`
         }
     } catch (e) {
-        list.innerHTML = `<div class="text-red-500 text-center text-sm">Failed to load orders</div>`;
+        list.innerHTML = `<div class="text-red-500 text-center text-sm py-4">Failed to load orders</div>`
     }
 }
 async function saveProfile() {
-    const accountname = document.getElementById('input-accountname').value;
-    const email = document.getElementById('input-email').value;
-    notyf.success('Updating Profile...');
+    const btn = event?.currentTarget
+    const accountname = $('input-accountname').value.trim()
+    const email = $('input-email').value.trim()
+    if (!accountname) { notyf.error('Username required'); return }
+    if (btn) btn.disabled = true
     try {
-        const res = await App.post('./api/account/update.php', { accountname, email });
+        const res = await App.post('./api/account/update.php', { accountname, email })
         if (res.status) {
-            notyf.success(res.message);
-            document.getElementById('profile-accountname').innerText = accountname || 'Account';
-        } else {
-            notyf.error(res.message);
-        }
+            notyf.success(res.message || 'Updated')
+            setText('profile-accountname', accountname)
+        } else notyf.error(res.message || 'Update failed')
     } catch (e) {
-        notyf.error('Update Failed');
+        notyf.error('Update failed')
     }
+    if (btn) btn.disabled = false
 }
 function getStatusColor(status) {
-    if (status === 'completed') return 'bg-green-100 text-green-600 dark:bg-green-500/20 dark:text-green-400';
-    if (status === 'pending') return 'bg-yellow-100 text-yellow-600 dark:bg-yellow-500/20 dark:text-yellow-400';
-    return 'bg-red-100 text-red-600 dark:bg-red-500/20 dark:text-red-400';
+    status = (status || '').toLowerCase()
+    if (status === 'completed' || status === 'paid' || status === 'success') return 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400'
+    if (status === 'pending' || status === 'processing') return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-400'
+    return 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400'
 }

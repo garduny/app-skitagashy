@@ -1,145 +1,179 @@
 <?php
 require_once 'init.php';
 $id = (int)request('id', 'get');
-$a = findQuery(" SELECT a.*,p.title,p.images,p.slug,acc.accountname,acc.wallet_address FROM auctions a JOIN products p ON p.id=a.product_id LEFT JOIN accounts acc ON acc.id=a.highest_bidder_id WHERE a.id=$id ");
+if (!$id) redirect('auctions.php');
+$a = findQuery(" SELECT a.*,p.title,p.images,p.slug,p.type,p.price_usd,s.accountname seller_name,u.accountname bidder_name,u.email bidder_email,u.wallet_address bidder_wallet FROM auctions a JOIN products p ON p.id=a.product_id LEFT JOIN accounts s ON s.id=p.seller_id LEFT JOIN accounts u ON u.id=a.highest_bidder_id WHERE a.id=$id ");
 if (!$a) redirect('auctions.php');
-if (post('update_auction')) {
-    $start = request('start_time', 'post');
-    $end = request('end_time', 'post');
-    $state = request('status', 'post');
-    $reserve = (float)request('reserve_price_usd', 'post');
-    execute(" UPDATE auctions SET start_time='$start',end_time='$end',status='$state',reserve_price_usd=$reserve WHERE id=$id ");
+$bids = getQuery(" SELECT t.*,acc.accountname,acc.email FROM transactions t LEFT JOIN accounts acc ON acc.id=t.account_id WHERE t.reference_id=$id AND t.type='auction_bid' ORDER BY t.id DESC ");
+$rate = toGashy();
+if (post('save_status')) {
+    $st = request('status', 'post');
+    $allowed = ['active', 'ended', 'cancelled'];
+    if (!in_array($st, $allowed)) $st = 'active';
+    execute(" UPDATE auctions SET status='$st' WHERE id=$id ");
     redirect("auctiondetail.php?id=$id&msg=updated");
 }
-$bids = getQuery(" SELECT t.*,acc.accountname,acc.wallet_address FROM transactions t LEFT JOIN accounts acc ON acc.id=t.account_id WHERE t.type='auction_bid' AND t.reference_id=$id ORDER BY t.amount DESC,t.id DESC ");
-$gashyRate = toGashy();
+$msg = request('msg', 'get');
+$img = '';
 $imgs = json_decode($a['images'], true);
-$img = $imgs[0] ?? '';
-$usd = (float)$a['current_bid_usd'];
-$gashy = $gashyRate ? ($usd / $gashyRate) : 0;
-$resusd = (float)$a['reserve_price_usd'];
-$resgashy = $gashyRate ? ($resusd / $gashyRate) : 0;
-$startTs = strtotime($a['start_time']);
-$endTs = strtotime($a['end_time']);
-$diff = $endTs - time();
+if (is_array($imgs) && !empty($imgs[0])) $img = $imgs[0];
+$currUsd = (float)$a['current_bid_usd'];
+$currGashy = $rate ? $currUsd / $rate : 0;
+$startUsd = (float)$a['start_price_usd'];
+$startGashy = $rate ? $startUsd / $rate : 0;
+$resUsd = (float)$a['reserve_price_usd'];
+$resGashy = $rate ? $resUsd / $rate : 0;
+$diff = strtotime($a['end_time']) - time();
+function badgeAuction($s)
+{
+    if ($s === 'active') return 'bg-green-500/10 text-green-500';
+    if ($s === 'ended') return 'bg-blue-500/10 text-blue-500';
+    return 'bg-red-500/10 text-red-500';
+}
 require_once 'header.php';
 require_once 'sidebar.php';
 ?>
 <main class="ml-0 lg:ml-64 pt-20 p-6 min-h-screen transition-all duration-300">
-    <div class="flex items-center gap-4 mb-6">
-        <a href="auctions.php" class="p-2 rounded-xl bg-white dark:bg-white/5 text-gray-500 hover:text-primary-500"><i class="fa-solid fa-arrow-left"></i></a>
-        <div>
-            <h1 class="text-2xl font-black text-gray-900 dark:text-white">Auction #<?= $id ?></h1>
-            <p class="text-sm text-gray-500">Manage bids, timer and status</p>
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <div class="flex items-center gap-4">
+            <a href="auctions.php" class="p-2 rounded-lg bg-white dark:bg-white/5 text-gray-500 hover:text-primary-500"><i class="fa-solid fa-arrow-left"></i></a>
+            <div>
+                <h1 class="text-2xl font-black text-gray-900 dark:text-white">Auction #<?= $id ?></h1>
+                <p class="text-sm text-gray-500">Detailed admin auction view</p>
+            </div>
+        </div>
+        <span class="px-3 py-1 rounded-full text-xs font-bold uppercase <?= badgeAuction($a['status']) ?>"><?= htmlspecialchars($a['status']) ?></span>
+    </div>
+
+    <?php if ($msg === 'updated'): ?>
+        <div class="p-4 mb-6 bg-green-100 dark:bg-green-500/20 border border-green-200 dark:border-green-500/30 text-green-600 dark:text-green-400 rounded-xl font-bold text-center">Auction updated successfully.</div>
+    <?php endif; ?>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-200 dark:border-white/5 p-5">
+            <div class="text-xs font-bold uppercase text-gray-500 mb-2">Current Bid</div>
+            <div class="text-2xl font-black text-primary-500">$<?= number_format($currUsd, 2) ?></div>
+            <div class="text-sm text-yellow-500"><?= number_format($currGashy, 2) ?> GASHY</div>
+        </div>
+        <div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-200 dark:border-white/5 p-5">
+            <div class="text-xs font-bold uppercase text-gray-500 mb-2">Reserve</div>
+            <div class="text-2xl font-black text-gray-900 dark:text-white">$<?= number_format($resUsd, 2) ?></div>
+            <div class="text-sm text-gray-500"><?= number_format($resGashy, 2) ?> GASHY</div>
+        </div>
+        <div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-200 dark:border-white/5 p-5">
+            <div class="text-xs font-bold uppercase text-gray-500 mb-2">Bids</div>
+            <div class="text-3xl font-black text-gray-900 dark:text-white"><?= count($bids) ?></div>
+        </div>
+        <div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-200 dark:border-white/5 p-5">
+            <div class="text-xs font-bold uppercase text-gray-500 mb-2">Countdown</div>
+            <div class="text-2xl font-black <?= $diff > 0 ? 'text-green-500' : 'text-red-500' ?>">
+                <?= $diff > 0 ? floor($diff / 3600) . 'h ' . floor(($diff % 3600) / 60) . 'm' : 'Ended' ?>
+            </div>
         </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="space-y-6">
+        <div class="lg:col-span-2 space-y-6">
+
             <div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-200 dark:border-white/5 p-6 shadow-sm">
-                <div class="aspect-video rounded-xl overflow-hidden bg-gray-100 dark:bg-white/5 mb-4">
-                    <img src="../<?= $img ?>" class="w-full h-full object-cover">
-                </div>
-                <h3 class="font-bold text-gray-900 dark:text-white text-lg"><?= $a['title'] ?></h3>
-                <?php if (!empty($a['slug'])): ?><a href="../product/<?= $a['slug'] ?>" target="_blank" class="text-xs text-primary-500 break-all"><?= $a['slug'] ?></a><?php endif; ?>
-                <div class="grid grid-cols-2 gap-3 mt-4">
-                    <div class="p-3 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5">
-                        <div class="text-xs text-gray-500 uppercase">Current Bid</div>
-                        <div class="text-lg font-black text-primary-500">$<?= number_format($usd, 2) ?></div>
-                        <div class="text-xs text-primary-500"><?= number_format($gashy, 2) ?> GASHY</div>
-                    </div>
-                    <div class="p-3 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5">
-                        <div class="text-xs text-gray-500 uppercase">Reserve</div>
-                        <div class="text-lg font-black text-gray-900 dark:text-white">$<?= number_format($resusd, 2) ?></div>
-                        <div class="text-xs text-gray-500"><?= number_format($resgashy, 2) ?> GASHY</div>
-                    </div>
-                    <div class="p-3 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5">
-                        <div class="text-xs text-gray-500 uppercase">Highest Bidder</div>
-                        <div class="font-bold text-sm text-gray-900 dark:text-white"><?= $a['accountname'] ?: 'No Bids' ?></div>
-                    </div>
-                    <div class="p-3 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5">
-                        <div class="text-xs text-gray-500 uppercase">Countdown</div>
-                        <div class="font-mono font-bold <?= $diff > 0 && $diff < 3600 ? 'text-red-500' : 'text-gray-900 dark:text-white' ?>"><?= $diff > 0 ? floor($diff / 3600) . 'h ' . floor(($diff % 3600) / 60) . 'm' : 'Ended' ?></div>
+                <div class="flex items-center gap-4">
+                    <img src="../<?= $img ?>" class="w-20 h-20 rounded-2xl object-cover bg-gray-100 dark:bg-white/5">
+                    <div class="min-w-0">
+                        <div class="text-xl font-black text-gray-900 dark:text-white"><?= htmlspecialchars($a['title']) ?></div>
+                        <div class="text-sm text-gray-500"><?= htmlspecialchars($a['type']) ?></div>
+                        <div class="text-xs text-primary-500 mt-1"><?= htmlspecialchars($a['slug']) ?></div>
                     </div>
                 </div>
-                <div class="mt-4 flex items-center justify-between">
-                    <span class="px-2 py-1 rounded text-[10px] uppercase font-bold <?= $a['status'] == 'active' ? 'bg-green-500/10 text-green-500' : ($a['status'] == 'ended' ? 'bg-blue-500/10 text-blue-500' : 'bg-red-500/10 text-red-500') ?>"><?= $a['status'] ?></span>
-                    <span class="text-xs text-gray-500"><?= date('Y-m-d H:i', $startTs) ?> → <?= date('Y-m-d H:i', $endTs) ?></span>
+                <div class="grid md:grid-cols-3 gap-4 mt-6">
+                    <div class="rounded-xl bg-gray-50 dark:bg-white/5 p-4">
+                        <div class="text-xs text-gray-500 uppercase font-bold mb-1">Start Price</div>
+                        <div class="font-black">$<?= number_format($startUsd, 2) ?></div>
+                    </div>
+                    <div class="rounded-xl bg-gray-50 dark:bg-white/5 p-4">
+                        <div class="text-xs text-gray-500 uppercase font-bold mb-1">Seller</div>
+                        <div class="font-black"><?= htmlspecialchars($a['seller_name'] ?: '-') ?></div>
+                    </div>
+                    <div class="rounded-xl bg-gray-50 dark:bg-white/5 p-4">
+                        <div class="text-xs text-gray-500 uppercase font-bold mb-1">Winner</div>
+                        <div class="font-black"><?= htmlspecialchars($a['bidder_name'] ?: 'No Bids') ?></div>
+                    </div>
                 </div>
             </div>
 
-            <div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-200 dark:border-white/5 p-6 shadow-sm">
-                <h3 class="font-bold text-gray-900 dark:text-white mb-4">Settings</h3>
-                <form method="POST" class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Start Time</label>
-                        <input type="datetime-local" name="start_time" value="<?= date('Y-m-d\TH:i', $startTs) ?>" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">End Time</label>
-                        <input type="datetime-local" name="end_time" value="<?= date('Y-m-d\TH:i', $endTs) ?>" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Reserve Price USD</label>
-                        <input type="number" step="0.01" min="0" name="reserve_price_usd" value="<?= $resusd ?>" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Status</label>
-                        <select name="status" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white">
-                            <option value="active" <?= $a['status'] == 'active' ? 'selected' : '' ?>>Active</option>
-                            <option value="ended" <?= $a['status'] == 'ended' ? 'selected' : '' ?>>Ended</option>
-                            <option value="cancelled" <?= $a['status'] == 'cancelled' ? 'selected' : '' ?>>Cancelled</option>
-                        </select>
-                    </div>
-                    <button type="submit" name="update_auction" value="1" class="w-full py-3 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-xl">Update Auction</button>
-                </form>
-            </div>
-        </div>
-
-        <div class="lg:col-span-2">
             <div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-200 dark:border-white/5 p-6 shadow-sm">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="font-bold text-gray-900 dark:text-white">Bid History</h3>
-                    <div class="text-sm text-gray-500"><?= count($bids) ?> bids</div>
+                    <div class="text-xs text-gray-500"><?= count($bids) ?> record(s)</div>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-sm">
                         <thead>
                             <tr class="border-b border-gray-200 dark:border-white/5 text-gray-500">
-                                <th class="pb-3">Bidder</th>
-                                <th class="pb-3">Amount</th>
-                                <th class="pb-3">Wallet</th>
-                                <th class="pb-3">Signature</th>
-                                <th class="pb-3 text-right">Time</th>
+                                <th class="pb-3">User</th>
+                                <th class="pb-3 text-right">Amount</th>
+                                <th class="pb-3 text-right">Status</th>
+                                <th class="pb-3 text-right">Date</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100 dark:divide-white/5">
-                            <?php foreach ($bids as $b):
-                                $busd = (float)$b['amount'];
-                                $bgashy = $gashyRate ? ($busd / $gashyRate) : 0;
-                            ?>
-                                <tr>
-                                    <td class="py-3">
-                                        <div class="font-bold text-gray-900 dark:text-white"><?= $b['accountname'] ?: 'Unknown' ?></div>
-                                    </td>
-                                    <td class="py-3 font-mono">
-                                        <div class="text-primary-500 font-bold">$<?= number_format($busd, 2) ?></div>
-                                        <div class="text-xs text-primary-500"><?= number_format($bgashy, 2) ?> GASHY</div>
-                                    </td>
-                                    <td class="py-3 text-xs text-gray-500 max-w-[160px] truncate"><?= $b['wallet_address'] ?></td>
-                                    <td class="py-3 text-xs text-gray-500 font-mono max-w-[220px] truncate"><?= $b['tx_signature'] ?></td>
-                                    <td class="py-3 text-right text-gray-500"><?= date('M d, H:i', strtotime($b['created_at'])) ?></td>
-                                </tr>
-                            <?php endforeach; ?>
                             <?php if (!$bids): ?>
                                 <tr>
-                                    <td colspan="5" class="py-10 text-center text-gray-400">No bids yet</td>
+                                    <td colspan="4" class="py-8 text-center text-gray-500">No bids yet.</td>
                                 </tr>
-                            <?php endif; ?>
+                                <?php else: foreach ($bids as $b):
+                                    $usd = (float)$b['amount'];
+                                    $g = $rate ? $usd / $rate : 0;
+                                ?>
+                                    <tr>
+                                        <td class="py-3 font-medium text-gray-900 dark:text-white"><?= htmlspecialchars($b['accountname'] ?: 'Unknown') ?></td>
+                                        <td class="py-3 text-right">
+                                            $<?= number_format($usd, 2) ?>
+                                            <div class="text-xs text-gray-500"><?= number_format($g, 2) ?> GASHY</div>
+                                        </td>
+                                        <td class="py-3 text-right"><span class="px-2 py-1 rounded text-[10px] uppercase font-bold bg-gray-100 dark:bg-white/5"><?= htmlspecialchars($b['status']) ?></span></td>
+                                        <td class="py-3 text-right text-gray-500"><?= !empty($b['created_at']) ? date('M d H:i', strtotime($b['created_at'])) : '-' ?></td>
+                                    </tr>
+                            <?php endforeach;
+                            endif; ?>
                         </tbody>
                     </table>
                 </div>
             </div>
+
+        </div>
+
+        <div class="space-y-6">
+
+            <div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-200 dark:border-white/5 p-6 shadow-sm">
+                <h3 class="font-bold text-gray-900 dark:text-white mb-4">Winner Info</h3>
+                <div class="space-y-3 text-sm">
+                    <div class="flex justify-between gap-3">
+                        <span class="text-gray-500">Name</span>
+                        <span class="font-medium text-right"><?= htmlspecialchars($a['bidder_name'] ?: '-') ?></span>
+                    </div>
+                    <div class="flex justify-between gap-3">
+                        <span class="text-gray-500">Email</span>
+                        <span class="font-medium text-right break-all"><?= htmlspecialchars($a['bidder_email'] ?: '-') ?></span>
+                    </div>
+                    <div class="pt-3 border-t border-gray-100 dark:border-white/5">
+                        <span class="text-xs text-gray-500 uppercase block mb-1">Wallet</span>
+                        <span class="text-xs font-mono break-all bg-gray-100 dark:bg-white/5 px-2 py-1 rounded block"><?= htmlspecialchars($a['bidder_wallet'] ?: '-') ?></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-200 dark:border-white/5 p-6 shadow-sm">
+                <h3 class="font-bold text-gray-900 dark:text-white mb-4">Workflow</h3>
+                <form method="POST" class="space-y-4">
+                    <select name="status" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white">
+                        <option value="active" <?= $a['status'] === 'active' ? 'selected' : '' ?>>Active</option>
+                        <option value="ended" <?= $a['status'] === 'ended' ? 'selected' : '' ?>>Ended</option>
+                        <option value="cancelled" <?= $a['status'] === 'cancelled' ? 'selected' : '' ?>>Cancelled</option>
+                    </select>
+                    <button type="submit" name="save_status" value="1" class="w-full py-3 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-xl">Save Status</button>
+                </form>
+            </div>
+
         </div>
     </div>
 </main>

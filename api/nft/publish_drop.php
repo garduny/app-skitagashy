@@ -10,7 +10,7 @@ if (!$session) {
     encode(['status' => false, 'message' => 'Unauthorized']);
 }
 $uid = $session['account_id'];
-$seller = findQuery(" SELECT id FROM sellers WHERE account_id=$uid AND is_approved=1 ");
+$seller = findQuery(" SELECT account_id FROM sellers WHERE account_id=$uid AND is_approved=1 ");
 if (!$seller) {
     encode(['status' => false, 'message' => 'Only approved sellers can publish drops']);
 }

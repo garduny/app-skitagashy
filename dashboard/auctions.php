@@ -1,36 +1,45 @@
 <?php
 require_once 'init.php';
-$products = getQuery(" SELECT id,title FROM products WHERE status='active' AND stock>0 ORDER BY title ASC ");
-if (get('delete')) {
-    $id = (int)request('delete', 'get');
-    execute(" DELETE FROM auctions WHERE id=$id ");
-    redirect('auctions.php?msg=deleted');
-}
-if (post('save_auction')) {
-    $id = (int)request('id', 'post');
-    $pid = (int)request('product_id', 'post');
-    $start = request('start_time', 'post');
-    $end = request('end_time', 'post');
-    $price = (float)request('start_price_usd', 'post');
-    $reserve = (float)request('reserve_price_usd', 'post');
-    $state = request('status', 'post') ?: 'active';
-    if ($id) {
-        execute(" UPDATE auctions SET product_id=$pid,start_time='$start',end_time='$end',reserve_price_usd=$reserve,status='$state' WHERE id=$id ");
-        redirect('auctions.php?msg=updated');
-    } else {
-        execute(" INSERT INTO auctions (product_id,option_id,start_time,end_time,start_price_usd,reserve_price_usd,current_bid_usd,highest_bidder_id,status) VALUES ($pid,NULL,'$start','$end',$price,$reserve,$price,NULL,'active') ");
-        redirect('auctions.php?msg=created');
-    }
-}
 $search = trim((string)request('search', 'get'));
 $status = trim((string)request('status', 'get'));
 $page = max(1, (int)(request('page', 'get') ?: 1));
 $limit = 10;
 $offset = ($page - 1) * $limit;
+$escSearch = addslashes($search);
+$products = getQuery(" SELECT p.id,p.title,p.type,p.stock,p.images,( SELECT COUNT(*) FROM gift_card_options gco WHERE gco.product_id=p.id ) option_count FROM products p WHERE p.status='active' AND p.stock>0 ORDER BY p.title ASC ");
+if (post('save_auction')) {
+    $id = (int)request('id', 'post');
+    $pid = (int)request('product_id', 'post');
+    $oid = (int)request('option_id', 'post');
+    $start = request('start_time', 'post');
+    $end = request('end_time', 'post');
+    $price = (float)request('start_price_usd', 'post');
+    $reserve = (float)request('reserve_price_usd', 'post');
+    $state = request('status', 'post') ?: 'active';
+    if (!$pid || !$start || !$end) redirect('auctions.php?msg=invalid');
+    if (strtotime($end) <= strtotime($start)) redirect('auctions.php?msg=time');
+    if ($id) {
+        $row = findQuery(" SELECT highest_bidder_id FROM auctions WHERE id=$id ");
+        if (($row['highest_bidder_id'] ?? 0) > 0) {
+            execute(" UPDATE auctions SET start_time='$start',end_time='$end',reserve_price_usd=$reserve,status='$state',option_id=" . ($oid ?: 'NULL') . " WHERE id=$id ");
+        } else {
+            execute(" UPDATE auctions SET product_id=$pid,start_time='$start',end_time='$end',start_price_usd=$price,current_bid_usd=$price,reserve_price_usd=$reserve,status='$state',option_id=" . ($oid ?: 'NULL') . " WHERE id=$id ");
+        }
+        redirect('auctions.php?msg=updated');
+    } else {
+        execute(" INSERT INTO auctions (product_id,option_id,start_time,end_time,start_price_usd,reserve_price_usd,current_bid_usd,highest_bidder_id,status) VALUES ($pid," . ($oid ?: 'NULL') . ",'$start','$end',$price,$reserve,$price,NULL,'active') ");
+        redirect('auctions.php?msg=created');
+    }
+}
+if (post('delete_auction')) {
+    $id = (int)request('delete_id', 'post');
+    execute(" DELETE FROM auctions WHERE id=$id ");
+    redirect('auctions.php?msg=deleted');
+}
 $where = " WHERE 1=1 ";
-if ($search) $where .= " AND p.title LIKE '%$search%' ";
+if ($search) $where .= " AND p.title LIKE '%$escSearch%' ";
 if ($status) $where .= " AND a.status='$status' ";
-$auctions = getQuery(" SELECT a.*,p.title,p.images,acc.accountname bidder_name FROM auctions a JOIN products p ON p.id=a.product_id LEFT JOIN accounts acc ON acc.id=a.highest_bidder_id $where ORDER BY FIELD(a.status,'active','ended','cancelled'),a.end_time ASC LIMIT $limit OFFSET $offset ");
+$auctions = getQuery(" SELECT a.*,p.title,p.images,acc.accountname bidder_name,gco.name option_name FROM auctions a JOIN products p ON p.id=a.product_id LEFT JOIN accounts acc ON acc.id=a.highest_bidder_id LEFT JOIN gift_card_options gco ON gco.id=a.option_id $where ORDER BY FIELD(a.status,'active','ended','cancelled'),a.end_time ASC LIMIT $limit OFFSET $offset ");
 $total = countQuery(" SELECT 1 FROM auctions a JOIN products p ON p.id=a.product_id $where ");
 $pages = max(1, ceil($total / $limit));
 function filterUrl($key, $val)
@@ -83,7 +92,7 @@ require_once 'sidebar.php';
                 <tbody class="divide-y divide-gray-100 dark:divide-white/5">
                     <?php foreach ($auctions as $a):
                         $imgs = json_decode($a['images'], true);
-                        $img = $imgs[0] ?? '';
+                        $img = $imgs[0] ?? 'assets/placeholder.png';
                         $diff = strtotime($a['end_time']) - time();
                         $h = floor(max(0, $diff) / 3600);
                         $m = floor((max(0, $diff) % 3600) / 60);
@@ -94,9 +103,12 @@ require_once 'sidebar.php';
                     ?>
                         <tr class="hover:bg-gray-50 dark:hover:bg-white/5">
                             <td class="px-6 py-4">
-                                <div class="flex items-center gap-3 min-w-[250px]">
+                                <div class="flex items-center gap-3 min-w-[260px]">
                                     <img src="../<?= $img ?>" class="w-10 h-10 rounded-lg object-cover bg-gray-100 dark:bg-white/5">
-                                    <div class="font-bold text-gray-900 dark:text-white"><?= $a['title'] ?></div>
+                                    <div>
+                                        <div class="font-bold text-gray-900 dark:text-white"><?= $a['title'] ?></div>
+                                        <?php if ($a['option_name']): ?><div class="text-xs text-primary-500"><?= $a['option_name'] ?></div><?php endif; ?>
+                                    </div>
                                 </div>
                             </td>
                             <td class="px-6 py-4 font-mono font-bold text-primary-500">$<?= number_format($usd, 2) ?><div class="text-xs"><?= number_format($gashy, 2) ?> GASHY</div>
@@ -143,21 +155,27 @@ require_once 'sidebar.php';
                 <div class="space-y-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Product</label>
-                        <select name="product_id" id="auc_prod" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none">
-                            <?php foreach ($products as $p): ?><option value="<?= $p['id'] ?>"><?= $p['title'] ?></option><?php endforeach; ?>
+                        <select name="product_id" id="auc_prod" onchange="loadOptions()" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white">
+                            <?php foreach ($products as $p): ?>
+                                <option value="<?= $p['id'] ?>"><?= $p['title'] ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
-                    <div class="grid md:grid-cols-2 gap-4">
-                        <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Start Time</label><input type="datetime-local" name="start_time" id="auc_start" required class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white"></div>
-                        <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">End Time</label><input type="datetime-local" name="end_time" id="auc_end" required class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white"></div>
+                    <div id="optionWrap" class="hidden">
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Option</label>
+                        <select name="option_id" id="auc_option" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white"></select>
                     </div>
                     <div class="grid md:grid-cols-2 gap-4">
-                        <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Start Price USD</label><input type="number" step="0.01" min="0" name="start_price_usd" id="auc_price" required class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white"></div>
-                        <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Reserve Price USD</label><input type="number" step="0.01" min="0" name="reserve_price_usd" id="auc_reserve" value="0" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white"></div>
+                        <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Start Time</label><input type="datetime-local" name="start_time" id="auc_start" required class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5"></div>
+                        <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">End Time</label><input type="datetime-local" name="end_time" id="auc_end" required class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5"></div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Start Price USD</label><input type="number" step="0.01" min="0" name="start_price_usd" id="auc_price" required class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5"></div>
+                        <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Reserve Price USD</label><input type="number" step="0.01" min="0" name="reserve_price_usd" id="auc_reserve" value="0" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5"></div>
                     </div>
                     <div id="statusWrap" class="hidden">
                         <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Status</label>
-                        <select name="status" id="auc_status" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white">
+                        <select name="status" id="auc_status" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5">
                             <option value="active">Active</option>
                             <option value="ended">Ended</option>
                             <option value="cancelled">Cancelled</option>
@@ -176,15 +194,23 @@ require_once 'sidebar.php';
         <div class="bg-white dark:bg-dark-800 rounded-2xl p-6">
             <div class="text-lg font-bold text-gray-900 dark:text-white mb-2">Delete Auction?</div>
             <div class="text-sm text-gray-500 mb-6">This action cannot be undone.</div>
-            <div class="grid grid-cols-2 gap-3">
-                <button onclick="closeModal('deleteModal')" class="py-2 rounded-xl bg-gray-100 dark:bg-white/5">Cancel</button>
-                <a id="deleteLink" href="#" class="py-2 rounded-xl bg-red-500 text-white text-center">Delete</a>
-            </div>
+            <form method="POST" class="grid grid-cols-2 gap-3">
+                <input type="hidden" name="delete_id" id="delete_id">
+                <button type="button" onclick="closeModal('deleteModal')" class="py-2 rounded-xl bg-gray-100 dark:bg-white/5">Cancel</button>
+                <button type="submit" name="delete_auction" value="1" class="py-2 rounded-xl bg-red-500 text-white">Delete</button>
+            </form>
         </div>
     </div>
 </div>
 
 <script>
+    const productOptions = {}
+    <?php foreach ($products as $p):
+        $opts = getQuery(" SELECT id,name as option_name FROM gift_card_options WHERE product_id=" . (int)$p['id'] . " ORDER BY id ASC ");
+    ?>
+        productOptions[<?= $p['id'] ?>] = <?= json_encode($opts) ?>;
+    <?php endforeach; ?>
+
     function openModal(id) {
         document.getElementById(id).classList.remove('hidden')
     }
@@ -193,12 +219,32 @@ require_once 'sidebar.php';
         document.getElementById(id).classList.add('hidden')
     }
 
+    function loadOptions(sel = null) {
+        const pid = auc_prod.value
+        const opts = productOptions[pid] || []
+        auc_option.innerHTML = ''
+        if (opts.length) {
+            optionWrap.classList.remove('hidden')
+            opts.forEach(o => {
+                const x = document.createElement('option')
+                x.value = o.id
+                x.textContent = o.option_name
+                if (sel && sel == o.id) x.selected = true
+                auc_option.appendChild(x)
+            })
+        } else {
+            optionWrap.classList.add('hidden')
+        }
+    }
+
     function resetForm() {
         auc_id.value = ''
         modalTitle.innerText = 'New Auction'
         statusWrap.classList.add('hidden')
         auc_price.disabled = false
         auc_prod.disabled = false
+        auc_status.value = 'active'
+        loadOptions()
     }
 
     function editAuction(a) {
@@ -212,12 +258,12 @@ require_once 'sidebar.php';
         auc_status.value = a.status
         modalTitle.innerText = 'Edit Auction'
         statusWrap.classList.remove('hidden')
-        auc_price.disabled = true
-        auc_prod.disabled = false
+        auc_price.disabled = (parseInt(a.highest_bidder_id || 0) > 0)
+        loadOptions(a.option_id)
     }
 
     function confirmDelete(id) {
-        deleteLink.href = '?delete=' + id
+        delete_id.value = id
         openModal('deleteModal')
     }
 </script>
