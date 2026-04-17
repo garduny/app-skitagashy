@@ -1,8 +1,6 @@
 <?php
 define('gashy_exec', true);
-if (file_exists('server/init.php')) {
-    require_once 'server/init.php';
-}
+if (file_exists('server/init.php')) require_once 'server/init.php';
 require_once 'header.php';
 require_once 'sidebar.php';
 ?>
@@ -17,7 +15,7 @@ require_once 'sidebar.php';
 
         50% {
             transform: scale(1.05);
-            opacity: 0.8
+            opacity: .8
         }
     }
 
@@ -29,7 +27,7 @@ require_once 'sidebar.php';
         }
 
         50% {
-            transform: translateY(-10px)
+            transform: translateY(-8px)
         }
     }
 
@@ -43,265 +41,199 @@ require_once 'sidebar.php';
         }
     }
 
-    @keyframes glow-pulse {
-
-        0%,
-        100% {
-            box-shadow: 0 0 20px rgba(34, 197, 94, 0.3)
-        }
-
-        50% {
-            box-shadow: 0 0 40px rgba(34, 197, 94, 0.6)
-        }
-    }
-
     .quest-card {
-        background: linear-gradient(135deg, rgba(19, 24, 36, 0.7), rgba(26, 31, 46, 0.7));
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        transition: all 0.3s ease;
+        background: linear-gradient(135deg, rgba(19, 24, 36, .72), rgba(26, 31, 46, .72));
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, .06);
+        transition: .3s;
         position: relative;
         overflow: hidden
     }
 
-    .quest-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.1), transparent);
-        transition: left 0.6s
-    }
-
-    .quest-card:hover::before {
-        left: 100%
-    }
-
     .quest-card:hover {
-        border-color: rgba(34, 197, 94, 0.3);
-        box-shadow: 0 8px 30px rgba(34, 197, 94, 0.15);
-        transform: translateY(-4px)
+        transform: translateY(-4px);
+        border-color: rgba(34, 197, 94, .35);
+        box-shadow: 0 15px 40px rgba(34, 197, 94, .12)
     }
 
     .quest-icon {
-        background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(16, 185, 129, 0.15));
-        border: 2px solid rgba(34, 197, 94, 0.3);
+        background: linear-gradient(135deg, rgba(34, 197, 94, .15), rgba(16, 185, 129, .15));
+        border: 1px solid rgba(34, 197, 94, .28);
         animation: float-up 3s ease-in-out infinite
     }
 
     .progress-bar {
-        background: linear-gradient(90deg, #22c55e, #10b981);
+        background: linear-gradient(90deg, #22c55e, #10b981, #22c55e);
         background-size: 200% 100%;
-        animation: shimmer 2s linear infinite;
-        box-shadow: 0 0 20px rgba(34, 197, 94, 0.4)
-    }
-
-    .balance-badge {
-        background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(16, 185, 129, 0.15));
-        border: 2px solid rgba(34, 197, 94, 0.3);
-        animation: glow-pulse 3s ease-in-out infinite
+        animation: shimmer 2s linear infinite
     }
 
     .claim-btn {
         background: linear-gradient(135deg, #22c55e, #10b981);
-        box-shadow: 0 8px 25px rgba(34, 197, 94, 0.3);
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden
-    }
-
-    .claim-btn::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transform: translateX(-100%);
-        transition: transform 0.6s
-    }
-
-    .claim-btn:hover::before {
-        transform: translateX(100%)
+        box-shadow: 0 10px 25px rgba(34, 197, 94, .28);
+        transition: .3s
     }
 
     .claim-btn:hover {
-        box-shadow: 0 12px 35px rgba(34, 197, 94, 0.5);
-        transform: translateY(-2px)
+        transform: translateY(-2px);
+        box-shadow: 0 16px 35px rgba(34, 197, 94, .42)
+    }
+
+    .stats-card {
+        background: linear-gradient(135deg, rgba(34, 197, 94, .12), rgba(16, 185, 129, .08));
+        border: 1px solid rgba(34, 197, 94, .2)
     }
 
     html:not(.dark) .quest-card {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.95));
-        border: 1px solid rgba(0, 0, 0, 0.08)
+        background: linear-gradient(135deg, #fff, #f8fafc);
+        border: 1px solid rgba(0, 0, 0, .08)
     }
 
-    html:not(.dark) .quest-card:hover {
-        box-shadow: 0 8px 30px rgba(34, 197, 94, 0.12)
-    }
-
-    html:not(.dark) .quest-icon {
-        background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(16, 185, 129, 0.1));
-        border: 2px solid rgba(34, 197, 94, 0.25)
-    }
-
-    html:not(.dark) .balance-badge {
-        background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(16, 185, 129, 0.1));
-        border: 2px solid rgba(34, 197, 94, 0.25)
+    html:not(.dark) .stats-card {
+        background: linear-gradient(135deg, rgba(34, 197, 94, .08), rgba(16, 185, 129, .06))
     }
 </style>
-<main class="min-h-screen pt-24 lg:pl-72 bg-gray-50 dark:bg-gradient-to-br dark:from-dark-900 dark:via-dark-800 dark:to-dark-900 text-gray-900 dark:text-white transition-all duration-300 relative overflow-hidden">
-    <div class="absolute inset-0 overflow-hidden pointer-events-none dark:block hidden">
-        <div class="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-green-500/8 rounded-full blur-[120px]"></div>
-        <div class="absolute bottom-1/4 left-1/4 w-[500px] h-[500px] bg-emerald-500/8 rounded-full blur-[120px]"></div>
-    </div>
-    <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+
+<main class="min-h-screen pt-24 lg:pl-72 bg-gray-50 dark:bg-gradient-to-br dark:from-dark-900 dark:via-dark-800 dark:to-dark-900 text-gray-900 dark:text-white transition-all overflow-hidden">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
             <div>
                 <div class="flex items-center gap-3 mb-3">
                     <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center shadow-lg">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7 12a5 5 0 1110 0 5 5 0 01-10 0z" />
                         </svg>
                     </div>
-                    <h1 class="text-4xl md:text-5xl font-black bg-gradient-to-r from-gray-900 via-green-900 to-gray-900 dark:from-white dark:via-green-200 dark:to-white bg-clip-text text-transparent tracking-tight">Quest Board</h1>
+                    <h1 class="text-4xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-gray-900 via-green-700 to-gray-900 dark:from-white dark:via-green-300 dark:to-white bg-clip-text text-transparent">Quest Board</h1>
                 </div>
-                <p class="text-gray-600 dark:text-gray-400 text-lg pl-15">Complete daily tasks and earn free <span class="font-bold text-green-500">$GASHY</span> rewards</p>
+                <p class="text-lg text-gray-600 dark:text-gray-400">Complete missions and earn free <span class="font-black text-green-500">$GASHY</span></p>
             </div>
-            <div class="balance-badge px-6 py-4 rounded-2xl backdrop-blur-xl">
-                <div class="text-xs text-gray-600 dark:text-gray-400 font-bold uppercase tracking-wider mb-1">Total Earned</div>
-                <div id="quest-balance" class="text-2xl font-black bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400 bg-clip-text text-transparent font-mono">0.00 G</div>
+            <div class="stats-card rounded-2xl px-6 py-4">
+                <div class="text-xs uppercase tracking-widest text-gray-500 font-bold">Total Earned</div>
+                <div id="quest-balance" class="text-2xl font-black text-green-500 font-mono mt-1">0.00 G</div>
             </div>
         </div>
-        <div id="quests-container" class="space-y-6">
-            <div class="flex flex-col items-center justify-center py-32">
-                <div class="relative">
-                    <div class="w-24 h-24 rounded-full border-4 border-green-500/20 border-t-green-500 animate-spin"></div>
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <svg class="w-10 h-10 text-green-500 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                        </svg>
-                    </div>
-                </div>
-                <p class="text-gray-600 dark:text-gray-400 mt-8 text-sm font-bold uppercase tracking-widest">Loading Quests...</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div class="stats-card rounded-2xl p-5">
+                <div class="text-xs uppercase text-gray-500 font-bold">Available Quests</div>
+                <div id="stat-total" class="mt-2 text-3xl font-black">0</div>
+            </div>
+            <div class="stats-card rounded-2xl p-5">
+                <div class="text-xs uppercase text-gray-500 font-bold">Completed</div>
+                <div id="stat-done" class="mt-2 text-3xl font-black text-green-500">0</div>
+            </div>
+            <div class="stats-card rounded-2xl p-5">
+                <div class="text-xs uppercase text-gray-500 font-bold">Claimed</div>
+                <div id="stat-claimed" class="mt-2 text-3xl font-black text-blue-500">0</div>
+            </div>
+        </div>
+
+        <div id="quests-container" class="space-y-5">
+            <div class="text-center py-24">
+                <div class="w-20 h-20 mx-auto rounded-full border-4 border-green-500/20 border-t-green-500 animate-spin"></div>
+                <div class="mt-6 text-sm uppercase tracking-widest font-bold text-gray-500">Loading Quests...</div>
             </div>
         </div>
     </div>
 </main>
+
 <script>
     document.addEventListener('DOMContentLoaded', async () => {
         setTimeout(() => {
-            if (!App.state.token) {
-                window.location.href = 'profile.php';
-                return;
-            }
-        }, 2000);
-        updateBalanceDisplay();
-        await loadQuests();
-    });
+            if (!App.state.token) location.href = 'profile.php'
+        }, 1200)
+        updateBalanceDisplay()
+        await loadQuests()
+    })
 
     function updateBalanceDisplay() {
-        if (App.state.account && App.state.account.tier_progress) {
-            document.getElementById('quest-balance').innerText = parseFloat(App.state.account.tier_progress.current).toFixed(2) + ' G';
-        }
+        let v = 0
+        if (App.state.account && App.state.account.wallet_stats) v = parseFloat(App.state.account.wallet_stats.reward_balance || 0)
+        document.getElementById('quest-balance').innerText = v.toFixed(2) + ' G'
     }
+
+    function iconByType(type) {
+        if (type === 'burn') return '🔥'
+        if (type === 'buy') return '🛒'
+        if (type === 'login') return '👋'
+        if (type === 'order') return '📦'
+        return '🎯'
+    }
+
     async function loadQuests() {
-        const container = document.getElementById('quests-container');
+        const box = document.getElementById('quests-container')
         try {
-            const res = await App.post('./api/account/quests.php', {});
-            if (res.status && res.data) {
-                if (res.data.length === 0) {
-                    container.innerHTML = `
-<div class="flex flex-col items-center justify-center py-32 text-center">
-<div class="w-32 h-32 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-dark-700 dark:to-dark-800 flex items-center justify-center mb-8 shadow-2xl">
-<svg class="w-16 h-16 text-gray-500 dark:text-gray-600 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
-</svg>
-</div>
-<h3 class="text-3xl font-black text-gray-900 dark:text-white mb-4">No Active Quests</h3>
-<p class="text-gray-600 dark:text-gray-400 text-lg">Check back later for new challenges and rewards!</p>
-</div>`;
-                    return;
-                }
-                container.innerHTML = res.data.map(q => {
-                    const pct = Math.min(100, (q.progress / q.target_count) * 100);
-                    const isDone = q.progress >= q.target_count;
-                    const isClaimed = q.is_claimed == 1;
-                    let actionBtn = '';
-                    if (isClaimed) {
-                        actionBtn = `<button disabled class="px-6 py-3 rounded-xl bg-gray-200 dark:bg-white/5 text-gray-500 dark:text-gray-400 text-sm font-bold uppercase cursor-not-allowed flex items-center gap-2">
-<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-</svg>
-Claimed
-</button>`;
-                    } else if (isDone) {
-                        actionBtn = `<button onclick="claimReward(${q.id})" class="claim-btn px-6 py-3 rounded-xl text-white text-sm font-black uppercase shadow-2xl flex items-center gap-2">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-</svg>
-Claim ${q.reward_gashy} G
-</button>`;
-                    } else {
-                        actionBtn = `<div class="text-sm font-mono text-gray-600 dark:text-gray-400 font-bold">${q.progress} / ${q.target_count}</div>`;
-                    }
-                    return `
-<div class="quest-card rounded-2xl p-6 md:p-8 shadow-2xl">
-<div class="flex flex-col md:flex-row items-start md:items-center gap-6">
-<div class="quest-icon w-16 h-16 rounded-2xl flex items-center justify-center text-4xl shrink-0 shadow-lg">${getIcon(q.action_type)}</div>
-<div class="flex-1 w-full">
-<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-<h3 class="text-xl font-black text-gray-900 dark:text-white">${q.title}</h3>
-<span class="text-[10px] font-black uppercase px-3 py-1.5 rounded-lg bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-600 dark:text-green-400 border border-green-500/30 w-fit">${q.reset_period}</span>
-</div>
-<div class="space-y-2">
-<div class="flex items-center justify-between text-xs font-bold text-gray-600 dark:text-gray-400">
-<span>Progress</span>
-<span class="text-green-600 dark:text-green-400">${pct.toFixed(0)}%</span>
-</div>
-<div class="w-full h-3 bg-gray-200 dark:bg-dark-800 rounded-full overflow-hidden shadow-inner">
-<div class="progress-bar h-full transition-all duration-1000 rounded-full" style="width:${pct}%"></div>
-</div>
-</div>
-</div>
-<div class="w-full md:w-auto">${actionBtn}</div>
-</div>
-</div>`;
-                }).join('');
+            const res = await App.post('./api/account/quests.php', {})
+            if (!res.status) {
+                box.innerHTML = '<div class="text-center py-16 text-red-500 font-bold">Failed to load quests</div>';
+                return
             }
+            const rows = res.data || []
+            document.getElementById('stat-total').innerText = rows.length
+            document.getElementById('stat-done').innerText = rows.filter(x => parseFloat(x.progress) >= parseFloat(x.target_count)).length
+            document.getElementById('stat-claimed').innerText = rows.filter(x => parseInt(x.is_claimed) == 1).length
+
+            if (!rows.length) {
+                box.innerHTML = '<div class="text-center py-24"><div class="text-6xl mb-4">🎯</div><div class="text-3xl font-black mb-2">No Active Quests</div><div class="text-gray-500">Check back later for new rewards.</div></div>'
+                return
+            }
+
+            box.innerHTML = rows.map(q => {
+                const progress = parseFloat(q.progress || 0)
+                const target = parseFloat(q.target_count || 1)
+                const pct = Math.min(100, (progress / target) * 100)
+                const done = progress >= target
+                const claimed = parseInt(q.is_claimed) == 1
+                let btn = ''
+                if (claimed) {
+                    btn = '<button disabled class="px-5 py-3 rounded-xl bg-gray-200 dark:bg-white/5 text-gray-500 text-sm font-bold">Claimed</button>'
+                } else if (done) {
+                    btn = `<button onclick="claimReward(${q.id})" class="claim-btn px-5 py-3 rounded-xl text-white text-sm font-black">Claim ${parseFloat(q.reward_gashy).toFixed(2)} G</button>`
+                } else {
+                    btn = `<div class="text-sm font-black text-gray-500">${progress}/${target}</div>`
+                }
+                return `
+<div class="quest-card rounded-2xl p-6">
+<div class="flex flex-col md:flex-row gap-5 md:items-center">
+<div class="quest-icon w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shrink-0">${iconByType(q.action_type)}</div>
+<div class="flex-1">
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+<div class="text-xl font-black">${q.title}</div>
+<div class="text-[10px] uppercase px-3 py-1 rounded-lg bg-green-500/10 text-green-500 font-bold w-fit">${q.reset_period}</div>
+</div>
+<div class="flex justify-between text-xs font-bold text-gray-500 mb-2">
+<span>Progress</span>
+<span>${pct.toFixed(0)}%</span>
+</div>
+<div class="w-full h-3 rounded-full bg-gray-200 dark:bg-dark-900 overflow-hidden">
+<div class="progress-bar h-full rounded-full" style="width:${pct}%"></div>
+</div>
+</div>
+<div class="md:ml-3">${btn}</div>
+</div>
+</div>`
+            }).join('')
         } catch (e) {
-            console.error(e);
-            container.innerHTML = `
-<div class="text-center py-20">
-<div class="text-red-500 text-6xl mb-4">⚠️</div>
-<h3 class="text-2xl font-black text-gray-900 dark:text-white mb-2">Failed to Load Quests</h3>
-<p class="text-gray-600 dark:text-gray-400">Please try again later</p>
-</div>`;
+            box.innerHTML = '<div class="text-center py-16 text-red-500 font-bold">Unexpected error</div>'
         }
     }
 
-    function getIcon(type) {
-        if (type === 'burn') return '🔥';
-        if (type === 'buy') return '🛒';
-        if (type === 'login') return '👋';
-        if (type === 'trade') return '💱';
-        if (type === 'stake') return '💎';
-        return '🎯';
-    }
-    async function claimReward(qid) {
+    async function claimReward(id) {
         try {
-            const res = await App.post('./api/account/claim_quest.php', {
-                quest_id: qid
-            });
-            if (res.status) {
-                window.notyf.success(res.message);
-                await App.fetchProfile();
-                updateBalanceDisplay();
-                loadQuests();
+            const r = await App.post('./api/account/claim_quest.php', {
+                quest_id: id
+            })
+            if (r.status) {
+                window.notyf.success(r.message || 'Reward claimed')
+                await App.fetchProfile()
+                updateBalanceDisplay()
+                loadQuests()
             } else {
-                window.notyf.error(res.message);
+                window.notyf.error(r.message || 'Unable to claim')
             }
         } catch (e) {
-            window.notyf.error('Claim failed');
+            window.notyf.error('Claim failed')
         }
     }
 </script>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
@@ -53,6 +54,7 @@
             }
         }
     </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
     <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
     <script src="https://bundle.run/buffer@6.0.3"></script>
@@ -150,26 +152,32 @@
             margin: 0;
             padding: 0
         }
+
         body {
             font-family: 'Rajdhani', sans-serif;
             background: #0a0e1a;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased
         }
+
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px
         }
+
         ::-webkit-scrollbar-track {
             background: rgba(26, 31, 46, .3)
         }
+
         ::-webkit-scrollbar-thumb {
             background: linear-gradient(180deg, #00d48f, #8B5CF6);
             border-radius: 10px
         }
+
         ::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(180deg, #00ffaa, #a855f7)
         }
+
         .glass-header {
             background: rgba(13, 17, 28, .9);
             backdrop-filter: blur(20px) saturate(180%);
@@ -177,6 +185,7 @@
             box-shadow: 0 4px 30px rgba(0, 0, 0, .3), 0 0 20px rgba(0, 255, 170, .05);
             height: 60px
         }
+
         .glass-header::before {
             content: '';
             position: absolute;
@@ -187,51 +196,63 @@
             background: linear-gradient(90deg, transparent, rgba(0, 255, 170, .3) 50%, transparent);
             animation: shimmer 3s infinite
         }
+
         @keyframes shimmer {
+
             0%,
             100% {
                 opacity: 0
             }
+
             50% {
                 opacity: 1
             }
         }
+
         @keyframes slideDown {
             0% {
                 transform: translateY(-100%);
                 opacity: 0
             }
+
             100% {
                 transform: translateY(0);
                 opacity: 1
             }
         }
+
         .animate-slide-down {
             animation: slideDown .3s ease-out
         }
+
         .logo-glow {
             filter: drop-shadow(0 0 8px rgba(0, 255, 170, .4)) drop-shadow(0 0 16px rgba(139, 92, 246, .2))
         }
+
         .search-input {
             background: rgba(26, 31, 46, .6);
             border: 1px solid rgba(0, 255, 170, .15);
             color: #fff;
             transition: all .3s ease
         }
+
         .search-input::placeholder {
             color: rgba(148, 163, 184, .5)
         }
+
         .search-input:focus {
             background: rgba(26, 31, 46, .9);
             border-color: rgba(0, 255, 170, .5);
             box-shadow: 0 0 20px rgba(0, 255, 170, .1), inset 0 0 15px rgba(0, 255, 170, .05);
             outline: none
         }
+
         .btn-glow {
             position: relative;
             overflow: hidden;
             transition: all .3s ease
         }
+
         .btn-glow::before {
             content: '';
             position: absolute;
@@ -243,52 +264,63 @@
             transform: rotate(45deg);
             transition: all .6s ease
         }
+
         .btn-glow:hover::before {
             animation: shine .8s ease-in-out
         }
+
         @keyframes shine {
             0% {
                 left: -50%
             }
+
             100% {
                 left: 150%
             }
         }
+
         .btn-primary {
             background: linear-gradient(135deg, #00d48f 0%, #00ffaa 100%);
             box-shadow: 0 4px 15px rgba(0, 255, 170, .3);
             color: #0a0e1a
         }
+
         .btn-primary:hover {
             box-shadow: 0 6px 25px rgba(0, 255, 170, .5);
             transform: translateY(-2px)
         }
+
         .btn-secondary {
             background: rgba(255, 255, 255, .06);
             border: 1px solid rgba(255, 255, 255, .1);
             color: rgba(156, 163, 175, 1)
         }
+
         .btn-secondary:hover {
             background: rgba(255, 255, 255, .1);
             border-color: rgba(0, 255, 170, .3);
             color: #00ffaa
         }
+
         .balance-card {
             background: linear-gradient(135deg, rgba(0, 212, 143, .1) 0%, rgba(139, 92, 246, .1) 100%);
             border: 1px solid rgba(0, 255, 170, .2);
             border-radius: 10px;
             padding: 5px 12px
         }
+
         .mobile-menu-btn {
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center
         }
+
         .mobile-menu-btn>div {
             position: relative;
             transition: all .3s ease
         }
+
         .mobile-menu-btn span {
             display: block;
             width: 100%;
@@ -297,16 +329,20 @@
             border-radius: 2px;
             transition: all .3s cubic-bezier(.4, 0, .2, 1)
         }
+
         .mobile-menu-btn.active>div span:nth-child(1) {
             transform: translateY(7px) rotate(45deg)
         }
+
         .mobile-menu-btn.active>div span:nth-child(2) {
             opacity: 0;
             transform: scaleX(0)
         }
+
         .mobile-menu-btn.active>div span:nth-child(3) {
             transform: translateY(-7px) rotate(-45deg)
         }
+
         .mobile-search-modal {
             position: fixed;
             top: 0;
@@ -320,19 +356,23 @@
             opacity: 0;
             transition: opacity .3s ease
         }
+
         .mobile-search-modal.active {
             display: flex;
             opacity: 1
         }
+
         @media(max-width:1024px) {
             .balance-card {
                 display: none !important
             }
         }
+
         @media(max-width:768px) {
             .glass-header {
                 height: 52px !important
             }
+
             .mobile-menu-btn,
             .btn-secondary,
             #wallet-btn,
@@ -344,105 +384,130 @@
                 justify-content: center
             }
         }
+
         @media(max-width:640px) {
             .glass-header {
                 height: 50px !important
             }
+
             .search-input {
                 font-size: 14px
             }
+
             .logo-glow {
                 width: 30px !important;
                 height: 30px !important
             }
         }
+
         html:not(.dark) body {
             background: #f1f5f9;
             color: #0f172a
         }
+
         html:not(.dark) .glass-header {
             background: rgba(255, 255, 255, .97);
             backdrop-filter: blur(20px) saturate(180%);
             border-bottom: 1px solid rgba(0, 0, 0, .1);
             box-shadow: 0 4px 20px rgba(0, 0, 0, .08)
         }
+
         html:not(.dark) .glass-header::before {
             background: linear-gradient(90deg, transparent, rgba(0, 180, 120, .2) 50%, transparent)
         }
+
         html:not(.dark) .logo-text-main {
             background: linear-gradient(135deg, #0f172a, #00a372) !important;
             -webkit-background-clip: text !important;
             -webkit-text-fill-color: transparent !important;
             background-clip: text !important
         }
+
         html:not(.dark) .logo-text-sub {
             color: #00a372 !important
         }
+
         html:not(.dark) .search-input {
             background: rgba(241, 245, 249, .9);
             border: 1px solid rgba(0, 0, 0, .12);
             color: #0f172a
         }
+
         html:not(.dark) .search-input::placeholder {
             color: rgba(100, 116, 139, .7)
         }
+
         html:not(.dark) .search-input:focus {
             background: #fff;
             border-color: rgba(0, 163, 114, .6);
             box-shadow: 0 0 0 3px rgba(0, 163, 114, .12);
             color: #0f172a
         }
+
         html:not(.dark) .header-icon {
             color: #475569
         }
+
         html:not(.dark) .header-icon:hover {
             color: #00a372
         }
+
         html:not(.dark) .btn-secondary {
             background: rgba(15, 23, 42, .06);
             border: 1px solid rgba(15, 23, 42, .12);
             color: #374151
         }
+
         html:not(.dark) .btn-secondary:hover {
             background: rgba(15, 23, 42, .1);
             border-color: rgba(0, 163, 114, .4);
             color: #00a372
         }
+
         html:not(.dark) .balance-card {
             background: linear-gradient(135deg, rgba(0, 163, 114, .08) 0%, rgba(139, 92, 246, .08) 100%);
             border: 1px solid rgba(0, 163, 114, .2)
         }
+
         html:not(.dark) .balance-label {
             color: #64748b !important
         }
+
         html:not(.dark) #account-balance {
             background: linear-gradient(135deg, #059669, #00a372) !important;
             -webkit-background-clip: text !important;
             -webkit-text-fill-color: transparent !important;
             background-clip: text !important
         }
+
         html:not(.dark) .mobile-menu-btn span {
             background: #374151
         }
+
         html:not(.dark) .mobile-menu-btn:hover span {
             background: #00a372
         }
+
         html:not(.dark) .mobile-menu-btn.active span {
             background: #00a372
         }
+
         html:not(.dark) .search-kbd {
             background: #e2e8f0;
             border-color: rgba(0, 0, 0, .12);
             color: #475569
         }
+
         html:not(.dark) .mobile-search-modal {
             background: rgba(248, 250, 252, .99)
         }
+
         html:not(.dark) .mobile-search-modal h3 {
             color: #0f172a
         }
     </style>
 </head>
+
 <body class="antialiased selection:bg-primary-500 selection:text-dark-900 transition-colors duration-300">
     <div id="mobile-search-modal" class="mobile-search-modal flex-col items-center justify-start pt-6 px-4">
         <div class="w-full max-w-2xl">

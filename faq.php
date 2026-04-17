@@ -12,9 +12,7 @@ require_once 'sidebar.php';
             <h1 class="text-3xl font-black text-gray-900 dark:text-white mb-4">Frequently Asked Questions</h1>
             <p class="text-gray-500 dark:text-gray-400">Everything you need to know about Gashy Bazaar.</p>
         </div>
-
         <div class="space-y-4">
-            <!-- Q1 -->
             <div class="bg-white dark:bg-[#151A23] rounded-2xl border border-gray-200 dark:border-white/5 overflow-hidden">
                 <details class="group">
                     <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
@@ -30,8 +28,6 @@ require_once 'sidebar.php';
                             </div>
                 </details>
             </div>
-
-            <!-- Q2 -->
             <div class="bg-white dark:bg-[#151A23] rounded-2xl border border-gray-200 dark:border-white/5 overflow-hidden">
                 <details class="group">
                     <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
@@ -47,8 +43,6 @@ require_once 'sidebar.php';
                     </div>
                 </details>
             </div>
-
-            <!-- Q3 -->
             <div class="bg-white dark:bg-[#151A23] rounded-2xl border border-gray-200 dark:border-white/5 overflow-hidden">
                 <details class="group">
                     <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
