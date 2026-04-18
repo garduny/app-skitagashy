@@ -57,13 +57,10 @@ $base = (isset($_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER['HTTP_HOS
 foreach ($data as &$row) {
     $imgs = json_decode($row['images'] ?? '[]', true);
     $img = $imgs[0] ?? '';
-    if ($img) {
-        $img = str_replace('/server/uploads/', '/uploads/', $img);
+    if (!$img || !file_exists(__DIR__ . '/../../' . ltrim($img, '/'))) {
+        $img = '/public/img/placeholder.png';
     }
-    if (!$img || !file_exists(__DIR__ . '/../../public' . ltrim($img, '/'))) {
-        $img = '/img/placeholder.png';
-    }
-    $row['image'] = $base . $img;
+    $row['image'] = $img;
     $row['current_bid'] = round((float)$row['current_bid_usd'] / $rate, 8);
     $row['start_price'] = round((float)$row['start_price_usd'] / $rate, 8);
     $row['reserve_price'] = round((float)$row['reserve_price_usd'] / $rate, 8);
@@ -86,6 +83,7 @@ encode([
     'status' => true,
     'data' => $data,
     'meta' => [
+        'images' => $imgs,
         'page' => $page,
         'limit' => $limit,
         'total' => $total,

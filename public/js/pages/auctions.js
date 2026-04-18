@@ -12,9 +12,10 @@ async function loadAuctions(filter) {
         if (!res.status || !res.data || !res.data.length) { setStats([]); empty.classList.remove('hidden'); return }
         setStats(res.data)
         res.data.forEach(a => {
-            console.log(a.images)
+            console.log(a.image)
             let img = 'public/img/placeholder.png'
-            try { img = JSON.parse(a.images || '[]')[0] || img } catch (e) { }
+            try { img = JSON.parse(a.image || '[]')[0] || img } catch (e) { }
+            console.log(img)
             const bid = num(a.current_bid)
             const nextBid = Math.max(bid * 1.05, bid + 1).toFixed(2)
             const timeLeft = renderTime(a.time_left)
