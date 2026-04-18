@@ -29,7 +29,7 @@ $new_arrivals = getQuery(" SELECT p.id,p.title,p.slug,p.price_usd,p.images,p.typ
 $lottery = findQuery(" SELECT prize_pool,round_number,draw_time FROM lottery_rounds WHERE status='open' ORDER BY id DESC LIMIT 1 ");
 $mystery_box = findQuery(" SELECT p.id,p.title,p.slug,p.price_usd,p.images FROM products p INNER JOIN mystery_box_loot m ON m.box_product_id=p.id WHERE p.status='active' AND p.stock>0 GROUP BY p.id,p.title,p.slug,p.price_usd,p.images ORDER BY p.created_at DESC,p.id DESC LIMIT 1 ");
 $quickCategories = [
-    ['title' => 'Gift Cards', 'icon' => 'fa-gift', 'url' => 'products.php?type=gift_card', 'color' => 'from-emerald-500 to-teal-500'],
+    ['title' => 'Gift Cards', 'icon' => 'fa-gift', 'url' => 'market.php?type=gift_card', 'color' => 'from-emerald-500 to-teal-500'],
     ['title' => 'Mystery Boxes', 'icon' => 'fa-box-open', 'url' => 'mystery-boxes.php', 'color' => 'from-purple-500 to-pink-500'],
     ['title' => 'Auctions', 'icon' => 'fa-gavel', 'url' => 'auctions.php', 'color' => 'from-blue-500 to-cyan-500'],
     ['title' => 'Lottery', 'icon' => 'fa-ticket', 'url' => 'lottery.php', 'color' => 'from-orange-500 to-amber-500']
@@ -291,7 +291,6 @@ $heroStats = [
             <?php endforeach; ?>
         </div>
     </div>
-
     <div class="relative z-10 max-w-[1800px] mx-auto px-4 pb-14">
         <section class="slide-up text-center py-10">
             <div class="hero-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[rgba(0,255,170,.3)] bg-[rgba(0,255,170,.05)] text-[#00ffaa] text-[.65rem] font-bold tracking-widest uppercase mb-6">
@@ -306,7 +305,7 @@ $heroStats = [
                 <span class="hero-accent text-[#00ffaa] font-bold">real marketplace utility</span>. Buy, trade, open boxes, bid in auctions, and join the #GashyGang revolution.
             </p>
             <div class="flex flex-wrap gap-3 justify-center">
-                <a href="products.php" class="inline-flex items-center gap-2 px-6 py-3 bg-[#00ffaa] text-black font-display font-bold text-sm tracking-wide rounded-lg hover:bg-[#00ffcc] hover:shadow-[0_4px_24px_rgba(0,255,170,.35)] hover:-translate-y-0.5 transition-all duration-200">
+                <a href="market.php" class="inline-flex items-center gap-2 px-6 py-3 bg-[#00ffaa] text-black font-display font-bold text-sm tracking-wide rounded-lg hover:bg-[#00ffcc] hover:shadow-[0_4px_24px_rgba(0,255,170,.35)] hover:-translate-y-0.5 transition-all duration-200">
                     <i class="fa-solid fa-store"></i>
                     ENTER MARKETPLACE
                 </a>
@@ -319,7 +318,6 @@ $heroStats = [
                     COPY CONTRACT
                 </button>
             </div>
-
             <div class="mt-8 max-w-4xl mx-auto">
                 <form action="market.php" method="get" class="panel-bg bg-[rgba(8,13,26,.85)] border border-[rgba(0,255,170,.14)] rounded-2xl p-3 md:p-4 flex flex-col md:flex-row gap-3 shadow-[0_8px_32px_rgba(0,255,170,.05)]">
                     <div class="flex-1 relative">
@@ -337,7 +335,6 @@ $heroStats = [
                 </form>
             </div>
         </section>
-
         <div class="slide-up stat-grid-wrap grid grid-cols-2 md:grid-cols-4 gap-px bg-[rgba(0,255,170,.1)] border border-[rgba(0,255,170,.1)] rounded-xl overflow-hidden mb-6">
             <?php
             $stats = [
@@ -353,7 +350,6 @@ $heroStats = [
                 </div>
             <?php endforeach; ?>
         </div>
-
         <div class="slide-up grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
             <?php foreach ($heroStats as $hs): ?>
                 <div class="panel-bg bg-[rgba(8,13,26,.85)] border border-[rgba(0,255,170,.12)] rounded-xl p-4 text-center hover:border-[rgba(0,255,170,.28)] transition-all duration-300">
@@ -362,14 +358,13 @@ $heroStats = [
                 </div>
             <?php endforeach; ?>
         </div>
-
         <div class="slide-up mb-12">
             <div class="flex items-center justify-between flex-wrap gap-3 mb-6">
                 <div>
                     <h2 class="sec-title font-display font-black text-slate-900 dark:text-white" style="font-size:clamp(1.3rem,3.5vw,1.8rem)">EXPLORE THE <span class="text-[#00ffaa]">MARKET</span></h2>
                     <p class="sec-sub font-body text-slate-500 dark:text-slate-400 text-sm">Jump directly into the highest-converting sections of GASHY Bazaar.</p>
                 </div>
-                <a href="products.php" class="neon-pill inline-flex items-center gap-2 px-4 py-2 font-body font-bold text-xs tracking-widest text-[#00ffaa] bg-[rgba(0,255,170,.08)] border border-[rgba(0,255,170,.2)] rounded-full hover:bg-[rgba(0,255,170,.15)] transition-colors">VIEW ALL PRODUCTS <i class="fa-solid fa-arrow-right"></i></a>
+                <a href="market.php" class="neon-pill inline-flex items-center gap-2 px-4 py-2 font-body font-bold text-xs tracking-widest text-[#00ffaa] bg-[rgba(0,255,170,.08)] border border-[rgba(0,255,170,.2)] rounded-full hover:bg-[rgba(0,255,170,.15)] transition-colors">VIEW ALL PRODUCTS <i class="fa-solid fa-arrow-right"></i></a>
             </div>
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 <?php foreach ($quickCategories as $cat): ?>
@@ -381,7 +376,6 @@ $heroStats = [
                 <?php endforeach; ?>
             </div>
         </div>
-
         <div class="slide-up panel-bg bg-[rgba(8,13,26,.85)] border border-[rgba(0,255,170,.12)] rounded-xl p-5 mb-12 hover:border-[rgba(0,255,170,.25)] hover:shadow-[0_8px_32px_rgba(0,255,170,.05)] transition-all duration-300">
             <div class="flex justify-between items-center gap-3 mb-5 flex-wrap">
                 <div class="flex items-center gap-3">
@@ -394,7 +388,6 @@ $heroStats = [
             </div>
             <div id="priceChart" style="height:300px"></div>
         </div>
-
         <div class="slide-up grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-4 mb-12">
             <div class="banner-wrap relative h-[320px] md:h-[380px] rounded-xl overflow-hidden border border-[rgba(0,255,170,.1)]">
                 <?php if (!empty($banners)): ?>
@@ -425,7 +418,6 @@ $heroStats = [
                     </div>
                 <?php endif; ?>
             </div>
-
             <div class="flex flex-col gap-4">
                 <a href="mystery-boxes.php<?= $mystery_box ? '?id=' . $mystery_box['id'] : '' ?>" class="flex-1 rounded-xl p-5 flex flex-col justify-between min-h-[160px] relative overflow-hidden hover:-translate-y-1 transition-transform duration-300 no-underline text-white" style="background:linear-gradient(135deg,#7c3aed,#ec4899)">
                     <div>
@@ -437,7 +429,6 @@ $heroStats = [
                     </div>
                     <div class="mt-3 py-2.5 bg-white/15 border border-white/20 rounded-lg text-center font-display font-bold text-xs tracking-widest hover:bg-white/25 transition-colors">OPEN NOW →</div>
                 </a>
-
                 <a href="lottery.php" class="flex-1 rounded-xl p-5 flex flex-col justify-between min-h-[160px] relative overflow-hidden hover:-translate-y-1 transition-transform duration-300 no-underline text-white" style="background:linear-gradient(135deg,#059669,#0891b2)">
                     <div>
                         <div class="font-display font-black text-lg tracking-wide mb-0.5">LOTTERY #<?= htmlspecialchars($lottery['round_number'] ?? '—') ?></div>
@@ -474,7 +465,6 @@ $heroStats = [
                 <?php endforeach; ?>
             </div>
         </div>
-
         <div class="slide-up mb-12">
             <div class="flex items-center justify-between flex-wrap gap-3 mb-6">
                 <h2 class="sec-title font-display font-black text-slate-900 dark:text-white" style="font-size:clamp(1.3rem,3.5vw,1.8rem)">
@@ -509,12 +499,11 @@ $heroStats = [
                 <?php endforeach; ?>
             </div>
         </div>
-
         <div class="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6 mb-12">
             <div class="slide-up">
                 <div class="flex items-center justify-between flex-wrap gap-3 mb-5">
                     <h2 class="sec-title font-display font-black text-slate-900 dark:text-white" style="font-size:clamp(1.3rem,3.5vw,1.8rem)">NEW ARRIVALS</h2>
-                    <a href="products.php" class="neon-pill inline-flex items-center gap-2 px-4 py-2 font-body font-bold text-xs tracking-widest text-[#00ffaa] bg-[rgba(0,255,170,.08)] border border-[rgba(0,255,170,.2)] rounded-full hover:bg-[rgba(0,255,170,.15)] transition-colors">SHOP ALL <i class="fa-solid fa-arrow-right"></i></a>
+                    <a href="market.php" class="neon-pill inline-flex items-center gap-2 px-4 py-2 font-body font-bold text-xs tracking-widest text-[#00ffaa] bg-[rgba(0,255,170,.08)] border border-[rgba(0,255,170,.2)] rounded-full hover:bg-[rgba(0,255,170,.15)] transition-colors">SHOP ALL <i class="fa-solid fa-arrow-right"></i></a>
                 </div>
                 <div class="flex flex-col gap-2">
                     <?php foreach ($new_arrivals as $p):
@@ -538,7 +527,6 @@ $heroStats = [
                     <?php endforeach; ?>
                 </div>
             </div>
-
             <div class="slide-up">
                 <div class="flex items-center justify-between flex-wrap gap-3 mb-5">
                     <h2 class="sec-title font-display font-black text-slate-900 dark:text-white" style="font-size:clamp(1.3rem,3.5vw,1.8rem)">TOP SELLERS</h2>
@@ -567,7 +555,6 @@ $heroStats = [
                         </a>
                     <?php endforeach; ?>
                 </div>
-
                 <div class="mt-4 rounded-xl p-5 text-center" style="background:linear-gradient(135deg,#1e40af,#7c3aed)">
                     <div class="font-display font-black text-white text-lg tracking-wide mb-1">BECOME A SELLER</div>
                     <div class="font-body text-xs text-white/70 mb-4">Launch your own crypto store and sell to the GASHY community.</div>
@@ -579,7 +566,6 @@ $heroStats = [
         </div>
     </div>
 </main>
-
 <script src="https://cdn.jsdelivr.net/npm/apexcharts" defer></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -787,7 +773,6 @@ $heroStats = [
             }, 1000);
         })();
     });
-
     (function() {
         var slides = document.querySelectorAll('.banner-slide');
         var dots = document.querySelectorAll('[id^="dot-"]');
