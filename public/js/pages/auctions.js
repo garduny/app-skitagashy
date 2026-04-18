@@ -12,7 +12,7 @@ async function loadAuctions(filter) {
         if (!res.status || !res.data || !res.data.length) { setStats([]); empty.classList.remove('hidden'); return }
         setStats(res.data)
         res.data.forEach(a => {
-            console.log(a)
+            console.log(a.images)
             let img = 'public/img/placeholder.png'
             try { img = JSON.parse(a.images || '[]')[0] || img } catch (e) { }
             const bid = num(a.current_bid)
@@ -22,7 +22,7 @@ async function loadAuctions(filter) {
             container.innerHTML += `
 <div class="auction-card rounded-2xl flex flex-col">
 <a href="auctiondetail.php?id=${a.id}" class="auction-img block">
-<img src="./${img}" alt="${escapeHtml(a.title)}">
+<img src="${img}" alt="${escapeHtml(a.title)}">
 <div class="absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-bold bg-black/55 text-white flex items-center gap-2"><span class="live-dot w-2 h-2 rounded-full bg-red-500"></span>LIVE</div>
 <div class="absolute top-3 right-3 timer-badge text-white text-xs font-bold px-3 py-1 rounded-full">${timeLeft}</div>
 <div class="absolute bottom-3 left-3 right-3 text-white">
