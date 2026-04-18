@@ -71,10 +71,10 @@ foreach ($data as &$row) {
     $img = $imgs[0] ?? '';
 
     if (!$img || !file_exists(__DIR__ . '/../../' . ltrim($img, '/'))) {
-        $img = '/assets/img/placeholder.png';
+        $img = '/public/img/placeholder.png';
     }
 
-    $row['image'] = $base . $img;
+    $row['image'] = $img;
 
     $row['current_bid'] = round((float)$row['current_bid_usd'] / $rate, 8);
     $row['start_price'] = round((float)$row['start_price_usd'] / $rate, 8);
@@ -105,6 +105,7 @@ encode([
     'status' => true,
     'data' => $data,
     'meta' => [
+        'images' => $imgs,
         'page' => $page,
         'limit' => $limit,
         'total' => $total,

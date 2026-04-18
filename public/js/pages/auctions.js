@@ -12,7 +12,8 @@ async function loadAuctions(filter) {
         if (!res.status || !res.data || !res.data.length) { setStats([]); empty.classList.remove('hidden'); return }
         setStats(res.data)
         res.data.forEach(a => {
-            let img = 'assets/placeholder.png'
+            console.log(a)
+            let img = 'public/img/placeholder.png'
             try { img = JSON.parse(a.images || '[]')[0] || img } catch (e) { }
             const bid = num(a.current_bid)
             const nextBid = Math.max(bid * 1.05, bid + 1).toFixed(2)
