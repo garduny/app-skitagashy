@@ -22,19 +22,19 @@ $gift_card_products = (int)countQuery(" SELECT 1 FROM products WHERE seller_id=$
 $mystery_box_products = (int)countQuery(" SELECT 1 FROM products WHERE seller_id=$uid AND type='mystery_box' ");
 $digital_products = (int)countQuery(" SELECT 1 FROM products WHERE seller_id=$uid AND type='digital' ");
 $withdrawals = getQuery(" SELECT id,amount,status,created_at,tx_signature FROM withdrawals WHERE account_id=$uid ORDER BY id DESC LIMIT 20 ");
-$products = getQuery(" SELECT p.id,p.title,p.description,p.price_usd,p.stock,p.type,p.status,p.images,p.category_id,c.name cat_name,p.is_featured,p.created_at,p.updated_at FROM products p LEFT JOIN categories c ON p.category_id=c.id WHERE p.seller_id=$uid ORDER BY p.id DESC ");
+$products = getQuery(" SELECT p.id,p.title,p.description,p.price_usd,p.stock,p.type,p.status,p.images,p.category_id,c.name cat_name,p.created_at FROM products p LEFT JOIN categories c ON p.category_id=c.id WHERE p.seller_id=$uid ORDER BY p.id DESC ");
 foreach ($products as &$pr) {
+    $pid = (int)$pr['id'];
     $usd = (float)($pr['price_usd'] ?? 0);
     $pr['price_usd'] = number_format($usd, 2, '.', '');
     $pr['price_gashy'] = $rate > 0 ? number_format(($usd / $rate), 3, '.', '') : number_format(0, 3, '.', '');
     $pr['stock'] = (int)($pr['stock'] ?? 0);
     $pr['images'] = $pr['images'] ?: '[]';
     $pr['cat_name'] = $pr['cat_name'] ?: '';
-    $pr['is_featured'] = (int)($pr['is_featured'] ?? 0);
     if ($pr['type'] === 'gift_card') {
-        $pr['options_count'] = (int)(findQuery(" SELECT COUNT(*) c FROM gift_card_options WHERE product_id={$pr['id']} ")['c'] ?? 0);
-        $pr['inventory_total'] = (int)(findQuery(" SELECT COUNT(*) c FROM gift_cards WHERE product_id={$pr['id']} ")['c'] ?? 0);
-        $pr['inventory_sold'] = (int)(findQuery(" SELECT COUNT(*) c FROM gift_cards WHERE product_id={$pr['id']} AND is_sold=1 ")['c'] ?? 0);
+        $pr['options_count'] = (int)(findQuery(" SELECT COUNT(*) c FROM gift_card_options WHERE product_id=$pid ")['c'] ?? 0);
+        $pr['inventory_total'] = (int)(findQuery(" SELECT COUNT(*) c FROM gift_cards WHERE product_id=$pid ")['c'] ?? 0);
+        $pr['inventory_sold'] = (int)(findQuery(" SELECT COUNT(*) c FROM gift_cards WHERE product_id=$pid AND is_sold=1 ")['c'] ?? 0);
         $pr['inventory_available'] = max($pr['inventory_total'] - $pr['inventory_sold'], 0);
     } else {
         $pr['options_count'] = 0;
@@ -43,8 +43,8 @@ foreach ($products as &$pr) {
         $pr['inventory_available'] = 0;
     }
     if ($pr['type'] === 'mystery_box') {
-        $pr['loot_count'] = (int)(findQuery(" SELECT COUNT(*) c FROM mystery_box_loot WHERE mystery_box_id={$pr['id']} ")['c'] ?? 0);
-        $pr['loot_probability_total'] = (float)(findQuery(" SELECT COALESCE(SUM(probability),0) t FROM mystery_box_loot WHERE mystery_box_id={$pr['id']} ")['t'] ?? 0);
+        $pr['loot_count'] = (int)(findQuery(" SELECT COUNT(*) c FROM mystery_box_loot WHERE box_product_id=$pid ")['c'] ?? 0);
+        $pr['loot_probability_total'] = (float)(findQuery(" SELECT COALESCE(SUM(probability),0) t FROM mystery_box_loot WHERE box_product_id=$pid ")['t'] ?? 0);
     } else {
         $pr['loot_count'] = 0;
         $pr['loot_probability_total'] = 0;
@@ -53,9 +53,11 @@ foreach ($products as &$pr) {
 unset($pr);
 $sales = getQuery(" SELECT oi.price_at_purchase,oi.quantity,o.created_at,p.title,a.accountname,o.id order_id,p.id product_id FROM order_items oi JOIN orders o ON oi.order_id=o.id JOIN products p ON oi.product_id=p.id LEFT JOIN accounts a ON o.account_id=a.id WHERE p.seller_id=$uid AND LOWER(o.status)='completed' ORDER BY oi.id DESC LIMIT 20 ");
 foreach ($sales as &$sale) {
-    $sale['price_at_purchase'] = number_format((float)($sale['price_at_purchase'] ?? 0), 3, '.', '');
-    $sale['quantity'] = (int)($sale['quantity'] ?? 0);
-    $sale['line_total'] = number_format(((float)$sale['price_at_purchase'] * (int)$sale['quantity']), 3, '.', '');
+    $price_at_purchase = (float)($sale['price_at_purchase'] ?? 0);
+    $quantity = (int)($sale['quantity'] ?? 0);
+    $sale['price_at_purchase'] = number_format($price_at_purchase, 3, '.', '');
+    $sale['quantity'] = $quantity;
+    $sale['line_total'] = number_format($price_at_purchase * $quantity, 3, '.', '');
     $sale['accountname'] = $sale['accountname'] ?: 'Guest';
 }
 unset($sale);

@@ -291,7 +291,7 @@ function isActive($pages)
                 <span class="<?= iconClass('orders') ?>">📦</span>
                 <span class="flex-1 leading-none">My Orders</span>
             </a>
-            <a href="seller-hub.php" class="auth-link hidden <?= navClass('seller|seller-hub') ?>">
+            <a href="seller.php" class="auth-link hidden <?= navClass('seller|seller-hub') ?>">
                 <span class="<?= iconClass('seller|seller-hub') ?>">🏪</span>
                 <span class="flex-1 leading-none">Seller Hub</span>
             </a>

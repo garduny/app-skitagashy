@@ -17,7 +17,7 @@ function esc(v) { return String(v || '').replace(/[&<>"']/g, m => ({ '&': '&amp;
 function num(v, d = 2) { return parseFloat(v || 0).toFixed(d) }
 function usdToG(v) { return gashyRate > 0 ? (parseFloat(v || 0) / gashyRate) : 0 }
 function productImage(p) {
-    let img = 'assets/placeholder.png'
+    let img = 'public/img/placeholder.png'
     try {
         const a = JSON.parse(p.images || '[]')
         if (a[0]) img = './' + String(a[0]).replace(/^\/+/, '')
@@ -103,7 +103,10 @@ async function loadHub() {
         document.getElementById('hub-content').classList.add('hidden')
         const res = await App.post('./api/seller/dashboard.php', {})
         document.getElementById('hub-loader').classList.add('hidden')
-        if (!res.status) { location.href = 'seller.php'; return }
+        if (!res.status) {
+            console.error(res)
+            location.href = 'seller.php'; return 
+        }
         document.getElementById('hub-content').classList.remove('hidden')
         myProducts = res.products || []
         gashyRate = parseFloat(res.rate || 0)
@@ -150,13 +153,13 @@ function renderTable() {
         const stockColor = stock > 0 ? 'color:var(--accent)' : 'color:var(--danger)'
         const cat = esc(p.cat_name || 'Uncategorized')
         const img = productImage(p)
-        return `<tr data-title="${esc((p.title || '').toLowerCase())}" data-type="${esc(p.type || '')}"><td data-label="Product"><div class="prod"><img src="${img}" class="thumb" onerror="this.src='assets/placeholder.png'"><div><div style="font-weight:800">${esc(p.title)}</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${typeBadge(p.type)}<span class="badge">${cat}</span></div></div></div></td><td data-label="Pricing"><div><div class="mono" style="font-weight:700">$${num(p.price_usd, 2)}</div><div class="mono" style="font-size:.72rem;color:var(--muted)">${num(usdToG(p.price_usd), 3)} G</div></div></td><td data-label="Inventory"><div><div class="mono" style="font-weight:700;${stockColor}">${stock}</div><div style="font-size:.72rem;color:var(--muted)">${stockText}</div></div></td><td data-label="Type">${typeBadge(p.type)}</td><td data-label="Status"><span class="badge ${p.status === 'active' ? 'active' : 'inactive'}">${esc(p.status || 'inactive')}</span></td><td data-label="Actions" style="text-align:right"><div style="display:inline-flex;gap:4px;flex-wrap:wrap">${getActionButtons(p)}</div></td></tr>`
+        return `<tr data-title="${esc((p.title || '').toLowerCase())}" data-type="${esc(p.type || '')}"><td data-label="Product"><div class="prod"><img src="${img}" class="thumb" onerror="this.src='public/img/placeholder.png'"><div><div style="font-weight:800">${esc(p.title)}</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${typeBadge(p.type)}<span class="badge">${cat}</span></div></div></div></td><td data-label="Pricing"><div><div class="mono" style="font-weight:700">$${num(p.price_usd, 2)}</div><div class="mono" style="font-size:.72rem;color:var(--muted)">${num(usdToG(p.price_usd), 3)} G</div></div></td><td data-label="Inventory"><div><div class="mono" style="font-weight:700;${stockColor}">${stock}</div><div style="font-size:.72rem;color:var(--muted)">${stockText}</div></div></td><td data-label="Type">${typeBadge(p.type)}</td><td data-label="Status"><span class="badge ${p.status === 'active' ? 'active' : 'inactive'}">${esc(p.status || 'inactive')}</span></td><td data-label="Actions" style="text-align:right"><div style="display:inline-flex;gap:4px;flex-wrap:wrap">${getActionButtons(p)}</div></td></tr>`
     }).join('')
     if (mobile) {
         mobile.innerHTML = myProducts.map(p => {
             const img = productImage(p)
             const stock = parseInt(p.stock || 0)
-            return `<div class="sh-card p-4 product-mobile-card" data-title="${esc((p.title || '').toLowerCase())}" data-type="${esc(p.type || '')}"><div style="display:flex;gap:12px;align-items:flex-start"><img src="${img}" class="thumb" style="width:54px;height:54px" onerror="this.src='assets/placeholder.png'"><div style="flex:1;min-width:0"><div style="font-weight:800">${esc(p.title)}</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${typeBadge(p.type)}<span class="badge">${esc(p.cat_name || 'Uncategorized')}</span><span class="badge ${p.status === 'active' ? 'active' : 'inactive'}">${esc(p.status || 'inactive')}</span></div><div style="display:flex;justify-content:space-between;gap:10px;margin-top:10px"><div><div class="mono" style="font-weight:700">$${num(p.price_usd, 2)}</div><div class="mono" style="font-size:.72rem;color:var(--muted)">${num(usdToG(p.price_usd), 3)} G</div></div><div style="text-align:right"><div class="mono" style="font-weight:700;${stock > 0 ? 'color:var(--accent)' : 'color:var(--danger)'}">${stock}</div><div style="font-size:.72rem;color:var(--muted)">Stock</div></div></div><div style="display:flex;justify-content:flex-end;gap:4px;flex-wrap:wrap;margin-top:12px">${getActionButtons(p)}</div></div></div></div>`
+            return `<div class="sh-card p-4 product-mobile-card" data-title="${esc((p.title || '').toLowerCase())}" data-type="${esc(p.type || '')}"><div style="display:flex;gap:12px;align-items:flex-start"><img src="${img}" class="thumb" style="width:54px;height:54px" onerror="this.src='public/img/placeholder.png'"><div style="flex:1;min-width:0"><div style="font-weight:800">${esc(p.title)}</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${typeBadge(p.type)}<span class="badge">${esc(p.cat_name || 'Uncategorized')}</span><span class="badge ${p.status === 'active' ? 'active' : 'inactive'}">${esc(p.status || 'inactive')}</span></div><div style="display:flex;justify-content:space-between;gap:10px;margin-top:10px"><div><div class="mono" style="font-weight:700">$${num(p.price_usd, 2)}</div><div class="mono" style="font-size:.72rem;color:var(--muted)">${num(usdToG(p.price_usd), 3)} G</div></div><div style="text-align:right"><div class="mono" style="font-weight:700;${stock > 0 ? 'color:var(--accent)' : 'color:var(--danger)'}">${stock}</div><div style="font-size:.72rem;color:var(--muted)">Stock</div></div></div><div style="display:flex;justify-content:flex-end;gap:4px;flex-wrap:wrap;margin-top:12px">${getActionButtons(p)}</div></div></div></div>`
         }).join('')
     }
     filterProducts()
@@ -204,7 +207,7 @@ function openProductModal(edit = false) {
         document.getElementById('product-form').reset()
         document.getElementById('prod-id').value = '0'
         document.getElementById('modal-title').innerText = 'Add Product'
-        document.getElementById('prod-preview').src = 'assets/placeholder.png'
+        document.getElementById('prod-preview').src = 'public/img/placeholder.png'
         document.getElementById('prod-attributes').value = ''
         hubTypeUI()
     }

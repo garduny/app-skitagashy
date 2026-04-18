@@ -5,9 +5,6 @@ if (file_exists('server/init.php')) {
 }
 require_once 'header.php';
 require_once 'sidebar.php';
-$is_seller = false;
-$seller_data = [];
-$uid = 0;
 ?>
 <style>
     @keyframes float-gentle {
@@ -33,9 +30,9 @@ $uid = 0;
     }
 
     .seller-form-card {
-        background: linear-gradient(135deg, rgba(19, 24, 36, 0.8), rgba(26, 31, 46, 0.8));
+        background: linear-gradient(135deg, rgba(19, 24, 36, .8), rgba(26, 31, 46, .8));
         backdrop-filter: blur(20px);
-        border: 1px solid rgba(59, 130, 246, 0.15);
+        border: 1px solid rgba(59, 130, 246, .15);
         position: relative;
         overflow: hidden
     }
@@ -53,21 +50,21 @@ $uid = 0;
     }
 
     .input-seller {
-        background: rgba(10, 14, 26, 0.6);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        transition: all 0.3s ease
+        background: rgba(10, 14, 26, .6);
+        border: 1px solid rgba(255, 255, 255, .05);
+        transition: all .3s ease
     }
 
     .input-seller:focus {
-        border-color: rgba(59, 130, 246, 0.5);
-        background: rgba(10, 14, 26, 0.9);
-        box-shadow: 0 0 20px rgba(59, 130, 246, 0.15)
+        border-color: rgba(59, 130, 246, .5);
+        background: rgba(10, 14, 26, .9);
+        box-shadow: 0 0 20px rgba(59, 130, 246, .15)
     }
 
     .submit-btn {
         background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
-        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(59, 130, 246, .3);
+        transition: all .3s ease;
         position: relative;
         overflow: hidden
     }
@@ -76,9 +73,9 @@ $uid = 0;
         content: '';
         position: absolute;
         inset: 0;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .2), transparent);
         transform: translateX(-100%);
-        transition: transform 0.6s
+        transition: transform .6s
     }
 
     .submit-btn:hover::before {
@@ -86,43 +83,60 @@ $uid = 0;
     }
 
     .submit-btn:hover {
-        box-shadow: 0 12px 35px rgba(59, 130, 246, 0.5);
+        box-shadow: 0 12px 35px rgba(59, 130, 246, .5);
         transform: translateY(-2px)
     }
 
+    .submit-btn:disabled {
+        opacity: .7;
+        cursor: not-allowed;
+        transform: none !important
+    }
+
     .feature-box {
-        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
-        border: 2px solid rgba(59, 130, 246, 0.2);
-        transition: all 0.3s ease
+        background: linear-gradient(135deg, rgba(59, 130, 246, .1), rgba(139, 92, 246, .1));
+        border: 2px solid rgba(59, 130, 246, .2);
+        transition: all .3s ease
     }
 
     .feature-box:hover {
-        border-color: rgba(59, 130, 246, 0.4);
+        border-color: rgba(59, 130, 246, .4);
         transform: translateY(-4px);
-        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2)
+        box-shadow: 0 8px 25px rgba(59, 130, 246, .2)
     }
 
     .illustration-wrapper {
         animation: float-gentle 6s ease-in-out infinite
     }
 
+    .status-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        padding: .85rem 1.2rem;
+        border-radius: 1rem;
+        font-weight: 800;
+        letter-spacing: .08em;
+        text-transform: uppercase
+    }
+
     html:not(.dark) .seller-form-card {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.98));
-        border: 1px solid rgba(59, 130, 246, 0.2)
+        background: linear-gradient(135deg, rgba(255, 255, 255, .98), rgba(248, 250, 252, .98));
+        border: 1px solid rgba(59, 130, 246, .2)
     }
 
     html:not(.dark) .input-seller {
-        background: rgba(248, 250, 252, 0.8);
-        border: 1px solid rgba(0, 0, 0, 0.1)
+        background: rgba(248, 250, 252, .8);
+        border: 1px solid rgba(0, 0, 0, .1)
     }
 
     html:not(.dark) .input-seller:focus {
-        background: rgba(255, 255, 255, 1)
+        background: #fff
     }
 
     html:not(.dark) .feature-box {
-        background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(139, 92, 246, 0.08));
-        border: 2px solid rgba(59, 130, 246, 0.15)
+        background: linear-gradient(135deg, rgba(59, 130, 246, .08), rgba(139, 92, 246, .08));
+        border: 2px solid rgba(59, 130, 246, .15)
     }
 </style>
 <main class="min-h-screen pt-24 lg:pl-72 bg-gray-50 dark:bg-gradient-to-br dark:from-dark-900 dark:via-dark-800 dark:to-dark-900 text-gray-900 dark:text-white relative overflow-hidden transition-colors duration-300">
@@ -141,6 +155,7 @@ $uid = 0;
             <h1 class="text-5xl md:text-6xl font-black bg-gradient-to-r from-gray-900 via-blue-900 to-gray-900 dark:from-white dark:via-blue-200 dark:to-white bg-clip-text text-transparent mb-6">Seller <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Center</span></h1>
             <p class="text-gray-600 dark:text-gray-400 max-w-3xl mx-auto text-lg leading-relaxed">Join the decentralized economy. List your digital assets, gift cards, and exclusive codes on Gashy Bazaar and get paid in <span class="font-bold text-blue-600 dark:text-blue-400">crypto instantly</span>.</p>
         </div>
+
         <div id="seller-loading" class="text-center py-32">
             <div class="relative inline-block">
                 <div class="w-24 h-24 rounded-full border-4 border-blue-500/20 border-t-blue-500 animate-spin"></div>
@@ -152,6 +167,7 @@ $uid = 0;
             </div>
             <p class="text-gray-600 dark:text-gray-400 mt-8 text-sm font-bold uppercase tracking-widest">Loading Seller Status...</p>
         </div>
+
         <div id="seller-form-view" class="hidden seller-form-card rounded-3xl p-8 md:p-12 shadow-2xl">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div class="order-2 lg:order-1">
@@ -174,11 +190,11 @@ $uid = 0;
                                 <p class="text-sm font-mono text-blue-700 dark:text-blue-400 font-bold">gashybazaar.com/shop/<span id="slug-preview" class="text-purple-600 dark:text-purple-400">...</span></p>
                             </div>
                         </div>
-                        <button onclick="applySeller()" class="submit-btn w-full py-5 text-white font-black text-lg rounded-2xl shadow-2xl flex items-center justify-center gap-3">
+                        <button id="apply-seller-btn" onclick="applySeller()" class="submit-btn w-full py-5 text-white font-black text-lg rounded-2xl shadow-2xl flex items-center justify-center gap-3">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            Submit Application
+                            <span id="apply-seller-text">Submit Application</span>
                         </button>
                     </div>
                 </div>
@@ -210,6 +226,7 @@ $uid = 0;
                 </div>
             </div>
         </div>
+
         <div id="seller-pending-view" class="hidden text-center py-32">
             <div class="relative inline-block mb-8">
                 <div class="absolute inset-0 bg-yellow-500/20 blur-3xl rounded-full"></div>
@@ -221,11 +238,12 @@ $uid = 0;
             </div>
             <h2 class="text-4xl font-black text-gray-900 dark:text-white mb-4">Application Pending</h2>
             <p class="text-gray-600 dark:text-gray-400 text-lg max-w-md mx-auto mb-8">Our team is reviewing your store details. You'll receive a notification once approved!</p>
-            <div class="inline-flex items-center gap-2 px-6 py-3 bg-yellow-500/10 rounded-xl border-2 border-yellow-500/30">
+            <div class="status-chip bg-yellow-500/10 border-2 border-yellow-500/30 text-yellow-600 dark:text-yellow-400">
                 <div class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></div>
-                <span class="text-sm font-bold text-yellow-600 dark:text-yellow-400">Under Review</span>
+                <span>Under Review</span>
             </div>
         </div>
+
         <div id="seller-dashboard-view" class="hidden">
             <div class="relative overflow-hidden bg-gradient-to-br from-green-500 to-emerald-600 rounded-3xl p-12 text-center shadow-2xl">
                 <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZiIgb3BhY2l0eT0iMC4xIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-20"></div>
@@ -237,11 +255,11 @@ $uid = 0;
                     </div>
                     <h2 class="text-4xl font-black text-white mb-4">You're a Verified Seller! 🎉</h2>
                     <p class="text-white/90 text-lg mb-10 max-w-lg mx-auto">Access your inventory, manage products, and track sales in your dedicated seller dashboard.</p>
-                    <a href="/dashboard" class="inline-flex items-center gap-3 px-10 py-5 bg-white hover:bg-gray-100 text-green-600 font-black text-lg rounded-2xl shadow-2xl transition-all hover:scale-105">
+                    <a href="seller-hub.php" class="inline-flex items-center gap-3 px-10 py-5 bg-white hover:bg-gray-100 text-green-600 font-black text-lg rounded-2xl shadow-2xl transition-all hover:scale-105">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
                         </svg>
-                        Go to Dashboard
+                        Go to Seller Hub
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                         </svg>
