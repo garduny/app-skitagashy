@@ -57,7 +57,8 @@ $base = (isset($_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER['HTTP_HOS
 foreach ($data as &$row) {
     $imgs = json_decode($row['images'] ?? '[]', true);
     $img = $imgs[0] ?? '';
-    if (!$img || !file_exists(__DIR__ . '/../../' . ltrim($img, '/'))) {
+    $checkPath = __DIR__ . '/../../' . ltrim($img, '/');
+    if (!$img || !file_exists($checkPath)) {
         $img = '/public/img/placeholder.png';
     }
     $row['image'] = $img;
